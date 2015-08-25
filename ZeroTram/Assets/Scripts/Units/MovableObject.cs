@@ -9,7 +9,8 @@ public class MovableObject : MonoBehaviour {
     protected Animator Animator;
     protected bool IsDead;
     protected int Hp;
-    protected BackgroundManager Background;
+    protected float AttackMaxDistance = 2f;
+    protected float AttackedStartTime;
 
     protected enum State
     {
@@ -23,6 +24,9 @@ public class MovableObject : MonoBehaviour {
     protected State CurrentState;
     private Vector3 _target;
     protected float Velocity = 5f;
+    protected int AttackStrength = 10;
+    protected MovableObject AttackTarget;
+    protected float AttackReactionPeriod = 0.5f;
 
     // Use this for initialization
     protected void Start()
@@ -31,13 +35,15 @@ public class MovableObject : MonoBehaviour {
         BoxCollider = GetComponent<BoxCollider2D>();
         Rb2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        Background = GameObject.Find("background").GetComponent<BackgroundManager>();
         StartCoroutine(mainLoop());
     }
 
-    public void AddDamage(int damage)
+    public void AddDamage(MovableObject attacker)
     {
-        Hp -= damage;
+        Hp -= attacker.AttackStrength;
+        CurrentState = State.Attacked;
+        AttackedStartTime = Time.time;
+        AttackTarget = attacker;
         if (Hp <= 0)
         {
             IsDead = true; 
@@ -64,11 +70,7 @@ public class MovableObject : MonoBehaviour {
     public bool IsIdle()
     {
         return CurrentState == State.Idle;
-    }
-
-    void Update()
-    {
-    }
+    }   
 
     IEnumerator mainLoop()
     {
@@ -88,6 +90,9 @@ public class MovableObject : MonoBehaviour {
                 case State.Attack:
                     yield return StartCoroutine(attack());
                     break;
+                case State.Attacked:
+                    yield return StartCoroutine(attacked());
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -98,7 +103,7 @@ public class MovableObject : MonoBehaviour {
     {
         Animator.Play("walk");
         float sqrRemainingDistance = (transform.position - _target).sqrMagnitude;
-        if (sqrRemainingDistance < float.Epsilon)
+        if (sqrRemainingDistance <= 1)
         {
             CurrentState = State.Idle;
             yield return null;
@@ -122,6 +127,16 @@ public class MovableObject : MonoBehaviour {
     protected virtual IEnumerator attack()
     {
         Animator.Play("attack");
+        yield return null;
+    }
+
+    protected virtual IEnumerator attacked()
+    {
+        Animator.Play("attacked");
+        if (Time.time - AttackedStartTime > AttackReactionPeriod)
+        {
+            CurrentState = State.Idle;
+        }
         yield return null;
     }
 }

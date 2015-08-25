@@ -10,6 +10,13 @@ namespace Assets
         void Awake()
         {
             Hp = 100;
+            AttackMaxDistance = 2;
+        }
+
+        public bool IsInAttackRadius(MovableObject obj)
+        {
+            float sqrRemainingDistance = (transform.position - obj.transform.position).sqrMagnitude;
+            return sqrRemainingDistance < AttackMaxDistance;
         }
     }
 }

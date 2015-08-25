@@ -11,34 +11,36 @@ namespace Assets
 {
     public class Passenger : MovableObject
     {
-        private MovableObject _attackTarget;
-
-        private int _moveProbability = 75;
+        private int _moveProbability = 5;
         private int _attackProbability = 100;
-        private int _attackReloadPeriod = 100;
-        private int _attackStrength = 10;
         private int _changeStatePeriod = 100;
-        private float _attackDistance = 0.5f;
-        private float _attackMaxDistance = 2f;
+        private float _attackDistance = 1;
+        protected int AttackReloadPeriod = 100;
 
         private bool _hasTicket;
+        private bool _isVisibleToHero;
 
         private int _timeForNextUpdate;
         private int _timeSinceAttackMade;
 
+        private Hero _hero;
+
+        protected BackgroundManager Background;
+        
         public void InitWithParameters(int moveProbability, int attackProbability, int attackReloadPeriod,
             int attackStrength, int changeStatePeriod, int attackDistance, int attackMaxDistance,
-            int velocity, int ticketProbability)
+            int velocity, int ticketProbability, int hp)
         {
             _moveProbability = moveProbability;
             _attackProbability = attackProbability;
-            _attackReloadPeriod = attackReloadPeriod;
-            _attackStrength = attackStrength;
+            AttackReloadPeriod = attackReloadPeriod;
+            AttackStrength = attackStrength;
             _changeStatePeriod = changeStatePeriod;
             _attackDistance = attackDistance;
-            _attackMaxDistance = attackMaxDistance;
+            AttackMaxDistance = attackMaxDistance;
             Velocity = velocity;
             _hasTicket = Randomizer.GetRandomPercent() > (100 - ticketProbability);
+            Hp = hp;
         }
 
         public bool HasTicket()
@@ -48,19 +50,21 @@ namespace Assets
 
         new void Start()
         {
+            Background = GameObject.Find("background").GetComponent<BackgroundManager>();
             base.Start();
             _timeForNextUpdate = 0;
-            _timeSinceAttackMade = 0;
+            _timeSinceAttackMade = AttackReloadPeriod;
+            Hp = 100;
         }
 
         public void SetAttackTarget(MovableObject target)
         {
-            _attackTarget = target;
+            AttackTarget = target;
         }
 
         protected override IEnumerator idle()
         {
-            if (_attackTarget == null)
+            if (AttackTarget == null)
             {
                 Animator.Play("idle");
                 if (CanMove())
@@ -71,15 +75,15 @@ namespace Assets
             else
             {
                 float dist = AttackTargetDistance();
-                if (dist > _attackMaxDistance)
+                if (dist > AttackMaxDistance)
                 {
-                    _attackTarget = null;
+                    AttackTarget = null;
                 }
                 else
                 {
                     if (dist > _attackDistance)
                     {
-                        SetTarget(_attackTarget.transform.position);
+                        SetTarget(AttackTarget.transform.position);
                     }
                     else
                     {
@@ -92,25 +96,43 @@ namespace Assets
 
         private float AttackTargetDistance()
         {
-            return (transform.position - _attackTarget.transform.position).sqrMagnitude;
+            return (transform.position - AttackTarget.transform.position).sqrMagnitude;
         }
 
         protected override IEnumerator attack()
         {
-            if (_attackTarget != null)
+            if (AttackTarget != null)
             {
-                CalculateOrientation(_attackTarget.transform.position);
+                CalculateOrientation(AttackTarget.transform.position);
                 if (CanAttack())
                 {
                     Animator.Play("attack");
-                    Debug.Log("attack performed");
-                    _attackTarget.AddDamage(_attackStrength);
+                    AttackTarget.AddDamage(this);
                     _timeSinceAttackMade = 0;
                 }
                 else
                 {
                     CurrentState = State.Idle;
-                }   
+                }
+            }
+            else
+            {
+                CurrentState = State.Idle;
+            }
+            yield return null;
+        }
+
+        protected override IEnumerator attacked()
+        {
+            Animator.Play("attacked");
+            float timeDist = Time.time - AttackedStartTime;
+            Debug.Log(timeDist);
+            if (timeDist > AttackReactionPeriod)
+            {
+                if (AttackTarget != null)
+                    CurrentState = State.Attack;
+                else
+                    CurrentState = State.Idle;
             }
             yield return null;
         }
@@ -119,6 +141,34 @@ namespace Assets
         {
             _timeForNextUpdate--;
             _timeSinceAttackMade++;
+        }
+
+        void OnMouseDown()
+        {
+            if (!_isVisibleToHero)
+            {
+                _isVisibleToHero = true;
+                DisplayTicketIcon();
+                return;
+            }
+            if (_hero == null)
+            {
+                _hero = GameObject.Find("hero").GetComponent<Hero>();
+            }
+            if (_hero.IsInAttackRadius(this))
+            {
+                CurrentState = State.Attacked;
+            }
+        }
+
+        private void DisplayTicketIcon()
+        {
+            
+        }
+
+        void OnMouseUp()
+        {
+            Debug.Log("mouse up");
         }
 
         private bool CanMove()
@@ -132,7 +182,7 @@ namespace Assets
 
         private bool CanAttack()
         {
-            if (_attackTarget == null)
+            if (AttackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
                 if (range > (100 - _attackProbability))
@@ -140,7 +190,7 @@ namespace Assets
             }
             else
             {
-                if (_timeSinceAttackMade >= _attackReloadPeriod && AttackTargetDistance() <= _attackDistance)
+                if (_timeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= _attackDistance)
                     return true;
             }
             return false;
@@ -153,7 +203,7 @@ namespace Assets
             {
                 if (CanAttack())
                 {
-                    _attackTarget = movable;
+                    AttackTarget = movable;
                     CurrentState = State.Attack;
                 }
             }
