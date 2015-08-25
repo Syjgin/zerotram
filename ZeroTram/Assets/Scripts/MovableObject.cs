@@ -6,8 +6,11 @@ public class MovableObject : MonoBehaviour {
     protected BoxCollider2D BoxCollider;
     protected Rigidbody2D Rb2D;
     protected Animator Animator;
+    protected bool IsDead;
+    protected int Hp;
+    protected BackgroundManager Background;
 
-    enum State
+    protected enum State
     {
         Idle,
         Walking,
@@ -16,18 +19,28 @@ public class MovableObject : MonoBehaviour {
         Attack
     }
 
-    private State _currentState;
+    protected State _currentState;
     private Vector3 _target;
     private const float Velocity = 5f;
 
     // Use this for initialization
-    void Start()
+    protected void Start()
     {
         _currentState = State.Idle;
         BoxCollider = GetComponent<BoxCollider2D>();
         Rb2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
+        Background = GameObject.Find("background").GetComponent<BackgroundManager>();
         StartCoroutine(mainLoop());
+    }
+
+    public void AddDamage(int damage)
+    {
+        Hp -= damage;
+        if (damage < 0)
+        {
+            IsDead = true;   
+        }
     }
 
     public void SetTarget(Vector3 target)
@@ -51,7 +64,7 @@ public class MovableObject : MonoBehaviour {
 
     IEnumerator mainLoop()
     {
-        while (true)
+        while (!IsDead)
         {
             switch (_currentState)
             {
@@ -76,7 +89,7 @@ public class MovableObject : MonoBehaviour {
         }
     }
 
-    IEnumerator walk()
+    protected IEnumerator walk()
     {
         Animator.Play("walk");
         float sqrRemainingDistance = (transform.position - _target).sqrMagnitude;
@@ -89,25 +102,25 @@ public class MovableObject : MonoBehaviour {
         Rb2D.MovePosition(newPosition);
     }
 
-    IEnumerator idle()
+    protected virtual IEnumerator idle()
     {
         Animator.Play("idle");
         yield return null;
     }
 
-    IEnumerator drag()
+    protected IEnumerator drag()
     {
         Animator.Play("drag");
         yield return null;
     }
 
-    IEnumerator attack()
+    protected IEnumerator attack()
     {
         Animator.Play("attack");
         yield return null;
     }
 
-    IEnumerator boot()
+    protected IEnumerator boot()
     {
         Animator.Play("boot");
         yield return null;
