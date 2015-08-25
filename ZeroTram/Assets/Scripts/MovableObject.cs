@@ -14,19 +14,19 @@ public class MovableObject : MonoBehaviour {
     {
         Idle,
         Walking,
-        Drag,
-        Boot, 
-        Attack
+        Drag, 
+        Attack,
+        Attacked
     }
 
-    protected State _currentState;
+    protected State CurrentState;
     private Vector3 _target;
-    private const float Velocity = 5f;
+    protected float Velocity = 5f;
 
     // Use this for initialization
     protected void Start()
     {
-        _currentState = State.Idle;
+        CurrentState = State.Idle;
         BoxCollider = GetComponent<BoxCollider2D>();
         Rb2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
@@ -46,16 +46,21 @@ public class MovableObject : MonoBehaviour {
     public void SetTarget(Vector3 target)
     {
         _target = target;
-        if (_target.x > Rb2D.position.x)
+        CalculateOrientation(target);
+        CurrentState = State.Walking;
+    }
+
+    protected void CalculateOrientation(Vector2 target)
+    {
+        if (target.x > Rb2D.position.x)
             Rb2D.transform.localScale = new Vector3(-1, 1, 1);
         else
             Rb2D.transform.localScale = new Vector3(1, 1, 1);
-        _currentState = State.Walking;
     }
 
     public bool IsIdle()
     {
-        return _currentState == State.Idle;
+        return CurrentState == State.Idle;
     }
 
     void Update()
@@ -66,7 +71,7 @@ public class MovableObject : MonoBehaviour {
     {
         while (!IsDead)
         {
-            switch (_currentState)
+            switch (CurrentState)
             {
                 case State.Walking:
                     yield return StartCoroutine(walk());
@@ -76,9 +81,6 @@ public class MovableObject : MonoBehaviour {
                     break;
                 case State.Drag:
                     yield return StartCoroutine(drag());
-                    break;
-                case State.Boot:
-                    yield return StartCoroutine(boot());
                     break;
                 case State.Attack:
                     yield return StartCoroutine(attack());
@@ -95,7 +97,7 @@ public class MovableObject : MonoBehaviour {
         float sqrRemainingDistance = (transform.position - _target).sqrMagnitude;
         if (sqrRemainingDistance < float.Epsilon)
         {
-            _currentState = State.Idle;
+            CurrentState = State.Idle;
             yield return null;
         }
         Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _target, Velocity * Time.deltaTime);
@@ -114,15 +116,9 @@ public class MovableObject : MonoBehaviour {
         yield return null;
     }
 
-    protected IEnumerator attack()
+    protected virtual IEnumerator attack()
     {
         Animator.Play("attack");
-        yield return null;
-    }
-
-    protected IEnumerator boot()
-    {
-        Animator.Play("boot");
         yield return null;
     }
 }

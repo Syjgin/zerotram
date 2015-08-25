@@ -11,6 +11,20 @@ namespace Assets.Scripts.Math
         private static bool _isInitialized;
         public static float GetNormalizedRandom()
         {
+            init();
+            int percent = Random.Range(0, 100);
+            float result = percent*0.01f;
+            return result;
+        }
+
+        public static int GetRandomPercent()
+        {
+            init();
+            return Random.Range(0, 100);
+        }
+
+        private static void init()
+        {
             if (!_isInitialized)
             {
                 DateTime utc = DateTime.Now.ToUniversalTime();
@@ -18,9 +32,6 @@ namespace Assets.Scripts.Math
                 Random.seed = seed;
                 _isInitialized = true;
             }
-            int percent = Random.Range(0, 100);
-            float result = percent*0.01f;
-            return result;
         }
     }
 }
