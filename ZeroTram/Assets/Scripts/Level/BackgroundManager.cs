@@ -34,6 +34,8 @@ public class BackgroundManager : MonoBehaviour
 
     void OnMouseDown()
     {
+        if(_hero == null)
+            return;
         Vector2 pos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         _hero.SetTarget(pos);
     }

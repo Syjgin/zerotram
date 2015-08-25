@@ -13,19 +13,38 @@ namespace Assets
     {
         private MovableObject _attackTarget;
 
-        //TODO: fill this in parametrized constructor in derived classes
-        private const int MoveProbability = 75;
-        private const int AttackProbability = 100;
-        private const int AttackReloadPeriod = 100;
-        private const int AttackStrength = 10;
-        private const int ChangeStatePeriod = 100;
-        private const float AttackDistance = 0.5f;
-        private const float AttackMaxDistance = 2f;
+        private int _moveProbability = 75;
+        private int _attackProbability = 100;
+        private int _attackReloadPeriod = 100;
+        private int _attackStrength = 10;
+        private int _changeStatePeriod = 100;
+        private float _attackDistance = 0.5f;
+        private float _attackMaxDistance = 2f;
+
+        private bool _hasTicket;
 
         private int _timeForNextUpdate;
         private int _timeSinceAttackMade;
 
+        public void InitWithParameters(int moveProbability, int attackProbability, int attackReloadPeriod,
+            int attackStrength, int changeStatePeriod, int attackDistance, int attackMaxDistance,
+            int velocity, int ticketProbability)
+        {
+            _moveProbability = moveProbability;
+            _attackProbability = attackProbability;
+            _attackReloadPeriod = attackReloadPeriod;
+            _attackStrength = attackStrength;
+            _changeStatePeriod = changeStatePeriod;
+            _attackDistance = attackDistance;
+            _attackMaxDistance = attackMaxDistance;
+            Velocity = velocity;
+            _hasTicket = Randomizer.GetRandomPercent() > (100 - ticketProbability);
+        }
 
+        public bool HasTicket()
+        {
+            return _hasTicket;
+        }
 
         new void Start()
         {
@@ -41,9 +60,9 @@ namespace Assets
 
         protected override IEnumerator idle()
         {
-            Animator.Play("idle");
             if (_attackTarget == null)
             {
+                Animator.Play("idle");
                 if (CanMove())
                 {
                     SetTarget(Background.GetRandomPosition());
@@ -52,13 +71,13 @@ namespace Assets
             else
             {
                 float dist = AttackTargetDistance();
-                if (dist > AttackMaxDistance)
+                if (dist > _attackMaxDistance)
                 {
                     _attackTarget = null;
                 }
                 else
                 {
-                    if (dist > AttackDistance)
+                    if (dist > _attackDistance)
                     {
                         SetTarget(_attackTarget.transform.position);
                     }
@@ -78,16 +97,20 @@ namespace Assets
 
         protected override IEnumerator attack()
         {
-            CalculateOrientation(_attackTarget.transform.position);
-            if (CanAttack())
+            if (_attackTarget != null)
             {
-                Animator.Play("attack");
-                CurrentState = State.Idle;
-                _timeSinceAttackMade = 0;   
-            }
-            else
-            {
-                CurrentState = State.Idle;
+                CalculateOrientation(_attackTarget.transform.position);
+                if (CanAttack())
+                {
+                    Animator.Play("attack");
+                    Debug.Log("attack performed");
+                    _attackTarget.AddDamage(_attackStrength);
+                    _timeSinceAttackMade = 0;
+                }
+                else
+                {
+                    CurrentState = State.Idle;
+                }   
             }
             yield return null;
         }
@@ -102,9 +125,9 @@ namespace Assets
         {
             if (_timeForNextUpdate > 0)
                 return false;
-            _timeForNextUpdate = ChangeStatePeriod;
+            _timeForNextUpdate = _changeStatePeriod;
             int range = Randomizer.GetRandomPercent();
-            return range > (100 - MoveProbability);
+            return range > (100 - _moveProbability);
         }
 
         private bool CanAttack()
@@ -112,12 +135,12 @@ namespace Assets
             if (_attackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
-                if (range > (100 - AttackProbability))
+                if (range > (100 - _attackProbability))
                     return true;
             }
             else
             {
-                if (_timeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
+                if (_timeSinceAttackMade >= _attackReloadPeriod && AttackTargetDistance() <= _attackDistance)
                     return true;
             }
             return false;

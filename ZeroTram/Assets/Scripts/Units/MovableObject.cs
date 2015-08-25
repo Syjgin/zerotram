@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets;
 using UnityEngine;
 using System.Collections;
 
@@ -37,9 +38,11 @@ public class MovableObject : MonoBehaviour {
     public void AddDamage(int damage)
     {
         Hp -= damage;
-        if (damage < 0)
+        if (Hp <= 0)
         {
-            IsDead = true;   
+            IsDead = true; 
+            GameController.GetInstance().RegisterDeath(this);
+            Destroy(this.gameObject);
         }
     }
 
