@@ -17,20 +17,20 @@ public class WayoutZone : MonoBehaviour
 
     void Update()
     {
+        if(_hero == null)
+            return;
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (Input.GetMouseButtonDown(0))
+        Vector2 transform2d = transform.position;
+        float distance = (transform2d - hit.centroid).sqrMagnitude;
+        Vector2 heroTransform2D = _hero.transform.position;
+        float heroDistance = (heroTransform2D - hit.centroid).sqrMagnitude;
+        if (distance < _radius && heroDistance < _radius)
         {
-            Vector2 transform2d = transform.position;
-            float distance = (transform2d - hit.centroid).sqrMagnitude;
-            Vector2 heroTransform2D = _hero.transform.position;
-            float heroDistance = (heroTransform2D - hit.centroid).sqrMagnitude;
-            if (distance < _radius && heroDistance < _radius)
-            {
-                if (!_hero.IsUnderAttack())
-                {
-                    _hero.Kick();
-                }
-            }
+            _hero.SetInWayoutZone(true);
+        }
+        else
+        {
+            _hero.SetInWayoutZone(false);
         }
     }
 }

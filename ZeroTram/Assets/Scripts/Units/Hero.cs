@@ -13,31 +13,30 @@ namespace Assets
         private Passenger _dragTarget;
         private Vector2 _dragStartPoint;
         private const float MaxDragDistance = 4f;
+        private bool _isInWayoutZone;
+
+        public void SetInWayoutZone(bool inZone)
+        {
+            _isInWayoutZone = inZone;
+        }
+
+        public bool IsInWayoutZone()
+        {
+            return _isInWayoutZone;
+        }
+
         void Awake()
         {
             Hp = 100;
             AttackMaxDistance = 1;
         }
 
-        public void Kick()
+        public void Kick(Passenger obj)
         {
-            if (AttackTarget != null || _dragTarget != null)
-            {
-                CurrentState = State.Attack;
-                if (AttackTarget != null)
-                {
-                    Passenger ps = AttackTarget.GetComponent<Passenger>();
-                    ps.FlyAway();
-                    AttackTarget = null;
-                    return;
-                }
-                if (_dragTarget != null)
-                {
-                    Passenger ps = _dragTarget.GetComponent<Passenger>();
-                    ps.FlyAway();
-                    _dragTarget = null;
-                }
-            }
+            CurrentState = State.Attack;
+            obj.FlyAway();
+            AttackTarget = null;
+            _dragTarget = null;
         }
 
         protected new void Start()

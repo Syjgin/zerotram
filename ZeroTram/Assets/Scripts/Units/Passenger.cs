@@ -11,17 +11,18 @@ namespace Assets
 {
     public class Passenger : MovableObject
     {
-        private int _moveProbability = 5;
-        private int _attackProbability = 50;
-        private int _changeStatePeriod = 100;
-        private float _attackDistance = 1;
-        protected int AttackReloadPeriod = 100;
+        protected int MoveProbability = 50;
+        protected int AttackProbability = 50;
+        protected float ChangeStatePeriod = 10;
+        protected float AttackDistance = 1;
+        protected float AttackReloadPeriod = 0.5f;
+        protected float CounterAttackProbability = 50;
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
 
-        private int _timeForNextUpdate;
-        private int _timeSinceAttackMade;
+        private float _timeForNextUpdate;
+        private float _timeSinceAttackMade;
 
         private Hero _hero;
 
@@ -34,22 +35,6 @@ namespace Assets
         private Vector2 _flyTarget;
 
         private const int FlyLength = 30;
-
-        public void InitWithParameters(int moveProbability, int attackProbability, int attackReloadPeriod,
-            int attackStrength, int changeStatePeriod, int attackDistance, int attackMaxDistance,
-            int velocity, int ticketProbability, int hp)
-        {
-            _moveProbability = moveProbability;
-            _attackProbability = attackProbability;
-            AttackReloadPeriod = attackReloadPeriod;
-            AttackStrength = attackStrength;
-            _changeStatePeriod = changeStatePeriod;
-            _attackDistance = attackDistance;
-            AttackMaxDistance = attackMaxDistance;
-            Velocity = velocity;
-            _hasTicket = Randomizer.GetRandomPercent() > (100 - ticketProbability);
-            Hp = hp;
-        }
 
         public bool HasTicket()
         {
@@ -113,7 +98,7 @@ namespace Assets
                 }
                 else
                 {
-                    if (dist > _attackDistance)
+                    if (dist > AttackDistance)
                     {
                         SetTarget(AttackTarget.transform.position);
                     }
@@ -162,10 +147,21 @@ namespace Assets
                 float timeDist = Time.time - AttackedStartTime;
                 if (timeDist > AttackReactionPeriod)
                 {
-                    if (AttackTarget != null)
-                        CurrentState = State.Attack;
+                    float currentCounterAttackProbability = Randomizer.GetRandomPercent();
+                    if (currentCounterAttackProbability > (100 - CounterAttackProbability))
+                    {
+                        if (AttackTarget != null)
+                            CurrentState = State.Attack;
+                        else
+                            CurrentState = State.Idle;
+                    }
                     else
-                        CurrentState = State.Idle;
+                    {
+                        if (CanMove())
+                        {
+                            SetTarget(Background.GetRandomPosition());
+                        }
+                    }
                 }   
             }
             yield return null;
@@ -173,8 +169,8 @@ namespace Assets
 
         void FixedUpdate()
         {
-            _timeForNextUpdate--;
-            _timeSinceAttackMade++;
+            _timeForNextUpdate-=Time.fixedDeltaTime;
+            _timeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
         void Update()
@@ -209,10 +205,25 @@ namespace Assets
                             DisplayTicketIcon();
                             return;
                         }
-                        if (!_hero.IsUnderAttack())
+                        if (!_hero.IsInWayoutZone())
                         {
-                            _hero.StartDrag(this);
-                            CurrentState = State.Attacked;
+                            if (!_hero.IsUnderAttack())
+                            {
+                                _hero.StartDrag(this);
+                                CurrentState = State.Attacked;
+                            }
+                        }
+                        else
+                        {
+                            if (!_hasTicket)
+                                _hero.Kick(this);
+                            else
+                            {
+                                if (AttackTarget == _hero)
+                                {
+                                    _hero.Kick(this);
+                                }
+                            }
                         }
                     }
                     else
@@ -237,9 +248,9 @@ namespace Assets
         {
             if (_timeForNextUpdate > 0)
                 return false;
-            _timeForNextUpdate = _changeStatePeriod;
+            _timeForNextUpdate = ChangeStatePeriod;
             int range = Randomizer.GetRandomPercent();
-            return range > (100 - _moveProbability);
+            return range > (100 - MoveProbability);
         }
 
         private bool CanAttack()
@@ -247,12 +258,12 @@ namespace Assets
             if (AttackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
-                if (range > (100 - _attackProbability))
+                if (range > (100 - AttackProbability))
                     return true;
             }
             else
             {
-                if (_timeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= _attackDistance)
+                if (_timeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
                     return true;
             }
             return false;
