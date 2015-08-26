@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets;
 using Assets.Scripts.Math;
 using UnityEngine;
 using System.Collections;
@@ -7,7 +8,7 @@ public class BackgroundManager : MonoBehaviour
 {
 
     [SerializeField] private Camera _mainCamera;
-    [SerializeField] private MovableObject _hero;
+    [SerializeField] private Hero _hero;
 
     private BoxCollider2D _collider;
 	// Use this for initialization
@@ -16,9 +17,13 @@ public class BackgroundManager : MonoBehaviour
 	    _collider = GetComponent<BoxCollider2D>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+	{
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+	    if (_hero.IsDragging() && hit.collider == _collider)
+	    {
+	        _hero.UpdatePositionForDrag();
+	    }
 	}
 
     public Vector2 GetRandomPosition()
@@ -36,7 +41,17 @@ public class BackgroundManager : MonoBehaviour
     {
         if(_hero == null)
             return;
-        Vector2 pos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 pos = GetCurrentMousePosition();
         _hero.SetTarget(pos);
+    }
+
+    void OnMouseUp()
+    {
+        _hero.StopDrag();
+    }
+
+    public Vector2 GetCurrentMousePosition()
+    {
+        return _mainCamera.ScreenToWorldPoint(Input.mousePosition);
     }
 }

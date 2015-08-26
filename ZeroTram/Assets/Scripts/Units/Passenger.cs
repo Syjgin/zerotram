@@ -26,7 +26,9 @@ namespace Assets
         private Hero _hero;
 
         protected BackgroundManager Background;
-        
+
+        private bool _isDragged;
+
         public void InitWithParameters(int moveProbability, int attackProbability, int attackReloadPeriod,
             int attackStrength, int changeStatePeriod, int attackDistance, int attackMaxDistance,
             int velocity, int ticketProbability, int hp)
@@ -46,6 +48,13 @@ namespace Assets
         public bool HasTicket()
         {
             return _hasTicket;
+        }
+
+        public void SetDragged(bool dragged)
+        {
+            _isDragged = dragged;
+            if(!dragged)
+                CurrentState = State.Idle;
         }
 
         new void Start()
@@ -125,14 +134,16 @@ namespace Assets
         protected override IEnumerator attacked()
         {
             Animator.Play("attacked");
-            float timeDist = Time.time - AttackedStartTime;
-            Debug.Log(timeDist);
-            if (timeDist > AttackReactionPeriod)
+            if (!_isDragged)
             {
-                if (AttackTarget != null)
-                    CurrentState = State.Attack;
-                else
-                    CurrentState = State.Idle;
+                float timeDist = Time.time - AttackedStartTime;
+                if (timeDist > AttackReactionPeriod)
+                {
+                    if (AttackTarget != null)
+                        CurrentState = State.Attack;
+                    else
+                        CurrentState = State.Idle;
+                }   
             }
             yield return null;
         }
@@ -143,21 +154,38 @@ namespace Assets
             _timeSinceAttackMade++;
         }
 
-        void OnMouseDown()
+        void Update()
         {
-            if (!_isVisibleToHero)
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (Input.GetMouseButtonDown(0))
             {
-                _isVisibleToHero = true;
-                DisplayTicketIcon();
-                return;
-            }
-            if (_hero == null)
-            {
-                _hero = GameObject.Find("hero").GetComponent<Hero>();
-            }
-            if (_hero.IsInAttackRadius(this))
-            {
-                CurrentState = State.Attacked;
+                Vector2 transform2d = transform.position;
+                float distance = (transform2d - hit.centroid).sqrMagnitude;
+                if (distance < 1)
+                {
+                    if (_hero == null)
+                    {
+                        _hero = GameObject.Find("hero").GetComponent<Hero>();
+                    }
+                    if (_hero.IsInAttackRadius(this))
+                    {
+                        if (!_isVisibleToHero)
+                        {
+                            _isVisibleToHero = true;
+                            DisplayTicketIcon();
+                            return;
+                        }
+                        if (!_hero.IsUnderAttack())
+                        {
+                            _hero.StartDrag(this);
+                            CurrentState = State.Attacked;
+                        }
+                    }
+                    else
+                    {
+                        _hero.SetTarget(this.transform.position);
+                    }   
+                }
             }
         }
 
@@ -168,7 +196,7 @@ namespace Assets
 
         void OnMouseUp()
         {
-            Debug.Log("mouse up");
+            SetDragged(false);
         }
 
         private bool CanMove()
