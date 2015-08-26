@@ -67,11 +67,18 @@ namespace Assets
             base.Start();
             _timeForNextUpdate = 0;
             _timeSinceAttackMade = AttackReloadPeriod;
-
-            //TODO: remove this when spawner will be finished
-            Hp = 100;
-            
             _hero = GameObject.Find("hero").GetComponent<Hero>();
+        }
+
+        protected void CalculateTicket(int currentTicketProbability)
+        {
+            int ticketProbability = Randomizer.GetRandomPercent();
+            _hasTicket = ticketProbability > (100 - currentTicketProbability);
+        }
+
+        protected virtual void Init()
+        {
+            
         }
 
         public void SetAttackTarget(MovableObject target)

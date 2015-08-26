@@ -8,5 +8,6 @@ namespace Assets.Scripts.Level
     public interface GameStateNotificationListener
     {
         void UpdatePercentage(int killedPercent, int haresPercent);
+        void GameOver();
     }
 }

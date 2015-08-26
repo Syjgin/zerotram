@@ -35,10 +35,6 @@ namespace Assets
             _listeners = new List<GameStateNotificationListener>();
             _totalHares = 0;
             _incomingPassengers = 0;
-
-            //TODO: remove when spawner will be ready
-            Passenger pass = GameObject.Find("passenger").GetComponent<Passenger>();
-            _passengers.Add(pass);
         }
 
         
@@ -70,7 +66,6 @@ namespace Assets
                     if (ps.HasTicket())
                     {
                         _killedPassengers++;
-                        UpdateStats();
                         CheckStats();
                         foreach (var gameStateNotificationListener in _listeners)
                         {
@@ -103,6 +98,7 @@ namespace Assets
 
         public void CheckStats()
         {
+            UpdateStats();
             if (_haresPercent > 50 || _killedPercent > 50)
             {
                 GameOver();
