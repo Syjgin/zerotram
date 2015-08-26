@@ -127,6 +127,8 @@ public class MovableObject : MonoBehaviour {
     protected virtual IEnumerator attack()
     {
         Animator.Play("attack");
+        if(AttackTarget == null)
+            CurrentState = State.Idle;
         yield return null;
     }
 

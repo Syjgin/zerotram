@@ -12,7 +12,7 @@ namespace Assets
     public class Passenger : MovableObject
     {
         private int _moveProbability = 5;
-        private int _attackProbability = 100;
+        private int _attackProbability = 50;
         private int _changeStatePeriod = 100;
         private float _attackDistance = 1;
         protected int AttackReloadPeriod = 100;
@@ -28,6 +28,12 @@ namespace Assets
         protected BackgroundManager Background;
 
         private bool _isDragged;
+
+        private bool _isFlyingAway;
+
+        private Vector2 _flyTarget;
+
+        private const int FlyLength = 30;
 
         public void InitWithParameters(int moveProbability, int attackProbability, int attackReloadPeriod,
             int attackStrength, int changeStatePeriod, int attackDistance, int attackMaxDistance,
@@ -57,13 +63,30 @@ namespace Assets
                 CurrentState = State.Idle;
         }
 
+        public bool IsAlreadyDragged()
+        {
+            return _isDragged;
+        }
+
+        public void FlyAway()
+        {
+            _isFlyingAway = true;
+            _isDragged = true;
+            CurrentState = State.Attacked;
+            _flyTarget = new Vector2(transform.position.x, transform.position.y + FlyLength);
+        }
+
         new void Start()
         {
             Background = GameObject.Find("background").GetComponent<BackgroundManager>();
             base.Start();
             _timeForNextUpdate = 0;
             _timeSinceAttackMade = AttackReloadPeriod;
+
+            //TODO: remove this when spawner will be finished
             Hp = 100;
+            
+            _hero = GameObject.Find("hero").GetComponent<Hero>();
         }
 
         public void SetAttackTarget(MovableObject target)
@@ -156,6 +179,21 @@ namespace Assets
 
         void Update()
         {
+            if(_hero == null)
+                return;
+            if (_isFlyingAway)
+            {
+                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 5 * Velocity * Time.deltaTime);
+                Rb2D.MovePosition(newPosition);
+                Vector2 position2D = transform.position;
+                float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
+                if (sqrRemainingDistance <= 1)
+                {
+                    GameController.GetInstance().RegisterDeath(this);
+                    Destroy(this.gameObject);
+                }
+                return;
+            }
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (Input.GetMouseButtonDown(0))
             {
@@ -163,10 +201,6 @@ namespace Assets
                 float distance = (transform2d - hit.centroid).sqrMagnitude;
                 if (distance < 1)
                 {
-                    if (_hero == null)
-                    {
-                        _hero = GameObject.Find("hero").GetComponent<Hero>();
-                    }
                     if (_hero.IsInAttackRadius(this))
                     {
                         if (!_isVisibleToHero)

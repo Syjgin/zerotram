@@ -35,8 +35,13 @@ namespace Assets
             _listeners = new List<GameStateNotificationListener>();
             _totalHares = 0;
             _incomingPassengers = 0;
+
+            //TODO: remove when spawner will be ready
+            Passenger pass = GameObject.Find("passenger").GetComponent<Passenger>();
+            _passengers.Add(pass);
         }
 
+        
         public void AddListener(GameStateNotificationListener listener)
         {
             _listeners.Add(listener);

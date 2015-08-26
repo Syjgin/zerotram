@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets
@@ -18,6 +19,27 @@ namespace Assets
             AttackMaxDistance = 1;
         }
 
+        public void Kick()
+        {
+            if (AttackTarget != null || _dragTarget != null)
+            {
+                CurrentState = State.Attack;
+                if (AttackTarget != null)
+                {
+                    Passenger ps = AttackTarget.GetComponent<Passenger>();
+                    ps.FlyAway();
+                    AttackTarget = null;
+                    return;
+                }
+                if (_dragTarget != null)
+                {
+                    Passenger ps = _dragTarget.GetComponent<Passenger>();
+                    ps.FlyAway();
+                    _dragTarget = null;
+                }
+            }
+        }
+
         protected new void Start()
         {
             base.Start();
@@ -32,6 +54,8 @@ namespace Assets
 
         public void StartDrag(Passenger obj)
         {
+            if(obj.IsAlreadyDragged())
+                return;
             CurrentState = State.Drag;
             obj.SetDragged(true);
             _dragTarget = obj;
@@ -41,6 +65,11 @@ namespace Assets
 
         public void UpdatePositionForDrag()
         {
+            if (_dragTarget == null)
+            {
+                StopDrag();
+                return;
+            }
             Vector2 targetPos = _backgroundManager.GetCurrentMousePosition();
             Vector2 position2D = transform.position;
             float dist = (position2D - targetPos).sqrMagnitude;
@@ -76,6 +105,11 @@ namespace Assets
                     _dragTarget.SetDragged(false);
                 }   
             }
+        }
+
+        void OnMouseUp()
+        {
+            StopDrag();
         }
     }
 }
