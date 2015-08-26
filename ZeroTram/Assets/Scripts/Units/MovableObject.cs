@@ -22,7 +22,7 @@ public class MovableObject : MonoBehaviour {
     }
 
     protected State CurrentState;
-    private Vector3 _target;
+    protected Vector3 Target;
     protected float Velocity = 5f;
     protected int AttackStrength = 10;
     protected MovableObject AttackTarget;
@@ -54,7 +54,7 @@ public class MovableObject : MonoBehaviour {
 
     public void SetTarget(Vector3 target)
     {
-        _target = target;
+        Target = target;
         CalculateOrientation(target);
         CurrentState = State.Walking;
     }
@@ -99,16 +99,16 @@ public class MovableObject : MonoBehaviour {
         }
     }
 
-    protected IEnumerator walk()
+    protected virtual IEnumerator walk()
     {
         Animator.Play("walk");
-        float sqrRemainingDistance = (transform.position - _target).sqrMagnitude;
-        if (sqrRemainingDistance <= 1)
+        float sqrRemainingDistance = (transform.position - Target).sqrMagnitude;
+        if (sqrRemainingDistance <= float.Epsilon)
         {
             CurrentState = State.Idle;
             yield return null;
         }
-        Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _target, Velocity * Time.deltaTime);
+        Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
         Rb2D.MovePosition(newPosition);
     }
 

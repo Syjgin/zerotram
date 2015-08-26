@@ -23,6 +23,12 @@ namespace Assets.Scripts.Math
             return Random.Range(0, 100);
         }
 
+        public static int GetInRange(int min, int max)
+        {
+            init();
+            return Random.Range(min, max);
+        }
+
         private static void init()
         {
             if (!_isInitialized)

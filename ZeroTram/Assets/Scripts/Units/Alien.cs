@@ -7,18 +7,18 @@ namespace Assets
 {
     public class Alien : Passenger
     {
-        protected override void Init()
+        public override void Init()
         {
             MoveProbability = 50;
             AttackProbability = 10;
             ChangeStatePeriod = 5;
-            AttackDistance = 0.5f;
+            AttackDistance = 1;
             AttackReloadPeriod = 0.5f;
             AttackMaxDistance = 50;
             CounterAttackProbability = 10;
             Hp = 250;
             Velocity = 7;
-            AttackStrength = 20;
+            AttackStrength = 10;
             AttackReactionPeriod = 1;
             CalculateTicket(80);
         }

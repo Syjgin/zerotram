@@ -76,7 +76,7 @@ namespace Assets
             _hasTicket = ticketProbability > (100 - currentTicketProbability);
         }
 
-        protected virtual void Init()
+        public virtual void Init()
         {
             
         }
@@ -116,6 +116,20 @@ namespace Assets
                 }
             }
             yield return null;
+        }
+
+        protected override IEnumerator walk()
+        {
+
+            Animator.Play("walk");
+            float sqrRemainingDistance = (transform.position - Target).sqrMagnitude;
+            if (sqrRemainingDistance <= 1)
+            {
+                CurrentState = State.Idle;
+                yield return null;
+            }
+            Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
+            Rb2D.MovePosition(newPosition);
         }
 
         private float AttackTargetDistance()
@@ -186,6 +200,7 @@ namespace Assets
                 return;
             if (_isFlyingAway)
             {
+                CurrentState = State.Attacked;
                 Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 5 * Velocity * Time.deltaTime);
                 Rb2D.MovePosition(newPosition);
                 Vector2 position2D = transform.position;
@@ -214,11 +229,8 @@ namespace Assets
                         }
                         if (!_hero.IsInWayoutZone())
                         {
-                            if (!_hero.IsUnderAttack())
-                            {
-                                _hero.StartDrag(this);
-                                CurrentState = State.Attacked;
-                            }
+                            _hero.StartDrag(this);
+                            CurrentState = State.Attacked;
                         }
                         else
                         {

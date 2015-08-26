@@ -22,6 +22,12 @@ namespace Assets
         private int _killedPercent;
         private int _haresPercent;
 
+        private const int InitialSpawnCount = 5;
+        private const int SpawnIncrementCount = 5;
+
+        private int _currentSpawnCount;
+        private int _currentStationNumber;
+
         public static GameController GetInstance()
         {
             if(_instance == null)
@@ -35,9 +41,20 @@ namespace Assets
             _listeners = new List<GameStateNotificationListener>();
             _totalHares = 0;
             _incomingPassengers = 0;
+            _currentSpawnCount = InitialSpawnCount;
+            _currentStationNumber = 0;
         }
 
-        
+        public int GetCurrentStationNumber()
+        {
+            return _currentStationNumber;
+        }
+
+        public int GetCurrentSpawnCount()
+        {
+            return _currentSpawnCount;
+        }
+
         public void AddListener(GameStateNotificationListener listener)
         {
             _listeners.Add(listener);
@@ -102,6 +119,11 @@ namespace Assets
             if (_haresPercent > 50 || _killedPercent > 50)
             {
                 GameOver();
+            }
+            else
+            {
+                _currentStationNumber++;
+                _currentSpawnCount += SpawnIncrementCount;
             }
         }
     }

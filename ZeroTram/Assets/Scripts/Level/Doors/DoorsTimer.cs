@@ -4,13 +4,14 @@ using System.Collections;
 
 public class DoorsTimer : MonoBehaviour {
 
-    private const int MoveDuration = 60;
-    private const int StopDuration = 10;
+    private const int MoveDuration = 20;
+    private const int StopDuration = 5;
 
     private float _currentMoveDuration;
     private float _currentStopDuration;
 
     private bool _isDoorsOpen;
+    private bool _isPaused;
 
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
 
@@ -41,16 +42,22 @@ public class DoorsTimer : MonoBehaviour {
         }
     }
 
+    public void SetPaused(bool paused)
+    {
+        _isPaused = paused;
+    }
+
 	void FixedUpdate () 
     {
+        if(_isPaused)
+            return;
 	    if (_isDoorsOpen)
 	    {
 	        _currentStopDuration += Time.fixedDeltaTime;
 	        if (_currentStopDuration > StopDuration)
 	        {
 	            _isDoorsOpen = false;
-	            _currentMoveDuration = 0;
-                GameController.GetInstance().CheckStats();
+	            _currentStopDuration = 0;
                 UpdateDoors();
 	        }
 	    }
@@ -60,7 +67,8 @@ public class DoorsTimer : MonoBehaviour {
 	        if (_currentMoveDuration > MoveDuration)
 	        {
 	            _isDoorsOpen = true;
-	            _currentStopDuration = 0;
+	            _currentMoveDuration = 0;
+                GameController.GetInstance().CheckStats();
                 UpdateDoors();
 	        }
 	    }
