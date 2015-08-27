@@ -9,6 +9,10 @@ public class BackgroundManager : MonoBehaviour
 
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Hero _hero;
+    [SerializeField] private Collider2D _leftDoor;
+    [SerializeField] private Collider2D _rightDoor;
+    [SerializeField] private Collider2D _centralWayout;
+    [SerializeField] private DoorsTimer _timer;
 
     private BoxCollider2D _collider;
 	// Use this for initialization
@@ -24,7 +28,33 @@ public class BackgroundManager : MonoBehaviour
 	    {
 	        _hero.UpdatePositionForDrag();
 	    }
+	    if (IsHeroNearWayout(_centralWayout))
+	    {
+            _hero.SetInWayoutZone(true);
+	    }
+	    else
+	    {
+	        if (IsHeroNearWayout(_leftDoor) || IsHeroNearWayout(_rightDoor))
+	        {
+	            if(_timer.IsDoorsOpen)
+                    _hero.SetInWayoutZone(true);
+                else
+                    _hero.SetInWayoutZone(true);
+	        }
+	        else
+	        {
+                _hero.SetInWayoutZone(false);   
+	        }
+	    }
 	}
+
+    private bool IsHeroNearWayout(Collider2D wayout)
+    {
+        float size = wayout.bounds.size.x;
+        float radius = Mathf.Sqrt(2 * size * size) * 0.5f;
+        float dist = (_hero.transform.position - wayout.bounds.center).sqrMagnitude;
+        return dist < radius;
+    }
 
     public Vector2 GetRandomPosition()
     {
@@ -48,6 +78,7 @@ public class BackgroundManager : MonoBehaviour
     void OnMouseUp()
     {
         _hero.StopDrag();
+        GameController.GetInstance().UndragAll();
     }
 
     public Vector2 GetCurrentMousePosition()

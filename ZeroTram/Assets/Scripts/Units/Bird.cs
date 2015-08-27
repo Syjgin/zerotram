@@ -16,11 +16,12 @@ namespace Assets
             AttackReloadPeriod = 1;
             AttackMaxDistance = 5;
             CounterAttackProbability = 70;
-            Hp = 50;
+            Hp = 150;
             Velocity = 7;
             AttackStrength = 1;
             AttackReactionPeriod = 0.5f;
             CalculateTicket(50);
+            base.Init();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Assets
         private int _haresPercent;
 
         private const int InitialSpawnCount = 5;
-        private const int SpawnIncrementCount = 5;
+        private const int SpawnIncrementCount = 1;
 
         private int _currentSpawnCount;
         private int _currentStationNumber;
@@ -53,6 +53,11 @@ namespace Assets
         public int GetCurrentSpawnCount()
         {
             return _currentSpawnCount;
+        }
+
+        public int GetPassengersCount()
+        {
+            return _passengers.Count();
         }
 
         public void AddListener(GameStateNotificationListener listener)
@@ -99,10 +104,22 @@ namespace Assets
             }
         }
 
+        public void UndragAll()
+        {
+            foreach (var passenger in _passengers)
+            {
+                passenger.SetDragged(false);
+            }
+        }
+
         public void GameOver()
         {
             Debug.Log("game over");
             Time.timeScale = 0;
+            foreach (var gameStateNotificationListener in _listeners)
+            {
+                gameStateNotificationListener.GameOver();
+            }
         }
 
         private void UpdateStats()
@@ -118,6 +135,7 @@ namespace Assets
             UpdateStats();
             if (_haresPercent > 50 || _killedPercent > 50)
             {
+                Debug.Log("caused by stats");
                 GameOver();
             }
             else

@@ -12,7 +12,7 @@ namespace Assets
         private BackgroundManager _backgroundManager;
         private Passenger _dragTarget;
         private Vector2 _dragStartPoint;
-        private const float MaxDragDistance = 4f;
+        private const float MaxDragDistance = 6f;
         private bool _isInWayoutZone;
 
         public void SetInWayoutZone(bool inZone)
@@ -27,7 +27,7 @@ namespace Assets
 
         void Awake()
         {
-            Hp = 100;
+            Hp = 300;
             AttackMaxDistance = 1;
         }
 

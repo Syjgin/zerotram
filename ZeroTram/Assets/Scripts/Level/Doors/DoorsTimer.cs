@@ -47,7 +47,12 @@ public class DoorsTimer : MonoBehaviour {
         _isPaused = paused;
     }
 
-	void FixedUpdate () 
+    public bool IsDoorsOpen
+    {
+        get { return _isDoorsOpen; }
+    }
+
+    void FixedUpdate () 
     {
         if(_isPaused)
             return;

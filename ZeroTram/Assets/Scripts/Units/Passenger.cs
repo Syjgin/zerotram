@@ -78,7 +78,7 @@ namespace Assets
 
         public virtual void Init()
         {
-            
+            GameController.GetInstance().RegisterPassenger(this);
         }
 
         public void SetAttackTarget(MovableObject target)
@@ -178,10 +178,7 @@ namespace Assets
                     }
                     else
                     {
-                        if (CanMove())
-                        {
-                            SetTarget(Background.GetRandomPosition());
-                        }
+                        SetTarget(Background.GetRandomPosition());
                     }
                 }   
             }
