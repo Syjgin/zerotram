@@ -4,7 +4,7 @@ using System.Collections;
 
 public class DoorsTimer : MonoBehaviour {
 
-    private const int MoveDuration = 20;
+    private const int MoveDuration = 10;
     private const int StopDuration = 5;
 
     private float _currentMoveDuration;
@@ -12,6 +12,8 @@ public class DoorsTimer : MonoBehaviour {
 
     private bool _isDoorsOpen;
     private bool _isPaused;
+
+    private int _stickCount;
 
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
 
@@ -27,6 +29,7 @@ public class DoorsTimer : MonoBehaviour {
     {
         _currentMoveDuration = 0;
         _currentStopDuration = 0;
+        _stickCount = 0;
         _isDoorsOpen = true;
         UpdateDoors();
     }
@@ -44,7 +47,19 @@ public class DoorsTimer : MonoBehaviour {
 
     public void SetPaused(bool paused)
     {
-        _isPaused = paused;
+        if (paused)
+        {
+            _stickCount++;
+            _isPaused = true;
+        }
+        else
+        {
+            _stickCount--;
+            if (_stickCount <= 0)
+            {
+                _isPaused = false;
+            }
+        }
     }
 
     public bool IsDoorsOpen

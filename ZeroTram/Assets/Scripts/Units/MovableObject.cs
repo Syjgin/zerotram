@@ -63,10 +63,13 @@ public class MovableObject : MonoBehaviour {
 
     protected void CalculateOrientation(Vector2 target)
     {
-        if (target.x > Rb2D.position.x)
-            Rb2D.transform.localScale = new Vector3(-1, 1, 1);
-        else
-            Rb2D.transform.localScale = new Vector3(1, 1, 1);
+        if (Rb2D != null)
+        {
+            if (target.x > Rb2D.position.x)
+                Rb2D.transform.localScale = new Vector3(-1, 1, 1);
+            else
+                Rb2D.transform.localScale = new Vector3(1, 1, 1);   
+        }
     }
 
     public bool IsIdle()

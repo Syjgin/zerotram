@@ -18,6 +18,10 @@ namespace Assets
         protected float ChangeStatePeriod = 10;
         protected float AttackDistance = 1;
         protected float CounterAttackProbability = 50;
+        protected float StickProbability = 0;
+        protected int TicketProbability;
+
+        private bool _isStick;
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
@@ -74,15 +78,16 @@ namespace Assets
             _hero = GameObject.Find("hero").GetComponent<Hero>();
         }
 
-        protected void CalculateTicket(int currentTicketProbability)
+        private void CalculateTicket(int currentTicketProbability)
         {
             int ticketProbability = Randomizer.GetRandomPercent();
             _hasTicket = ticketProbability > (100 - currentTicketProbability);
         }
 
-        public virtual void Init(int ticketProbability = 100)
+        public virtual void Init()
         {
-            CalculateTicket(ticketProbability);
+            CalculateTicket(TicketProbability);
+            CalculateStick();
             int stopCount = Randomizer.GetInRange(1, MaxStopCount);
             _tramStopCount = stopCount;
             GameController.GetInstance().RegisterPassenger(this);
@@ -135,7 +140,9 @@ namespace Assets
                 {
                     GameController.GetInstance().RegisterTravelFinish();
                     Debug.Log("finish");
-                    Destroy(gameObject);
+                    CalculateStickOnExit();
+                    if(!_isStick)
+                        Destroy(gameObject);
                 }
                 CurrentState = State.Idle;
                 yield return null;
@@ -190,7 +197,8 @@ namespace Assets
                     }
                     else
                     {
-                        SetTarget(Background.GetRandomPosition());
+                        if(!_isStick)
+                            SetTarget(Background.GetRandomPosition());
                     }
                 }   
             }
@@ -252,6 +260,11 @@ namespace Assets
                                     _hero.Kick(this);
                                 }
                             }
+                            if (_isStick)
+                            {
+                                _hero.Kick(this);
+                                GetTimer().SetPaused(false);
+                            }
                         }
                     }
                     else
@@ -274,6 +287,8 @@ namespace Assets
 
         private bool CanMove()
         {
+            if (_isStick)
+                return false;
             if (_timeForNextUpdate > 0)
                 return false;
             _timeForNextUpdate = ChangeStatePeriod;
@@ -283,6 +298,8 @@ namespace Assets
 
         private bool CanAttack()
         {
+            if (_isStick)
+                return false;
             if (AttackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
@@ -294,8 +311,11 @@ namespace Assets
                 Passenger ps = AttackTarget.GetComponent<Passenger>();
                 if (ps != null)
                 {
-                    if (ps.IsGoingAway)
-                        return false;
+                    if (ps.IsGoingAway || ps.IsStick)
+                    {
+                        AttackTarget = null;
+                        return false;   
+                    }
                 }
                 if (TimeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
                     return true;
@@ -342,6 +362,39 @@ namespace Assets
         public bool IsGoingAway
         {
             get { return _isGoingAway; }
+        }
+
+        public bool IsStick
+        {
+            get { return _isStick; }
+        }
+
+        public void StopStick()
+        {
+            _isStick = false;
+            GetTimer().SetPaused(false);
+        }
+
+        private void CalculateStick()
+        {
+            int random = Randomizer.GetRandomPercent();
+            _isStick = random > (100 - StickProbability);
+        }
+
+        public void CalculateStickOnExit()
+        {
+            CalculateStick();
+            if (_isStick)
+            {
+                Debug.Log("stick on exit");
+                transform.position = new Vector3(Target.x, Target.y - Spawner.StickYOffset, 0);
+                GetTimer().SetPaused(true);
+            }
+        }
+
+        private DoorsTimer GetTimer()
+        {
+            return GameObject.Find("Spawner").GetComponent<DoorsTimer>();
         }
     }
 }

@@ -10,6 +10,8 @@ public class Spawner : MonoBehaviour
     private bool _isFirstStation;
     private const int MaxPassengers = 20;
 
+    public static float StickYOffset = 0.8f;
+
     public void Spawn(GameObject spawnPoint)
     {
         int minCount = 0;
@@ -32,6 +34,13 @@ public class Spawner : MonoBehaviour
             GameObject instantiated = (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
             Passenger ps = instantiated.GetComponent<Passenger>();
             ps.Init();
+            if (ps.IsStick)
+            {
+                instantiated.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y - StickYOffset, 0);
+                DoorsTimer timer = GetComponent<DoorsTimer>();
+                timer.SetPaused(true);
+                return;
+            }
         }
     }
 }

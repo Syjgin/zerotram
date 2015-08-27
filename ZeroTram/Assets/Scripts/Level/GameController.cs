@@ -23,7 +23,7 @@ namespace Assets
         private int _haresPercent;
 
         private const int InitialSpawnCount = 5;
-        private const int SpawnIncrementCount = 1;
+        private const int SpawnIncrementCount = 3;
 
         private int _currentSpawnCount;
         private int _currentStationNumber;
@@ -92,11 +92,14 @@ namespace Assets
                 {
                     if (ps.HasTicket())
                     {
-                        _killedPassengers++;
-                        CheckStats();
-                        foreach (var gameStateNotificationListener in _listeners)
+                        if (!ps.IsStick)
                         {
-                            gameStateNotificationListener.UpdatePercentage(_killedPercent, _haresPercent);
+                            _killedPassengers++;
+                            CheckStats();
+                            foreach (var gameStateNotificationListener in _listeners)
+                            {
+                                gameStateNotificationListener.UpdatePercentage(_killedPercent, _haresPercent);
+                            }   
                         }
                     }
                     else

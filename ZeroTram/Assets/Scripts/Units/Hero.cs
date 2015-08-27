@@ -69,6 +69,10 @@ namespace Assets
         {
             if(obj.IsAlreadyDragged())
                 return;
+            if (obj.IsStick)
+            {
+                obj.StopStick();
+            }
             CurrentState = State.Drag;
             obj.SetDragged(true);
             _dragTarget = obj;

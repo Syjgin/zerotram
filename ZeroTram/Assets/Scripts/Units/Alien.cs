@@ -7,7 +7,7 @@ namespace Assets
 {
     public class Alien : Passenger
     {
-        public override void Init(int ticketprobability)
+        public override void Init()
         {
             MoveProbability = 50;
             AttackProbability = 5;
@@ -20,7 +20,9 @@ namespace Assets
             Velocity = 7;
             AttackStrength = 10;
             AttackReactionPeriod = 0.5f;
-            base.Init(80);
+            TicketProbability = 80;
+            StickProbability = 10;
+            base.Init();
         }
     }
 }

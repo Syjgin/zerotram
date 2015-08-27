@@ -7,7 +7,7 @@ namespace Assets
 {
     public class Gnome : Passenger
     {
-        public override void Init(int probability)
+        public override void Init()
         {
             MoveProbability = 20;
             AttackProbability = 10;
@@ -20,7 +20,9 @@ namespace Assets
             Velocity = 2;
             AttackStrength = 5;
             AttackReactionPeriod = 0.5f;
-            base.Init(60);
+            TicketProbability = 60;
+            StickProbability = 90;
+            base.Init();
         }
     }
 }
