@@ -73,7 +73,7 @@ public class DoorsTimer : MonoBehaviour {
 	        {
 	            _isDoorsOpen = true;
 	            _currentMoveDuration = 0;
-                GameController.GetInstance().CheckStats();
+                GameController.GetInstance().CheckBeforeDoorsOpen();
                 UpdateDoors();
 	        }
 	    }

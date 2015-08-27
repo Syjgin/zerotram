@@ -7,10 +7,10 @@ namespace Assets
 {
     public class Bird : Passenger
     {
-        public override void Init()
+        public override void Init(int probability)
         {
             MoveProbability = 90;
-            AttackProbability = 90;
+            AttackProbability = 60;
             ChangeStatePeriod = 5;
             AttackDistance = 2f;
             AttackReloadPeriod = 1;
@@ -20,8 +20,7 @@ namespace Assets
             Velocity = 7;
             AttackStrength = 1;
             AttackReactionPeriod = 0.5f;
-            CalculateTicket(50);
-            base.Init();
+            base.Init(50);
         }
     }
 }

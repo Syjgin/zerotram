@@ -7,10 +7,10 @@ namespace Assets
 {
     public class Granny : Passenger
     {
-        public override void Init()
+        public override void Init(int ticketProbability)
         {
             MoveProbability = 10;
-            AttackProbability = 90;
+            AttackProbability = 70;
             ChangeStatePeriod = 20;
             AttackDistance = 1;
             AttackReloadPeriod = 2;
@@ -20,8 +20,7 @@ namespace Assets
             Velocity = 3;
             AttackStrength = 15;
             AttackReactionPeriod = 0.5f;
-            CalculateTicket(100);
-            base.Init();
+            base.Init(100);
         }
     }
 }

@@ -27,14 +27,20 @@ namespace Assets
 
         void Awake()
         {
-            Hp = 300;
+            Hp = 500;
             AttackMaxDistance = 1;
+            AttackReloadPeriod = 0.5f;
         }
 
+        void FixedUpdate()
+        {
+            TimeSinceAttackMade += Time.fixedDeltaTime;
+        }
         public void Kick(Passenger obj)
         {
             CurrentState = State.Attack;
             obj.FlyAway();
+            TimeSinceAttackMade = 0;
             AttackTarget = null;
             _dragTarget = null;
         }
@@ -48,8 +54,16 @@ namespace Assets
         public bool IsInAttackRadius(MovableObject obj)
         {
             float sqrRemainingDistance = (transform.position - obj.transform.position).sqrMagnitude;
-            return sqrRemainingDistance <= AttackMaxDistance;
+            bool isDistanceCorrect = sqrRemainingDistance <= AttackMaxDistance;
+            Passenger ps = obj.GetComponent<Passenger>();
+            if (ps != null)
+            {
+                if (ps.IsGoingAway)
+                    return false;
+            }
+            return isDistanceCorrect;
         }
+
 
         public void StartDrag(Passenger obj)
         {

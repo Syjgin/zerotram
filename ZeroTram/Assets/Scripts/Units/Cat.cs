@@ -7,10 +7,10 @@ namespace Assets
 {
     public class Cat : Passenger
     {
-        public override void Init()
+        public override void Init(int probability)
         {
             MoveProbability = 10;
-            AttackProbability = 50;
+            AttackProbability = 20;
             ChangeStatePeriod = 30;
             AttackDistance = 1;
             AttackReloadPeriod = 0.5f;
@@ -20,8 +20,7 @@ namespace Assets
             Velocity = 5;
             AttackStrength = 7;
             AttackReactionPeriod = 0.5f;
-            CalculateTicket(10);
-            base.Init();
+            base.Init(10);
         }
     }
 }

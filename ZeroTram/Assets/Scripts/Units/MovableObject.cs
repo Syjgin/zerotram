@@ -27,6 +27,8 @@ public class MovableObject : MonoBehaviour {
     protected int AttackStrength = 10;
     protected MovableObject AttackTarget;
     protected float AttackReactionPeriod = 0.5f;
+    protected float AttackReloadPeriod = 0.5f;
+    protected float TimeSinceAttackMade;
 
     // Use this for initialization
     protected void Start()
@@ -127,8 +129,11 @@ public class MovableObject : MonoBehaviour {
     protected virtual IEnumerator attack()
     {
         Animator.Play("attack");
-        if(AttackTarget == null)
-            CurrentState = State.Idle;
+        if (AttackTarget == null && TimeSinceAttackMade > AttackReloadPeriod)
+        {
+            TimeSinceAttackMade = 0;
+            CurrentState = State.Idle;   
+        }
         yield return null;
     }
 

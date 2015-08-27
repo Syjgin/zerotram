@@ -11,18 +11,20 @@ namespace Assets
 {
     public class Passenger : MovableObject
     {
+        private int _tramStopCount;
+        private int _currentTramStopCount;
         protected int MoveProbability = 50;
         protected int AttackProbability = 50;
         protected float ChangeStatePeriod = 10;
         protected float AttackDistance = 1;
-        protected float AttackReloadPeriod = 0.5f;
         protected float CounterAttackProbability = 50;
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
 
         private float _timeForNextUpdate;
-        private float _timeSinceAttackMade;
+
+        private bool _isGoingAway;
 
         private Hero _hero;
 
@@ -35,6 +37,8 @@ namespace Assets
         private Vector2 _flyTarget;
 
         private const int FlyLength = 30;
+
+        private const int MaxStopCount = 3;
 
         public bool HasTicket()
         {
@@ -66,7 +70,7 @@ namespace Assets
             Background = GameObject.Find("background").GetComponent<BackgroundManager>();
             base.Start();
             _timeForNextUpdate = 0;
-            _timeSinceAttackMade = AttackReloadPeriod;
+            TimeSinceAttackMade = AttackReloadPeriod;
             _hero = GameObject.Find("hero").GetComponent<Hero>();
         }
 
@@ -76,8 +80,11 @@ namespace Assets
             _hasTicket = ticketProbability > (100 - currentTicketProbability);
         }
 
-        public virtual void Init()
+        public virtual void Init(int ticketProbability = 100)
         {
+            CalculateTicket(ticketProbability);
+            int stopCount = Randomizer.GetInRange(1, MaxStopCount);
+            _tramStopCount = stopCount;
             GameController.GetInstance().RegisterPassenger(this);
         }
 
@@ -120,11 +127,16 @@ namespace Assets
 
         protected override IEnumerator walk()
         {
-
             Animator.Play("walk");
             float sqrRemainingDistance = (transform.position - Target).sqrMagnitude;
             if (sqrRemainingDistance <= 1)
             {
+                if (_isGoingAway)
+                {
+                    GameController.GetInstance().RegisterTravelFinish();
+                    Debug.Log("finish");
+                    Destroy(gameObject);
+                }
                 CurrentState = State.Idle;
                 yield return null;
             }
@@ -146,7 +158,7 @@ namespace Assets
                 {
                     Animator.Play("attack");
                     AttackTarget.AddDamage(this);
-                    _timeSinceAttackMade = 0;
+                    TimeSinceAttackMade = 0;
                 }
                 else
                 {
@@ -188,7 +200,7 @@ namespace Assets
         void FixedUpdate()
         {
             _timeForNextUpdate-=Time.fixedDeltaTime;
-            _timeSinceAttackMade+=Time.fixedDeltaTime;
+            TimeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
         void Update()
@@ -235,7 +247,7 @@ namespace Assets
                                 _hero.Kick(this);
                             else
                             {
-                                if (AttackTarget == _hero)
+                                if (AttackTarget != null)
                                 {
                                     _hero.Kick(this);
                                 }
@@ -279,7 +291,13 @@ namespace Assets
             }
             else
             {
-                if (_timeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
+                Passenger ps = AttackTarget.GetComponent<Passenger>();
+                if (ps != null)
+                {
+                    if (ps.IsGoingAway)
+                        return false;
+                }
+                if (TimeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
                     return true;
             }
             return false;
@@ -287,6 +305,8 @@ namespace Assets
 
         void OnTriggerEnter2D(Collider2D other)
         {
+            if(_isDragged || _isFlyingAway || _isGoingAway)
+                return;
             MovableObject movable = other.GetComponent<MovableObject>();
             if (movable != null)
             {
@@ -295,7 +315,33 @@ namespace Assets
                     AttackTarget = movable;
                     CurrentState = State.Attack;
                 }
+                else
+                {
+                    CurrentState = State.Idle;
+                }
             }
+        }
+
+        public void IncrementStationCount()
+        {
+            _currentTramStopCount++;
+            if (_currentTramStopCount > _tramStopCount)
+            {
+                GameObject leftDoor = GameObject.Find("door1");
+                GameObject rightDoor = GameObject.Find("door2");
+                Vector2 target;
+                if (Randomizer.GetRandomPercent() > 50)
+                    target = leftDoor.transform.position;
+                else
+                    target = rightDoor.transform.position;
+                SetTarget(target);
+                _isGoingAway = true;
+            }
+        }
+
+        public bool IsGoingAway
+        {
+            get { return _isGoingAway; }
         }
     }
 }

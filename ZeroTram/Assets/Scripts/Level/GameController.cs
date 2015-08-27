@@ -74,6 +74,11 @@ namespace Assets
             _passengers.Add(ps);
         }
 
+        public void RegisterTravelFinish()
+        {
+            _incomingPassengers--;
+        }
+
         public void RegisterDeath(MovableObject obj)
         {
             if (obj as Hero != null)
@@ -126,22 +131,46 @@ namespace Assets
         {
             float haresPercent = _totalHares / (float)_passengers.Count;
             _haresPercent = Mathf.RoundToInt(haresPercent * 100);
-            float killedPercent = _killedPassengers / (float)_incomingPassengers;
-            _killedPercent = Mathf.RoundToInt(killedPercent * 100);
-        }
-
-        public void CheckStats()
-        {
-            UpdateStats();
-            if (_haresPercent > 50 || _killedPercent > 50)
+            if (_incomingPassengers > 0)
             {
-                Debug.Log("caused by stats");
-                GameOver();
+                float killedPercent = _killedPassengers/(float) _incomingPassengers;
+                _killedPercent = Mathf.RoundToInt(killedPercent*100);
             }
             else
             {
-                _currentStationNumber++;
-                _currentSpawnCount += SpawnIncrementCount;
+                _killedPercent = 0;
+            }
+        }
+
+        private bool CheckStats()
+        {
+            UpdateStats();
+            if (_haresPercent > 90 || _killedPercent > 90)
+            {
+                Debug.Log("caused by stats");
+                GameOver();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public void CheckBeforeDoorsOpen()
+        {
+            if(CheckStats())
+                NextStationReached();
+        }
+
+        private void NextStationReached()
+        {
+            Debug.Log("next station");
+            _currentStationNumber++;
+            _currentSpawnCount += SpawnIncrementCount;
+            foreach (var passenger in _passengers)
+            {
+                passenger.IncrementStationCount();
             }
         }
     }
