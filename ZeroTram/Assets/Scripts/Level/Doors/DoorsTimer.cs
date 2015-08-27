@@ -20,9 +20,9 @@ public class DoorsTimer : MonoBehaviour {
     public int GetCurrentRemainingTime()
     {
         if (_isDoorsOpen)
-            return (int) _currentStopDuration;
+            return (int) (StopDuration - _currentStopDuration);
         else
-            return (int) _currentMoveDuration;
+            return (int) (MoveDuration - _currentMoveDuration);
     }
 
     void Start()

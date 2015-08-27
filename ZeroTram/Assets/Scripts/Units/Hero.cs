@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets
 {
@@ -14,6 +15,8 @@ namespace Assets
         private Vector2 _dragStartPoint;
         private const float MaxDragDistance = 6f;
         private bool _isInWayoutZone;
+        private Text _lifes;
+        private const int InitialLifes = 500;
 
         public void SetInWayoutZone(bool inZone)
         {
@@ -27,9 +30,18 @@ namespace Assets
 
         void Awake()
         {
-            Hp = 500;
+            Hp = InitialLifes;
             AttackMaxDistance = 1;
             AttackReloadPeriod = 0.5f;
+            _lifes = GameObject.Find("userLifes").GetComponent<Text>();
+            _lifes.text = "здоровье:100%";
+        }
+
+        public override void AddDamage(MovableObject attacker)
+        {
+            base.AddDamage(attacker);
+            int lifesPercent = Mathf.RoundToInt(100*(Hp/(float) InitialLifes));
+            _lifes.text = "здоровье:" + lifesPercent + "%";
         }
 
         void FixedUpdate()

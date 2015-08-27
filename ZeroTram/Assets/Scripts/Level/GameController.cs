@@ -94,18 +94,18 @@ namespace Assets
                     {
                         if (!ps.IsStick)
                         {
-                            _killedPassengers++;
-                            CheckStats();
-                            foreach (var gameStateNotificationListener in _listeners)
-                            {
-                                gameStateNotificationListener.UpdatePercentage(_killedPercent, _haresPercent);
-                            }   
+                            _killedPassengers++;  
                         }
                     }
                     else
                     {
                         _totalHares--;
                     }
+                    CheckStats();
+                    foreach (var gameStateNotificationListener in _listeners)
+                    {
+                        gameStateNotificationListener.UpdatePercentage(_killedPercent, _haresPercent);
+                    } 
                 }
                 if(_passengers.Contains(ps))
                     _passengers.Remove(ps);

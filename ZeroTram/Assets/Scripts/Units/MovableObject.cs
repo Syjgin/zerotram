@@ -40,7 +40,7 @@ public class MovableObject : MonoBehaviour {
         StartCoroutine(mainLoop());
     }
 
-    public void AddDamage(MovableObject attacker)
+    public virtual void AddDamage(MovableObject attacker)
     {
         Hp -= attacker.AttackStrength;
         CurrentState = State.Attacked;
