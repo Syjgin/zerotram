@@ -116,7 +116,7 @@ namespace Assets
                 {
                     if (ps.HasTicket())
                     {
-                        if (!ps.IsStick)
+                        if (!ps.WasStickWhenFlyAway)
                         {
                             _killedPassengers++;  
                         }

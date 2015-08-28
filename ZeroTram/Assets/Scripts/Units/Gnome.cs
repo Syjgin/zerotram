@@ -21,7 +21,7 @@ namespace Assets
             AttackStrength = 5;
             AttackReactionPeriod = 0.5f;
             TicketProbability = 60;
-            StickProbability = 50;
+            StickProbability = 100;
             base.Init();
         }
     }

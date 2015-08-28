@@ -36,10 +36,7 @@ public class BackgroundManager : MonoBehaviour
 	    {
 	        if (IsHeroNearWayout(_leftDoor) || IsHeroNearWayout(_rightDoor))
 	        {
-	            if(_timer.IsDoorsOpen)
-                    _hero.SetInWayoutZone(true);
-                else
-                    _hero.SetInWayoutZone(true);
+                _hero.SetInWayoutZone(_timer.IsDoorsOpen);
 	        }
 	        else
 	        {

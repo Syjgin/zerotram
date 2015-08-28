@@ -51,8 +51,11 @@ namespace Assets
         public void Kick(Passenger obj)
         {
             CurrentState = State.Attack;
-            if(obj.IsStick)
-                obj.StopStick(true);
+            if (obj.IsStick)
+            {
+                obj.StopStick();
+                obj.WasStickWhenFlyAway = true;
+            }
             obj.FlyAway();
             TimeSinceAttackMade = 0;
             AttackTarget = null;

@@ -17,6 +17,8 @@ namespace Assets
         [SerializeField] private Sprite _stick;
         [SerializeField] protected SpriteRenderer Indicator;
 
+        public bool WasStickWhenFlyAway { get; set; }
+
         private int _tramStopCount;
         private int _currentTramStopCount;
         protected int MoveProbability = 50;
@@ -26,8 +28,6 @@ namespace Assets
         protected float CounterAttackProbability = 50;
         protected float StickProbability = 0;
         protected int TicketProbability;
-
-        private bool _isStick;
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
@@ -149,10 +149,11 @@ namespace Assets
                 {
                     GameController.GetInstance().RegisterTravelFinish();
                     CalculateStickOnExit();
-                    if(!_isStick)
+                    if(CurrentState != State.Stick)
                         Destroy(gameObject);
                 }
-                CurrentState = State.Idle;
+                if(CurrentState != State.Stick)
+                    CurrentState = State.Idle;
                 yield return null;
             }
             Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
@@ -214,8 +215,7 @@ namespace Assets
             }
             else
             {
-                if (!_isStick)
-                    SetTarget(Background.GetRandomPosition());
+                SetTarget(Background.GetRandomPosition());
             }
         }
 
@@ -237,12 +237,12 @@ namespace Assets
                 if (!_isVisibleToHero)
                 {
                     _isVisibleToHero = true;
-                    DisplayTicketIcon();
                     if (!_hasTicket)
                     {
                         AttackTarget = _hero;
                         CalculateAttackReaction();
                     }
+                    StopStick();
                     return;
                 }
                 if (!_hero.IsInWayoutZone())
@@ -261,9 +261,12 @@ namespace Assets
                             _hero.Kick(this);
                         }
                     }
-                    if (_isStick)
+                    if (IsStick)
                     {
-                        _hero.Kick(this);
+                        if(_isGoingAway)
+                            _hero.Kick(this);
+                        else
+                            _hero.StartDrag(this);
                     }
                 }
             }
@@ -273,8 +276,27 @@ namespace Assets
             }
         }
 
+        private void CalculateIndicator()
+        {
+            if (IsStick)
+            {
+                Indicator.sprite = _stick;
+                return;
+            }
+            if (!_isVisibleToHero)
+            {
+                Indicator.sprite = _question;
+                return;
+            }
+            if (_hasTicket)
+                Indicator.sprite = _ticket;
+            else
+                Indicator.sprite = _hare;
+        }
+
         void Update()
         {
+            CalculateIndicator();
             if(_hero == null)
                 return;
             if (_isFlyingAway)
@@ -304,11 +326,6 @@ namespace Assets
             }
         }
 
-        private void DisplayTicketIcon()
-        {
-            Indicator.sprite = _hasTicket ? _ticket : _hare;
-        }
-
         void OnMouseUp()
         {
             SetDragged(false);
@@ -316,8 +333,6 @@ namespace Assets
 
         private bool CanMove()
         {
-            if (_isStick)
-                return false;
             if (_timeForNextUpdate > 0)
                 return false;
             _timeForNextUpdate = ChangeStatePeriod;
@@ -327,8 +342,6 @@ namespace Assets
 
         private bool CanAttack()
         {
-            if (_isStick)
-                return false;
             if (AttackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
@@ -395,28 +408,29 @@ namespace Assets
 
         public bool IsStick
         {
-            get { return _isStick; }
+            get { return CurrentState == State.Stick; }
         }
 
-        public void StopStick(bool justChangeTimer = false)
+        public void StopStick()
         {
-            if(!justChangeTimer)
-                _isStick = false;
+            ForceChangeState(State.Idle);
             GetTimer().SetPaused(false);
         }
 
         private void CalculateStick()
         {
             int random = Randomizer.GetRandomPercent();
-            _isStick = random > (100 - StickProbability);
-            if (_isStick)
-                Indicator.sprite = _stick;
+            if (random > (100 - StickProbability))
+            {
+                CurrentState = State.Stick;
+                Indicator.sprite = _stick;   
+            }
         }
 
         public void CalculateStickOnExit()
         {
             CalculateStick();
-            if (_isStick)
+            if (IsStick)
             {
                 SetPosition(new Vector3(Target.x, Target.y - Spawner.StickYOffset, 0));
                 GetTimer().SetPaused(true);

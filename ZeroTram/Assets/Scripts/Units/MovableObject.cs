@@ -19,10 +19,29 @@ public class MovableObject : MonoBehaviour {
         Walking,
         Drag, 
         Attack,
-        Attacked
+        Attacked, 
+        Stick
     }
 
-    protected State CurrentState;
+    private State _state;
+
+    protected State CurrentState
+    {
+        get { return _state; }
+        set
+        {
+            if (_state != State.Stick)
+            {
+                _state = value;
+            }
+        }
+    }
+
+    protected void ForceChangeState(State newState)
+    {
+        _state = newState;
+    }
+
     protected Vector3 Target;
     protected float Velocity = 5f;
     protected int AttackStrength = 10;
@@ -112,7 +131,7 @@ public class MovableObject : MonoBehaviour {
     {
         while (!IsDead)
         {
-            switch (CurrentState)
+            switch (_state)
             {
                 case State.Walking:
                     yield return StartCoroutine(walk());
@@ -128,6 +147,9 @@ public class MovableObject : MonoBehaviour {
                     break;
                 case State.Attacked:
                     yield return StartCoroutine(attacked());
+                    break;
+                case State.Stick:
+                    yield return StartCoroutine(stick());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -155,6 +177,12 @@ public class MovableObject : MonoBehaviour {
     }
 
     protected virtual IEnumerator idle()
+    {
+        Animator.Play("idle");
+        yield return null;
+    }
+
+    protected IEnumerator stick()
     {
         Animator.Play("idle");
         yield return null;
