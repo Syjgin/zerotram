@@ -13,7 +13,7 @@ namespace Assets
         private BackgroundManager _backgroundManager;
         private Passenger _dragTarget;
         private Vector2 _dragStartPoint;
-        private const float MaxDragDistance = 8f;
+        private float _maxDragDistance;
         private bool _isInWayoutZone;
         private Text _lifes;
         
@@ -29,10 +29,13 @@ namespace Assets
 
         void Awake()
         {
-            Hp = InitialLifes = 500;
-            AttackMaxDistance = 2;
-            AttackMaxDistance = 2;
-            AttackReloadPeriod = 0.5f;
+            _maxDragDistance = ConfigReader.GetConfig().GetField("hero").GetField("MaxDragDistance").n;
+            Hp = InitialLifes = ConfigReader.GetConfig().GetField("hero").GetField("InitialLifes").n;
+            AttackMaxDistance = ConfigReader.GetConfig().GetField("hero").GetField("AttackMaxDistance").n;
+            AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
+            Velocity = ConfigReader.GetConfig().GetField("hero").GetField("Velocity").n;
+            AttackReactionPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReactionPeriod").n;
+            AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
             _lifes = GameObject.Find("userLifes").GetComponent<Text>();
             _lifes.text = "здоровье:100%";
         }
@@ -106,7 +109,7 @@ namespace Assets
             if(dist > 0.001f)
                 CalculateOrientation(targetPos);
             float currentDist = (targetPos - _dragStartPoint).sqrMagnitude;
-            if (currentDist > MaxDragDistance)
+            if (currentDist > _maxDragDistance)
             {
                 StopDrag();
                 return;

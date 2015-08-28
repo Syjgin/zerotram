@@ -21,13 +21,13 @@ namespace Assets
 
         private int _tramStopCount;
         private int _currentTramStopCount;
-        protected int MoveProbability = 50;
-        protected int AttackProbability = 50;
+        protected float MoveProbability = 50;
+        protected float AttackProbability = 50;
         protected float ChangeStatePeriod = 10;
         protected float AttackDistance = 1;
         protected float CounterAttackProbability = 50;
         protected float StickProbability = 0;
-        protected int TicketProbability;
+        protected float TicketProbability;
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
@@ -87,7 +87,7 @@ namespace Assets
             _indicatorOffset = Indicator.transform.position - Rb2D.transform.position;
         }
 
-        private void CalculateTicket(int currentTicketProbability)
+        private void CalculateTicket(float currentTicketProbability)
         {
             int ticketProbability = Randomizer.GetRandomPercent();
             _hasTicket = ticketProbability > (100 - currentTicketProbability);

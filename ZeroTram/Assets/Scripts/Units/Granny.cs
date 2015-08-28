@@ -9,19 +9,19 @@ namespace Assets
     {
         public override void Init()
         {
-            MoveProbability = 10;
-            AttackProbability = 90;
-            ChangeStatePeriod = 20;
-            AttackDistance = 1;
-            AttackReloadPeriod = 2;
-            AttackMaxDistance = 10;
-            CounterAttackProbability = 90;
-            Hp = InitialLifes = 510;
-            Velocity = 3;
-            AttackStrength = 15;
-            AttackReactionPeriod = 0.5f;
-            TicketProbability = 100;
-            StickProbability = 100;
+            MoveProbability = ConfigReader.GetConfig().GetField("granny").GetField("MoveProbability").n;
+            AttackProbability = ConfigReader.GetConfig().GetField("granny").GetField("AttackProbability").n;
+            ChangeStatePeriod = ConfigReader.GetConfig().GetField("granny").GetField("ChangeStatePeriod").n;
+            AttackDistance = ConfigReader.GetConfig().GetField("granny").GetField("AttackDistance").n;
+            AttackReloadPeriod = ConfigReader.GetConfig().GetField("granny").GetField("AttackReloadPeriod").n;
+            AttackMaxDistance = ConfigReader.GetConfig().GetField("granny").GetField("AttackMaxDistance").n;
+            CounterAttackProbability = ConfigReader.GetConfig().GetField("granny").GetField("CounterAttackProbability").n;
+            Hp = InitialLifes = ConfigReader.GetConfig().GetField("granny").GetField("InitialLifes").n;
+            Velocity = ConfigReader.GetConfig().GetField("granny").GetField("Velocity").n;
+            AttackStrength = ConfigReader.GetConfig().GetField("granny").GetField("AttackStrength").n;
+            AttackReactionPeriod = ConfigReader.GetConfig().GetField("granny").GetField("AttackReactionPeriod").n;
+            TicketProbability = ConfigReader.GetConfig().GetField("granny").GetField("TicketProbability").n;
+            StickProbability = ConfigReader.GetConfig().GetField("granny").GetField("StickProbability").n;
             base.Init();
         }
     }

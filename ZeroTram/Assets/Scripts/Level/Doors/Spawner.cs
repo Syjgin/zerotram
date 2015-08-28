@@ -8,9 +8,14 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> unitPrefabs;
     private bool _isFirstStation;
-    private const int MaxPassengers = 20;
+    private float _maxPassengers;
 
     public static float StickYOffset = 0.8f;
+
+    void Awake()
+    {
+        _maxPassengers = ConfigReader.GetConfig().GetField("tram").GetField("MaxPassengers").n;
+    }
 
     public void Spawn(GameObject spawnPoint)
     {
@@ -24,7 +29,7 @@ public class Spawner : MonoBehaviour
         int realCount = Randomizer.GetInRange(minCount, maxCount);
         for (int i = 0; i < realCount; i++)
         {
-            if(GameController.GetInstance().GetPassengersCount() > MaxPassengers)
+            if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
                 return;
             int randomIndex = Randomizer.GetInRange(0, unitPrefabs.Count);
             GameObject randomNPC = unitPrefabs[randomIndex];

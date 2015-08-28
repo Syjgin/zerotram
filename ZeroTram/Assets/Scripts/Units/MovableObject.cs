@@ -7,7 +7,7 @@ using System.Collections;
 public class MovableObject : MonoBehaviour {
     protected Animator Animator;
     protected bool IsDead;
-    protected int Hp;
+    protected float Hp;
     protected float AttackMaxDistance = 3;
     protected float AttackedStartTime;
 
@@ -44,12 +44,12 @@ public class MovableObject : MonoBehaviour {
 
     protected Vector3 Target;
     protected float Velocity = 5f;
-    protected int AttackStrength = 10;
+    protected float AttackStrength = 10;
     protected MovableObject AttackTarget;
     protected float AttackReactionPeriod = 0.5f;
     protected float AttackReloadPeriod = 0.5f;
     protected float TimeSinceAttackMade;
-    protected int InitialLifes;
+    protected float InitialLifes;
     private Vector3 _lifebarOffset;
 
     // Use this for initialization
