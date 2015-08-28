@@ -10,7 +10,7 @@ namespace Assets
         public override void Init()
         {
             MoveProbability = 10;
-            AttackProbability = 70;
+            AttackProbability = 90;
             ChangeStatePeriod = 20;
             AttackDistance = 1;
             AttackReloadPeriod = 2;

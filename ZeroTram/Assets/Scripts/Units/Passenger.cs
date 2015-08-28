@@ -11,6 +11,12 @@ namespace Assets
 {
     public class Passenger : MovableObject
     {
+        [SerializeField] private Sprite _question;
+        [SerializeField] private Sprite _ticket;
+        [SerializeField] private Sprite _hare;
+        [SerializeField] private Sprite _stick;
+        [SerializeField] protected SpriteRenderer Indicator;
+
         private int _tramStopCount;
         private int _currentTramStopCount;
         protected int MoveProbability = 50;
@@ -44,6 +50,8 @@ namespace Assets
 
         private const int MaxStopCount = 3;
 
+        private Vector3 _indicatorOffset;
+
         public bool HasTicket()
         {
             return _hasTicket;
@@ -66,7 +74,7 @@ namespace Assets
             _isFlyingAway = true;
             _isDragged = true;
             CurrentState = State.Attacked;
-            _flyTarget = new Vector2(transform.position.x, transform.position.y + FlyLength);
+            _flyTarget = new Vector2(Rb2D.transform.position.x, Rb2D.transform.position.y + FlyLength);
         }
 
         new void Start()
@@ -76,6 +84,7 @@ namespace Assets
             _timeForNextUpdate = 0;
             TimeSinceAttackMade = AttackReloadPeriod;
             _hero = GameObject.Find("hero").GetComponent<Hero>();
+            _indicatorOffset = Indicator.transform.position - Rb2D.transform.position;
         }
 
         private void CalculateTicket(int currentTicketProbability)
@@ -119,7 +128,7 @@ namespace Assets
                 {
                     if (dist > AttackDistance)
                     {
-                        SetTarget(AttackTarget.transform.position);
+                        SetTarget(AttackTarget.GetPosition());
                     }
                     else
                     {
@@ -133,13 +142,12 @@ namespace Assets
         protected override IEnumerator walk()
         {
             Animator.Play("walk");
-            float sqrRemainingDistance = (transform.position - Target).sqrMagnitude;
+            float sqrRemainingDistance = (GetPosition() - Target).sqrMagnitude;
             if (sqrRemainingDistance <= 1)
             {
                 if (_isGoingAway)
                 {
                     GameController.GetInstance().RegisterTravelFinish();
-                    Debug.Log("finish");
                     CalculateStickOnExit();
                     if(!_isStick)
                         Destroy(gameObject);
@@ -149,18 +157,19 @@ namespace Assets
             }
             Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
             Rb2D.MovePosition(newPosition);
+            MoveLifebar(newPosition);
         }
 
         private float AttackTargetDistance()
         {
-            return (transform.position - AttackTarget.transform.position).sqrMagnitude;
+            return (GetPosition() - AttackTarget.GetPosition()).sqrMagnitude;
         }
 
         protected override IEnumerator attack()
         {
             if (AttackTarget != null)
             {
-                CalculateOrientation(AttackTarget.transform.position);
+                CalculateOrientation(AttackTarget.GetPosition());
                 if (CanAttack())
                 {
                     Animator.Play("attack");
@@ -187,22 +196,27 @@ namespace Assets
                 float timeDist = Time.time - AttackedStartTime;
                 if (timeDist > AttackReactionPeriod)
                 {
-                    float currentCounterAttackProbability = Randomizer.GetRandomPercent();
-                    if (currentCounterAttackProbability > (100 - CounterAttackProbability))
-                    {
-                        if (AttackTarget != null)
-                            CurrentState = State.Attack;
-                        else
-                            CurrentState = State.Idle;
-                    }
-                    else
-                    {
-                        if(!_isStick)
-                            SetTarget(Background.GetRandomPosition());
-                    }
-                }   
+                    CalculateAttackReaction();
+                }
             }
             yield return null;
+        }
+
+        private void CalculateAttackReaction()
+        {
+            float currentCounterAttackProbability = Randomizer.GetRandomPercent();
+            if (currentCounterAttackProbability > (100 - CounterAttackProbability))
+            {
+                if (AttackTarget != null)
+                    CurrentState = State.Attack;
+                else
+                    CurrentState = State.Idle;
+            }
+            else
+            {
+                if (!_isStick)
+                    SetTarget(Background.GetRandomPosition());
+            }
         }
 
         void FixedUpdate()
@@ -211,16 +225,65 @@ namespace Assets
             TimeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
+        void OnMouseDown()
+        {
+            HandleClick();
+        }
+
+        private void HandleClick()
+        {
+            if (_hero.IsInAttackRadius(this))
+            {
+                if (!_isVisibleToHero)
+                {
+                    _isVisibleToHero = true;
+                    DisplayTicketIcon();
+                    if (!_hasTicket)
+                    {
+                        AttackTarget = _hero;
+                        CalculateAttackReaction();
+                    }
+                    return;
+                }
+                if (!_hero.IsInWayoutZone())
+                {
+                    _hero.StartDrag(this);
+                    CurrentState = State.Attacked;
+                }
+                else
+                {
+                    if (!_hasTicket)
+                        _hero.Kick(this);
+                    else
+                    {
+                        if (AttackTarget == _hero)
+                        {
+                            _hero.Kick(this);
+                        }
+                    }
+                    if (_isStick)
+                    {
+                        _hero.Kick(this);
+                    }
+                }
+            }
+            else
+            {
+                _hero.SetTarget(GetPosition());
+            }
+        }
+
         void Update()
         {
             if(_hero == null)
                 return;
-            if (_isFlyingAway && !_isStick)
+            if (_isFlyingAway)
             {
                 CurrentState = State.Attacked;
                 Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 5 * Velocity * Time.deltaTime);
                 Rb2D.MovePosition(newPosition);
-                Vector2 position2D = transform.position;
+                MoveLifebar(newPosition);
+                Vector2 position2D = GetPosition();
                 float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
                 if (sqrRemainingDistance <= 1)
                 {
@@ -232,51 +295,18 @@ namespace Assets
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (Input.GetMouseButtonDown(0))
             {
-                Vector2 transform2d = transform.position;
+                Vector2 transform2d = GetPosition();
                 float distance = (transform2d - hit.centroid).sqrMagnitude;
                 if (distance < 1)
                 {
-                    if (_hero.IsInAttackRadius(this))
-                    {
-                        if (!_isVisibleToHero)
-                        {
-                            _isVisibleToHero = true;
-                            DisplayTicketIcon();
-                            return;
-                        }
-                        if (!_hero.IsInWayoutZone())
-                        {
-                            _hero.StartDrag(this);
-                            CurrentState = State.Attacked;
-                        }
-                        else
-                        {
-                            if (!_hasTicket)
-                                _hero.Kick(this);
-                            else
-                            {
-                                if (AttackTarget != null)
-                                {
-                                    _hero.Kick(this);
-                                }
-                            }
-                            if (_isStick)
-                            {
-                                _hero.Kick(this);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _hero.SetTarget(this.transform.position);
-                    }   
+                    HandleClick();
                 }
             }
         }
 
         private void DisplayTicketIcon()
         {
-            
+            Indicator.sprite = _hasTicket ? _ticket : _hare;
         }
 
         void OnMouseUp()
@@ -322,11 +352,11 @@ namespace Assets
             return false;
         }
 
-        void OnTriggerEnter2D(Collider2D other)
+        public void HandleTriggerEnter(Collider2D other)
         {
-            if(_isDragged || _isFlyingAway || _isGoingAway)
+            if (_isDragged || _isFlyingAway || _isGoingAway)
                 return;
-            MovableObject movable = other.GetComponent<MovableObject>();
+            MovableObject movable = other.gameObject.GetComponentInParent<MovableObject>();
             if (movable != null)
             {
                 if (CanAttack())
@@ -379,6 +409,8 @@ namespace Assets
         {
             int random = Randomizer.GetRandomPercent();
             _isStick = random > (100 - StickProbability);
+            if (_isStick)
+                Indicator.sprite = _stick;
         }
 
         public void CalculateStickOnExit()
@@ -386,8 +418,7 @@ namespace Assets
             CalculateStick();
             if (_isStick)
             {
-                Debug.Log("stick on exit");
-                transform.position = new Vector3(Target.x, Target.y - Spawner.StickYOffset, 0);
+                SetPosition(new Vector3(Target.x, Target.y - Spawner.StickYOffset, 0));
                 GetTimer().SetPaused(true);
             }
         }
@@ -395,6 +426,12 @@ namespace Assets
         private DoorsTimer GetTimer()
         {
             return GameObject.Find("Spawner").GetComponent<DoorsTimer>();
+        }
+
+        protected override void MoveLifebar(Vector3 position)
+        {
+            base.MoveLifebar(position);
+            Indicator.transform.position = position + _indicatorOffset;
         }
     }
 }

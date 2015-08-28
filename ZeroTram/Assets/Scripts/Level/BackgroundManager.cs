@@ -54,7 +54,7 @@ public class BackgroundManager : MonoBehaviour
         float radius = Mathf.Sqrt(2 * size * size) * 0.5f;
         if(_hero == null)
             return false;
-        float dist = (_hero.transform.position - wayout.bounds.center).sqrMagnitude;
+        float dist = (_hero.GetPosition() - wayout.bounds.center).sqrMagnitude;
         return dist < radius;
     }
 

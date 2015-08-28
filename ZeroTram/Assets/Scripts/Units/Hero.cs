@@ -30,7 +30,8 @@ namespace Assets
         void Awake()
         {
             Hp = InitialLifes = 500;
-            AttackMaxDistance = 1;
+            AttackMaxDistance = 2;
+            AttackMaxDistance = 2;
             AttackReloadPeriod = 0.5f;
             _lifes = GameObject.Find("userLifes").GetComponent<Text>();
             _lifes.text = "здоровье:100%";
@@ -64,16 +65,12 @@ namespace Assets
             _backgroundManager = GameObject.Find("background").GetComponent<BackgroundManager>();
         }
 
-        public bool IsInAttackRadius(MovableObject obj)
+        public bool IsInAttackRadius(Passenger obj)
         {
-            float sqrRemainingDistance = (transform.position - obj.transform.position).sqrMagnitude;
+            float sqrRemainingDistance = (GetPosition() - obj.GetPosition()).sqrMagnitude;
             bool isDistanceCorrect = sqrRemainingDistance <= AttackMaxDistance;
-            Passenger ps = obj.GetComponent<Passenger>();
-            if (ps != null)
-            {
-                if (ps.IsGoingAway)
-                    return false;
-            }
+            if (obj.IsGoingAway && !obj.IsStick)
+                return false;
             return isDistanceCorrect;
         }
 
@@ -101,7 +98,7 @@ namespace Assets
                 return;
             }
             Vector2 targetPos = _backgroundManager.GetCurrentMousePosition();
-            Vector2 position2D = transform.position;
+            Vector2 position2D = GetPosition();
             float dist = (position2D - targetPos).sqrMagnitude;
             if(dist > 0.001f)
                 CalculateOrientation(targetPos);
@@ -111,8 +108,8 @@ namespace Assets
                 StopDrag();
                 return;
             }
-            transform.position = targetPos;
-            _dragTarget.transform.position = targetPos;
+            SetPosition(targetPos);
+            _dragTarget.SetPosition(targetPos);
         }
 
         public bool IsUnderAttack()
