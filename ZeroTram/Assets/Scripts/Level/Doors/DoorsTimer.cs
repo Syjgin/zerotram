@@ -13,23 +13,19 @@ public class DoorsTimer : MonoBehaviour {
     private bool _isDoorsOpen;
     private bool _isPaused;
 
-    private int _stickCount;
-
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
 
     public int GetCurrentRemainingTime()
     {
         if (_isDoorsOpen)
             return (int) (StopDuration - _currentStopDuration);
-        else
-            return (int) (MoveDuration - _currentMoveDuration);
+        return (int) (MoveDuration - _currentMoveDuration);
     }
 
     void Start()
     {
         _currentMoveDuration = 0;
         _currentStopDuration = 0;
-        _stickCount = 0;
         _isDoorsOpen = true;
         UpdateDoors();
     }
@@ -49,16 +45,12 @@ public class DoorsTimer : MonoBehaviour {
     {
         if (paused)
         {
-            _stickCount++;
             _isPaused = true;
         }
         else
         {
-            _stickCount--;
-            if (_stickCount <= 0)
-            {
+            if (!GameController.GetInstance().IsAnybodyStick())
                 _isPaused = false;
-            }
         }
     }
 

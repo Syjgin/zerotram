@@ -75,16 +75,12 @@ namespace Assets
         {
             float sqrRemainingDistance = (GetPosition() - obj.GetPosition()).sqrMagnitude;
             bool isDistanceCorrect = sqrRemainingDistance <= AttackMaxDistance;
-            if (obj.IsGoingAway && !obj.IsStick)
-                return false;
             return isDistanceCorrect;
         }
 
 
         public void StartDrag(Passenger obj)
         {
-            if(obj.IsAlreadyDragged())
-                return;
             if (obj.IsStick)
             {
                 obj.StopStick();

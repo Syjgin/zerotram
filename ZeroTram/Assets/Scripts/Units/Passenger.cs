@@ -64,17 +64,13 @@ namespace Assets
                 CurrentState = State.Idle;
         }
 
-        public bool IsAlreadyDragged()
-        {
-            return _isDragged;
-        }
-
         public void FlyAway()
         {
             _isFlyingAway = true;
             _isDragged = true;
             CurrentState = State.Attacked;
             _flyTarget = new Vector2(Rb2D.transform.position.x, Rb2D.transform.position.y + FlyLength);
+            GameController.GetInstance().RegisterDeath(this);
         }
 
         new void Start()
@@ -225,11 +221,6 @@ namespace Assets
             TimeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
-        void OnMouseDown()
-        {
-            HandleClick();
-        }
-
         private void HandleClick()
         {
             if (_hero.IsInAttackRadius(this))
@@ -309,7 +300,6 @@ namespace Assets
                 float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
                 if (sqrRemainingDistance <= 1)
                 {
-                    GameController.GetInstance().RegisterDeath(this);
                     Destroy(this.gameObject);
                 }
                 return;

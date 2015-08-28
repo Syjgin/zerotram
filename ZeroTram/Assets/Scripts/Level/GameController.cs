@@ -103,6 +103,16 @@ namespace Assets
             }
         }
 
+        public bool IsAnybodyStick()
+        {
+            foreach (var passenger in _passengers)
+            {
+                if (passenger.IsStick)
+                    return true;
+            }
+            return false;
+        }
+
         public void RegisterDeath(MovableObject obj)
         {
             if (obj as Hero != null)
