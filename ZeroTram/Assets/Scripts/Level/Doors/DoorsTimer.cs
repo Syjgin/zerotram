@@ -27,6 +27,8 @@ public class DoorsTimer : MonoBehaviour {
         _currentMoveDuration = 0;
         _currentStopDuration = 0;
         _isDoorsOpen = true;
+        //
+        //_isPaused = true;
         UpdateDoors();
     }
 

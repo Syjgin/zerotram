@@ -73,9 +73,13 @@ namespace Assets
             GameController.GetInstance().RegisterDeath(this);
         }
 
-        new void Start()
+        void Awake()
         {
             Background = GameObject.Find("background").GetComponent<BackgroundManager>();
+        }
+
+        new void Start()
+        {
             base.Start();
             _timeForNextUpdate = 0;
             TimeSinceAttackMade = AttackReloadPeriod;
@@ -221,7 +225,7 @@ namespace Assets
             TimeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
-        private void HandleClick()
+        public void HandleClick()
         {
             if (_hero.IsInAttackRadius(this))
             {
@@ -311,7 +315,7 @@ namespace Assets
                 float distance = (transform2d - hit.centroid).sqrMagnitude;
                 if (distance < 1)
                 {
-                    HandleClick();
+                    //HandleClick();
                 }
             }
         }

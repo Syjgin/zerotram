@@ -11,4 +11,9 @@ public class PassengerCollisionDetector : MonoBehaviour
     {
         _passenger.HandleTriggerEnter(other);
     }
+
+    void OnMouseDown()
+    {
+        _passenger.HandleClick();
+    }
 }

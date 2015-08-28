@@ -14,9 +14,11 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] private Collider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
 
+    private const float ColliderOffset = 2;
+
     private BoxCollider2D _collider;
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 	    _collider = GetComponent<BoxCollider2D>();
 	}
@@ -47,20 +49,18 @@ public class BackgroundManager : MonoBehaviour
 
     private bool IsHeroNearWayout(Collider2D wayout)
     {
-        float size = wayout.bounds.size.x;
-        float radius = Mathf.Sqrt(2 * size * size) * 0.5f;
-        if(_hero == null)
+        if (_hero == null)
             return false;
-        float dist = (_hero.GetPosition() - wayout.bounds.center).sqrMagnitude;
-        return dist < radius;
+        Vector2 position = _hero.GetPosition();
+        return wayout.OverlapPoint(position);
     }
 
     public Vector2 GetRandomPosition()
     {
         if (_collider != null)
         {
-            float xPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.x - _collider.bounds.size.x / 2;
-            float yPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.y - _collider.bounds.size.y / 2;
+            float xPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.x - _collider.bounds.size.x * 0.5f;
+            float yPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.y - _collider.bounds.size.y * 0.5f - ColliderOffset;
             return new Vector2(xPos, yPos);   
         }
         return new Vector2(0,0);
