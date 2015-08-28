@@ -12,6 +12,8 @@ public class MovableObject : MonoBehaviour {
     protected float AttackMaxDistance = 2f;
     protected float AttackedStartTime;
 
+    [SerializeField] private SpriteRenderer _lifebar;
+
     protected enum State
     {
         Idle,
@@ -29,6 +31,7 @@ public class MovableObject : MonoBehaviour {
     protected float AttackReactionPeriod = 0.5f;
     protected float AttackReloadPeriod = 0.5f;
     protected float TimeSinceAttackMade;
+    protected int InitialLifes;
 
     // Use this for initialization
     protected void Start()
@@ -46,6 +49,20 @@ public class MovableObject : MonoBehaviour {
         CurrentState = State.Attacked;
         AttackedStartTime = Time.time;
         AttackTarget = attacker;
+        float lifesPercent = Hp/(float) InitialLifes;
+        float originalValue = _lifebar.bounds.min.x;
+        _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);
+        float newValue = _lifebar.bounds.min.x;
+        float difference = newValue - originalValue;
+        _lifebar.transform.Translate(new Vector3(-difference, 0f, 0f));
+        if (lifesPercent < 0.5f && lifesPercent > 0.1f)
+        {
+            _lifebar.color = Color.yellow;
+        }
+        if (lifesPercent < 0.1f)
+        {
+            _lifebar.color = Color.red;
+        }
         if (Hp <= 0)
         {
             IsDead = true; 

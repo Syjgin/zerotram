@@ -67,9 +67,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\GUI\GUIManager.cs" />
     <Compile Include="Assets\Scripts\GUI\HaresPassengers.cs" />
+    <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
     <Compile Include="Assets\Scripts\GUI\KilledPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\PauseHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\Score.cs" />
+    <Compile Include="Assets\Scripts\GUI\SuccessfullPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\TimeToStopBus.cs" />
     <Compile Include="Assets\Scripts\Level\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsAnimationController.cs" />

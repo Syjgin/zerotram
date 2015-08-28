@@ -10,11 +10,19 @@ namespace Assets
 {
     public class GameController
     {
+        public class StateInformation
+        {
+            public int Killed;
+            public int Hares;
+            public int Successfull;
+            public int StationNumber;
+        }
         private static GameController _instance;
 
         private int _incomingPassengers;
         private int _killedPassengers;
         private int _totalHares;
+        private int _successfullyFinishedCount;
 
         private List<Passenger> _passengers;
         private List<GameStateNotificationListener> _listeners;
@@ -43,6 +51,7 @@ namespace Assets
             _incomingPassengers = 0;
             _currentSpawnCount = InitialSpawnCount;
             _currentStationNumber = 0;
+            _successfullyFinishedCount = 0;
         }
 
         public int GetCurrentStationNumber()
@@ -72,11 +81,26 @@ namespace Assets
             else
                 _totalHares++;
             _passengers.Add(ps);
+            UpdateStats();
         }
 
         public void RegisterTravelFinish()
         {
-            _incomingPassengers--;
+            _successfullyFinishedCount++;
+            UpdateListeners();
+        }
+
+        private void UpdateListeners()
+        {
+            StateInformation info = new StateInformation();
+            info.Hares = _haresPercent;
+            info.Killed = _killedPercent;
+            info.StationNumber = _currentStationNumber;
+            info.Successfull = _successfullyFinishedCount;
+            foreach (var gameStateNotificationListener in _listeners)
+            {
+                gameStateNotificationListener.UpdateInfo(info);
+            }
         }
 
         public void RegisterDeath(MovableObject obj)
@@ -101,14 +125,9 @@ namespace Assets
                     {
                         _totalHares--;
                     }
-                    CheckStats();
-                    foreach (var gameStateNotificationListener in _listeners)
-                    {
-                        gameStateNotificationListener.UpdatePercentage(_killedPercent, _haresPercent);
-                    } 
                 }
-                if(_passengers.Contains(ps))
-                    _passengers.Remove(ps);
+                _passengers.Remove(ps);
+                UpdateStats();
             }
         }
 
@@ -143,6 +162,7 @@ namespace Assets
             {
                 _killedPercent = 0;
             }
+            UpdateListeners();
         }
 
         private bool CheckStats()
@@ -168,7 +188,6 @@ namespace Assets
 
         private void NextStationReached()
         {
-            Debug.Log("next station");
             _currentStationNumber++;
             _currentSpawnCount += SpawnIncrementCount;
             foreach (var passenger in _passengers)

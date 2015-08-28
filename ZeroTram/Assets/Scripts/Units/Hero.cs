@@ -13,11 +13,10 @@ namespace Assets
         private BackgroundManager _backgroundManager;
         private Passenger _dragTarget;
         private Vector2 _dragStartPoint;
-        private const float MaxDragDistance = 6f;
+        private const float MaxDragDistance = 8f;
         private bool _isInWayoutZone;
         private Text _lifes;
-        private const int InitialLifes = 500;
-
+        
         public void SetInWayoutZone(bool inZone)
         {
             _isInWayoutZone = inZone;
@@ -30,7 +29,7 @@ namespace Assets
 
         void Awake()
         {
-            Hp = InitialLifes;
+            Hp = InitialLifes = 500;
             AttackMaxDistance = 1;
             AttackReloadPeriod = 0.5f;
             _lifes = GameObject.Find("userLifes").GetComponent<Text>();
@@ -51,6 +50,8 @@ namespace Assets
         public void Kick(Passenger obj)
         {
             CurrentState = State.Attack;
+            if(obj.IsStick)
+                obj.StopStick(true);
             obj.FlyAway();
             TimeSinceAttackMade = 0;
             AttackTarget = null;

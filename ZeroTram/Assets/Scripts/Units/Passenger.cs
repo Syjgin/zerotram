@@ -215,7 +215,7 @@ namespace Assets
         {
             if(_hero == null)
                 return;
-            if (_isFlyingAway)
+            if (_isFlyingAway && !_isStick)
             {
                 CurrentState = State.Attacked;
                 Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 5 * Velocity * Time.deltaTime);
@@ -263,7 +263,6 @@ namespace Assets
                             if (_isStick)
                             {
                                 _hero.Kick(this);
-                                GetTimer().SetPaused(false);
                             }
                         }
                     }
@@ -369,9 +368,10 @@ namespace Assets
             get { return _isStick; }
         }
 
-        public void StopStick()
+        public void StopStick(bool justChangeTimer = false)
         {
-            _isStick = false;
+            if(!justChangeTimer)
+                _isStick = false;
             GetTimer().SetPaused(false);
         }
 

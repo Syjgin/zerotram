@@ -16,7 +16,7 @@ namespace Assets
             AttackReloadPeriod = 2;
             AttackMaxDistance = 2;
             CounterAttackProbability = 70;
-            Hp = 600;
+            Hp = InitialLifes = 600;
             Velocity = 2;
             AttackStrength = 5;
             AttackReactionPeriod = 0.5f;
