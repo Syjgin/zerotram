@@ -37,14 +37,14 @@ namespace Assets
             AttackReactionPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReactionPeriod").n;
             AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
             _lifes = GameObject.Find("userLifes").GetComponent<Text>();
-            _lifes.text = "здоровье:100%";
+            _lifes.text = "100%";
         }
 
         public override void AddDamage(MovableObject attacker)
         {
             base.AddDamage(attacker);
             int lifesPercent = Mathf.RoundToInt(100*(Hp/(float) InitialLifes));
-            _lifes.text = "здоровье:" + lifesPercent + "%";
+            _lifes.text = lifesPercent + "%";
         }
 
         void FixedUpdate()

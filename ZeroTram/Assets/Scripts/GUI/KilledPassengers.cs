@@ -8,12 +8,13 @@ using UnityEngine.UI;
 public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
 {
     private Text _text;
-    private const String Prefix = "не доехавших: ";
+    private bool _shouldUpdate;
 
 	void Start ()
 	{
 	    _text = GetComponent<Text>();
-	    _text.text = Prefix + "0%";
+        _text.text = "0%" + "/" + GameController.GetInstance().MaxKilledPercent;
+	    _shouldUpdate = true;
         GameController.GetInstance().AddListener(this);
 	}
 
@@ -24,11 +25,12 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
 
     public void UpdateInfo(GameController.StateInformation information)
     {
-        _text.text = Prefix + information.Killed + "%";
+        if(_shouldUpdate)
+            _text.text = information.Killed + "/" + GameController.GetInstance().MaxKilledPercent + "%";
     }
 
     public void GameOver()
     {
-        
+        _shouldUpdate = false;
     }
 }

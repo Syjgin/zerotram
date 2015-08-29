@@ -94,6 +94,7 @@ public class MovableObject : MonoBehaviour {
         }
         if (Hp <= 0)
         {
+            Hp = 0;
             IsDead = true; 
             GameController.GetInstance().RegisterDeath(this);
             Destroy(this.gameObject);

@@ -9,12 +9,13 @@ namespace Assets
     public class HaresPassengers : MonoBehaviour, GameStateNotificationListener
 {
     private Text _text;
-    private const String Prefix = "зайцев: ";
+    private bool _shouldUpdate;
 
     void Awake()
     {
         _text = GetComponent<Text>();
-        _text.text = Prefix + "0%";
+        _text.text = "0%" + "/" + GameController.GetInstance().MaxHaresPercent;
+        _shouldUpdate = true;
         GameController.GetInstance().AddListener(this);
     }
 
@@ -25,12 +26,13 @@ namespace Assets
 
     public void UpdateInfo(GameController.StateInformation information)
     {
-        _text.text = Prefix + information.Hares + "%";
+        if(_shouldUpdate)
+            _text.text = information.Hares + "/" + GameController.GetInstance().MaxHaresPercent + "%";
     }
 
         public void GameOver()
-    {
-
-    }
+        {
+            _shouldUpdate = false;
+        }
 }
 }
