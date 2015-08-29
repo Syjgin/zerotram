@@ -259,5 +259,13 @@ namespace Assets
                 passenger.IncrementStationCount();
             }
         }
+
+        /*public bool IsPlaceFree(Vector2 place)
+        {
+            foreach (var passenger in _passengers)
+            {
+                
+            }
+        }*/
     }
 }

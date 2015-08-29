@@ -1,6 +1,7 @@
 ﻿using Assets;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class PassengerCollisionDetector : MonoBehaviour
 {

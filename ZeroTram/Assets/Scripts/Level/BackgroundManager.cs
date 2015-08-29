@@ -14,7 +14,7 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] private Collider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
 
-    private const float ColliderOffset = 2;
+    private const float ColliderOffset = 1.5f;
 
     private BoxCollider2D _collider;
 	// Use this for initialization

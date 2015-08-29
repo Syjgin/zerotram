@@ -16,6 +16,7 @@ public class DoorsTimer : MonoBehaviour {
 
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
     [SerializeField] private GameObject _stickNote;
+    [SerializeField] private Parallax _parallax;
 
     void Awake()
     {
@@ -44,10 +45,16 @@ public class DoorsTimer : MonoBehaviour {
     {
         foreach (var doorsAnimationController in _doorsAnimators)
         {
-            if(_isDoorsOpen)
+            if (_isDoorsOpen)
+            {
+                _parallax.SetEnabled(false);
                 doorsAnimationController.Open();
+            }
             else
-                doorsAnimationController.Close();
+            {
+                _parallax.SetEnabled(true);
+                doorsAnimationController.Close();   
+            }
         }
     }
 
