@@ -57,11 +57,10 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         String countText = String.Empty;
         for (int i = 0; i < leadingZeroCount; i++)
         {
-            if (i == 3)
-                countText += " ";
             countText += "0";
         }
         countText += _stateInfo.Successfull;
+        countText = countText.Insert(3, " ");
         _countText.text = countText;
         gameOverMenu.SetActive(true);
     }

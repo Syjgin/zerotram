@@ -88,6 +88,8 @@
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 90,
 			"InitialSpawnCount" : 5,
-			"SpawnIncrementCount" : 1
+			"SpawnIncrementCount" : 1,
+			"MoveDuration" : 20,
+			"StopDuration" : 5
 		}
 }

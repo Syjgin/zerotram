@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour {
 
-    private const int MoveDuration = 10;
-    private const int StopDuration = 5;
+    private float _moveDuration;
+    private float _stopDuration;
 
     private float _currentMoveDuration;
     private float _currentStopDuration;
@@ -17,11 +17,17 @@ public class DoorsTimer : MonoBehaviour {
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
     [SerializeField] private GameObject _stickNote;
 
+    void Awake()
+    {
+        _moveDuration = ConfigReader.GetConfig().GetField("tram").GetField("MoveDuration").n;
+        _stopDuration = ConfigReader.GetConfig().GetField("tram").GetField("StopDuration").n;
+    }
+
     public int GetCurrentRemainingTime()
     {
         if (_isDoorsOpen)
-            return (int) (StopDuration - _currentStopDuration);
-        return (int) (MoveDuration - _currentMoveDuration);
+            return (int) (_stopDuration - _currentStopDuration);
+        return (int) (_moveDuration - _currentMoveDuration);
     }
 
     void Start()
@@ -74,7 +80,7 @@ public class DoorsTimer : MonoBehaviour {
 	    if (_isDoorsOpen)
 	    {
 	        _currentStopDuration += Time.fixedDeltaTime;
-	        if (_currentStopDuration > StopDuration)
+	        if (_currentStopDuration > _stopDuration)
 	        {
 	            _isDoorsOpen = false;
 	            _currentStopDuration = 0;
@@ -84,7 +90,7 @@ public class DoorsTimer : MonoBehaviour {
 	    else
 	    {
 	        _currentMoveDuration += Time.fixedDeltaTime;
-	        if (_currentMoveDuration > MoveDuration)
+	        if (_currentMoveDuration > _moveDuration)
 	        {
 	            _isDoorsOpen = true;
 	            _currentMoveDuration = 0;

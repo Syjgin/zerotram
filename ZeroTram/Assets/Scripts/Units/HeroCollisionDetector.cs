@@ -11,7 +11,7 @@ public class HeroCollisionDetector : MonoBehaviour
     {
         if(Time.timeScale == 0)
             return;
-        Debug.Log("hero click");
+        _hero.HandleClick();
     }
 
     void OnMouseUp()

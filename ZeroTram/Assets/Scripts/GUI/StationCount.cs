@@ -7,12 +7,11 @@ using UnityEngine.UI;
 
 public class StationCount : MonoBehaviour, GameStateNotificationListener
 {
-    private Text _text;
-    private const String Prefix = "№ станции: ";
+    [SerializeField] private TextMesh _text;
+    private const String Prefix = "станция: ";
 
 	void Start ()
 	{
-	    _text = GetComponent<Text>();
 	    _text.text = Prefix + "1";
         GameController.GetInstance().AddListener(this);
 	}
