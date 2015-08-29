@@ -10,6 +10,12 @@ namespace Assets
 {
     public class GameController
     {
+        private bool _isGameFinished;
+
+        public bool IsGameFinished
+        {
+            get { return _isGameFinished; }
+        }
         private float _maxHaresPercent;
         public float MaxHaresPercent
         {
@@ -41,8 +47,8 @@ namespace Assets
         private int _killedPercent;
         private int _haresPercent;
 
-        private const int InitialSpawnCount = 5;
-        private const int SpawnIncrementCount = 3;
+        private float _initialSpawnCount;
+        private float _spawnIncrementCount;
 
         private int _currentSpawnCount;
         private int _currentStationNumber;
@@ -57,9 +63,11 @@ namespace Assets
         GameController()
         {
             _listeners = new List<GameStateNotificationListener>();
-            Init();
             _maxHaresPercent = ConfigReader.GetConfig().GetField("tram").GetField("MaxHarePercent").n;
             _maxKilledPercent = ConfigReader.GetConfig().GetField("tram").GetField("MaxKilledPercent").n;
+            _initialSpawnCount = ConfigReader.GetConfig().GetField("tram").GetField("InitialSpawnCount").n;
+            _spawnIncrementCount = ConfigReader.GetConfig().GetField("tram").GetField("SpawnIncrementCount").n;
+            Init();
         }
 
         public void Init()
@@ -70,9 +78,13 @@ namespace Assets
                 _passengers.Clear();
             _totalHares = 0;
             _incomingPassengers = 0;
-            _currentSpawnCount = InitialSpawnCount;
+            _currentSpawnCount = (int)_initialSpawnCount;
             _currentStationNumber = 0;
             _successfullyFinishedCount = 0;
+            _killedPassengers = 0;
+            _killedPercent = 0;
+            _haresPercent = 0;
+            _isGameFinished = false;
         }
 
         public int GetCurrentStationNumber()
@@ -193,6 +205,7 @@ namespace Assets
 
         public void GameOver(bool isConductorDied)
         {
+            _isGameFinished = true;
             Time.timeScale = 0;
             UpdateListeners(isConductorDied);
             foreach (var gameStateNotificationListener in _listeners)
@@ -240,7 +253,7 @@ namespace Assets
         private void NextStationReached()
         {
             _currentStationNumber++;
-            _currentSpawnCount += SpawnIncrementCount;
+            _currentSpawnCount += (int)_spawnIncrementCount;
             foreach (var passenger in _passengers)
             {
                 passenger.IncrementStationCount();

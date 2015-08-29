@@ -86,6 +86,8 @@
 	"tram" : {
 			"MaxPassengers" : 20,
 			"MaxKilledPercent" : 50,
-			"MaxHarePercent" : 90
+			"MaxHarePercent" : 90,
+			"InitialSpawnCount" : 5,
+			"SpawnIncrementCount" : 1
 		}
 }

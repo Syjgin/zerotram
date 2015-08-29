@@ -19,6 +19,8 @@ public class Spawner : MonoBehaviour
 
     public void Spawn(GameObject spawnPoint)
     {
+        if(GameController.GetInstance().IsGameFinished)
+            return;
         int minCount = 0;
         if (_isFirstStation)
         {

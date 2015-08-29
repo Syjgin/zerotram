@@ -138,11 +138,13 @@ namespace Assets
             }
         }
 
-        void OnMouseUp()
+        public void HandleClick()
         {
-            if(Time.timeScale == 0)
-                return;
-            StopDrag();
+            if (_dragTarget != null)
+            {
+                _dragTarget.HandleClick();
+            }
         }
+
     }
 }

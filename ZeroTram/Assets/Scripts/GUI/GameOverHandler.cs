@@ -11,9 +11,11 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _reasonText;
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _exitButton;
+    [SerializeField] private Text _countText;
     private const String DeathReason = "Кондуктор погиб";
     private const String HareReason = "Слишком много зайцев";
-    private const String KilledPassengersReason = "Слишком много погибших пассажиров с билетами";
+    private const String KilledPassengersReason = "Слишком много погибших";
+    private const int ZeroCount = 6;
 
     private GameController.StateInformation _stateInfo;
 
@@ -51,6 +53,16 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
             _reasonText.text = KilledPassengersReason;
         if(_stateInfo.IsConductorDied)
             _reasonText.text = DeathReason;
+        int leadingZeroCount = ZeroCount - _stateInfo.Successfull.ToString().Length;
+        String countText = String.Empty;
+        for (int i = 0; i < leadingZeroCount; i++)
+        {
+            if (i == 3)
+                countText += " ";
+            countText += "0";
+        }
+        countText += _stateInfo.Successfull;
+        _countText.text = countText;
         gameOverMenu.SetActive(true);
     }
 }
