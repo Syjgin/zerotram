@@ -10,12 +10,23 @@ namespace Assets
 {
     public class GameController
     {
+        private float _maxHaresPercent;
+        public float MaxHaresPercent
+        {
+            get { return _maxHaresPercent; }
+        }
+        private float _maxKilledPercent;
+        public float MaxKilledPercent
+        {
+            get { return _maxKilledPercent; }
+        }
         public class StateInformation
         {
             public int Killed;
             public int Hares;
             public int Successfull;
             public int StationNumber;
+            public bool IsConductorDied;
         }
         private static GameController _instance;
 
@@ -45,8 +56,18 @@ namespace Assets
 
         GameController()
         {
-            _passengers = new List<Passenger>();
             _listeners = new List<GameStateNotificationListener>();
+            Init();
+            _maxHaresPercent = ConfigReader.GetConfig().GetField("tram").GetField("MaxHarePercent").n;
+            _maxKilledPercent = ConfigReader.GetConfig().GetField("tram").GetField("MaxKilledPercent").n;
+        }
+
+        public void Init()
+        {
+            if(_passengers == null)
+                _passengers = new List<Passenger>();
+            else 
+                _passengers.Clear();
             _totalHares = 0;
             _incomingPassengers = 0;
             _currentSpawnCount = InitialSpawnCount;
@@ -74,29 +95,44 @@ namespace Assets
             _listeners.Add(listener);
         }
 
+        public void RemoveListener(GameStateNotificationListener listener)
+        {
+            _listeners.Remove(listener);
+        }
+
         public void RegisterPassenger(Passenger ps)
         {
             if (ps.HasTicket())
                 _incomingPassengers++;
-            else
-                _totalHares++;
+            _totalHares++;
             _passengers.Add(ps);
+            UpdateStats();
+        }
+
+        public void UpdatePassenger(Passenger ps)
+        {
+            if (ps.HasTicket())
+            {
+                if(_totalHares > 0)
+                    _totalHares--;   
+            }
             UpdateStats();
         }
 
         public void RegisterTravelFinish()
         {
             _successfullyFinishedCount++;
-            UpdateListeners();
+            UpdateListeners(false);
         }
 
-        private void UpdateListeners()
+        private void UpdateListeners(bool isCondutctorDied)
         {
             StateInformation info = new StateInformation();
             info.Hares = _haresPercent;
             info.Killed = _killedPercent;
             info.StationNumber = _currentStationNumber;
             info.Successfull = _successfullyFinishedCount;
+            info.IsConductorDied = isCondutctorDied;
             foreach (var gameStateNotificationListener in _listeners)
             {
                 gameStateNotificationListener.UpdateInfo(info);
@@ -117,7 +153,7 @@ namespace Assets
         {
             if (obj as Hero != null)
             {
-                GameOver();
+                GameOver(true);
             }
             else
             {
@@ -130,10 +166,16 @@ namespace Assets
                         {
                             _killedPassengers++;  
                         }
+                        if (ps.IsVisibleToHero)
+                        {
+                            if(_totalHares > 0)
+                                _totalHares--;   
+                        }
                     }
                     else
                     {
-                        _totalHares--;
+                        if(_totalHares > 0)
+                            _totalHares--;
                     }
                 }
                 _passengers.Remove(ps);
@@ -149,10 +191,10 @@ namespace Assets
             }
         }
 
-        public void GameOver()
+        public void GameOver(bool isConductorDied)
         {
-            Debug.Log("game over");
             Time.timeScale = 0;
+            UpdateListeners(isConductorDied);
             foreach (var gameStateNotificationListener in _listeners)
             {
                 gameStateNotificationListener.GameOver();
@@ -172,16 +214,15 @@ namespace Assets
             {
                 _killedPercent = 0;
             }
-            UpdateListeners();
+            UpdateListeners(false);
         }
 
         private bool CheckStats()
         {
             UpdateStats();
-            if (_haresPercent > 90 || _killedPercent > 90)
+            if (_haresPercent > MaxHaresPercent || _killedPercent > MaxKilledPercent)
             {
-                Debug.Log("caused by stats");
-                GameOver();
+                GameOver(false);
                 return false;
             }
             else

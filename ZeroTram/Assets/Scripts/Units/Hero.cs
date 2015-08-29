@@ -73,7 +73,9 @@ namespace Assets
 
         public bool IsInAttackRadius(Passenger obj)
         {
-            float sqrRemainingDistance = (GetPosition() - obj.GetPosition()).sqrMagnitude;
+            Vector2 position2D = GetPosition();
+            Vector2 passengerPosition2D = obj.GetPosition();
+            float sqrRemainingDistance = (position2D - passengerPosition2D).sqrMagnitude;
             bool isDistanceCorrect = sqrRemainingDistance <= AttackMaxDistance;
             return isDistanceCorrect;
         }
@@ -138,6 +140,8 @@ namespace Assets
 
         void OnMouseUp()
         {
+            if(Time.timeScale == 0)
+                return;
             StopDrag();
         }
     }

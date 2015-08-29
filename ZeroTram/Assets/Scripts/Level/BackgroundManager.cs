@@ -47,6 +47,16 @@ public class BackgroundManager : MonoBehaviour
 	    }
 	}
 
+    public bool IsPassengerNearDoors(Passenger ps)
+    {
+        Vector2 position = ps.GetPosition();
+        if (_leftDoor.OverlapPoint(position) || _rightDoor.OverlapPoint(position))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private bool IsHeroNearWayout(Collider2D wayout)
     {
         if (_hero == null)
@@ -68,6 +78,8 @@ public class BackgroundManager : MonoBehaviour
 
     void OnMouseDown()
     {
+        if(Time.timeScale == 0)
+            return;
         if(_hero == null)
             return;
         Vector2 pos = GetCurrentMousePosition();

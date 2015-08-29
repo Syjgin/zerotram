@@ -1,6 +1,7 @@
 ﻿using Assets;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour {
 
@@ -14,6 +15,7 @@ public class DoorsTimer : MonoBehaviour {
     private bool _isPaused;
 
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
+    [SerializeField] private GameObject _stickNote;
 
     public int GetCurrentRemainingTime()
     {
@@ -48,11 +50,15 @@ public class DoorsTimer : MonoBehaviour {
         if (paused)
         {
             _isPaused = true;
+            _stickNote.SetActive(true);
         }
         else
         {
             if (!GameController.GetInstance().IsAnybodyStick())
+            {
+                _stickNote.SetActive(false);
                 _isPaused = false;
+            }
         }
     }
 

@@ -14,6 +14,8 @@ public class PassengerCollisionDetector : MonoBehaviour
 
     void OnMouseDown()
     {
+        if(Time.timeScale == 0)
+            return;
         _passenger.HandleClick();
     }
 }

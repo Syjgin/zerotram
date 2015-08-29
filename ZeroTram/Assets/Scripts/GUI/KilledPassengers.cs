@@ -17,6 +17,11 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
         GameController.GetInstance().AddListener(this);
 	}
 
+    void OnDestroy()
+    {
+        GameController.GetInstance().RemoveListener(this);
+    }
+
     public void UpdateInfo(GameController.StateInformation information)
     {
         _text.text = Prefix + information.Killed + "%";

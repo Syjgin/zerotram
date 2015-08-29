@@ -35,13 +35,13 @@ public class Spawner : MonoBehaviour
             GameObject randomNPC = unitPrefabs[randomIndex];
             float horisontalOffset = Random.Range(-2f, 2f);
             float verticalOffset = Random.Range(1f, 2f);
-            Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset, 0);
+            Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset, -1);
             GameObject instantiated = (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
             Passenger ps = instantiated.GetComponent<Passenger>();
             ps.Init();
             if (ps.IsStick)
             {
-                instantiated.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y - StickYOffset, 0);
+                instantiated.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y - StickYOffset, -1);
                 DoorsTimer timer = GetComponent<DoorsTimer>();
                 timer.SetPaused(true);
                 return;

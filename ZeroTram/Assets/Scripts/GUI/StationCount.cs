@@ -17,6 +17,11 @@ public class StationCount : MonoBehaviour, GameStateNotificationListener
         GameController.GetInstance().AddListener(this);
 	}
 
+    void OnDestroy()
+    {
+        GameController.GetInstance().RemoveListener(this);
+    }
+
     public void UpdateInfo(GameController.StateInformation information)
     {
         int realNum = information.StationNumber + 1;

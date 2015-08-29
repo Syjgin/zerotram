@@ -52,6 +52,7 @@ namespace Assets
 
         private Vector3 _indicatorOffset;
 
+
         public bool HasTicket()
         {
             return _hasTicket;
@@ -225,6 +226,11 @@ namespace Assets
             TimeSinceAttackMade+=Time.fixedDeltaTime;
         }
 
+        public bool IsVisibleToHero
+        {
+            get { return _isVisibleToHero; }
+        }
+
         public void HandleClick()
         {
             if (_hero.IsInAttackRadius(this))
@@ -232,6 +238,7 @@ namespace Assets
                 if (!_isVisibleToHero)
                 {
                     _isVisibleToHero = true;
+                    GameController.GetInstance().UpdatePassenger(this);
                     if (!_hasTicket)
                     {
                         AttackTarget = _hero;
@@ -242,8 +249,11 @@ namespace Assets
                 }
                 if (!_hero.IsInWayoutZone())
                 {
-                    _hero.StartDrag(this);
-                    CurrentState = State.Attacked;
+                    if (!_hero.IsUnderAttack())
+                    {
+                        _hero.StartDrag(this);
+                        CurrentState = State.Attacked;   
+                    }
                 }
                 else
                 {
@@ -306,17 +316,19 @@ namespace Assets
                 {
                     Destroy(this.gameObject);
                 }
-                return;
             }
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            if (Input.GetMouseButtonDown(0))
+            if (IsStick)
             {
-                Vector2 transform2d = GetPosition();
-                float distance = (transform2d - hit.centroid).sqrMagnitude;
-                if (distance < 1)
+                RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                if (Input.GetMouseButtonDown(0))
                 {
-                    //HandleClick();
-                }
+                    Vector2 transform2d = GetPosition();
+                    float distance = (transform2d - hit.centroid).sqrMagnitude;
+                    if (distance < 1)
+                    {
+                        HandleClick();
+                    }
+                }   
             }
         }
 
@@ -414,7 +426,7 @@ namespace Assets
         private void CalculateStick()
         {
             int random = Randomizer.GetRandomPercent();
-            if (random > (100 - StickProbability))
+            if (random > (100 - StickProbability) && Background.IsPassengerNearDoors(this))
             {
                 CurrentState = State.Stick;
                 Indicator.sprite = _stick;   

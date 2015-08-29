@@ -83,7 +83,7 @@ public class MovableObject : MonoBehaviour {
         _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);
         float newValue = _lifebar.bounds.min.x;
         float difference = newValue - originalValue;
-        _lifebar.transform.Translate(new Vector3(-difference, 0f, 0f));
+        _lifebar.transform.Translate(new Vector3(-difference, 0, 0));
         if (lifesPercent < 0.5f && lifesPercent > 0.1f)
         {
             _lifebar.color = Color.yellow;
@@ -167,6 +167,7 @@ public class MovableObject : MonoBehaviour {
             yield return null;
         }
         Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
+        newPosition.z = -1;
         Rb2D.MovePosition(newPosition);
         MoveLifebar(newPosition);
     }
