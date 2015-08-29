@@ -90,6 +90,7 @@
 			"InitialSpawnCount" : 5,
 			"SpawnIncrementCount" : 1,
 			"MoveDuration" : 20,
-			"StopDuration" : 5
+			"StopDuration" : 5,
+			"MinDistance" : 0.8
 		}
 }

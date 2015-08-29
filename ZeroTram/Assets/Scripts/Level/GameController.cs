@@ -10,7 +10,7 @@ namespace Assets
 {
     public class GameController
     {
-        private const int MinDistance = 1;
+        private float _minDistance;
 
         private bool _isGameFinished;
 
@@ -69,6 +69,7 @@ namespace Assets
             _maxKilledPercent = ConfigReader.GetConfig().GetField("tram").GetField("MaxKilledPercent").n;
             _initialSpawnCount = ConfigReader.GetConfig().GetField("tram").GetField("InitialSpawnCount").n;
             _spawnIncrementCount = ConfigReader.GetConfig().GetField("tram").GetField("SpawnIncrementCount").n;
+            _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
             Init();
         }
 
@@ -269,7 +270,7 @@ namespace Assets
             {
                 Vector2 position = passenger.GetPosition();
                 float dist = (place - position).sqrMagnitude;
-                if (dist < MinDistance)
+                if (dist < _minDistance)
                     return false;
             }
             return true;
