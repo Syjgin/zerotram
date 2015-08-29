@@ -115,7 +115,7 @@ namespace Assets
                 Animator.Play("idle");
                 if (CanMove())
                 {
-                    SetTarget(Background.GetRandomPosition());
+                    CalculateRandomTarget();
                 }
             }
             else
@@ -138,6 +138,13 @@ namespace Assets
                 }
             }
             yield return null;
+        }
+
+        private void CalculateRandomTarget()
+        {
+            Vector2 target = Background.GetRandomPosition();
+            if (target != default(Vector2))
+                SetTarget(target);
         }
 
         protected override IEnumerator walk()
@@ -216,7 +223,7 @@ namespace Assets
             }
             else
             {
-                SetTarget(Background.GetRandomPosition());
+                CalculateRandomTarget();
             }
         }
 

@@ -10,6 +10,8 @@ namespace Assets
 {
     public class GameController
     {
+        private const int MinDistance = 1;
+
         private bool _isGameFinished;
 
         public bool IsGameFinished
@@ -260,12 +262,17 @@ namespace Assets
             }
         }
 
-        /*public bool IsPlaceFree(Vector2 place)
+        public bool IsPlaceFree(Vector2 place)
         {
+            _passengers.RemoveAll(item => item == null);
             foreach (var passenger in _passengers)
             {
-                
+                Vector2 position = passenger.GetPosition();
+                float dist = (place - position).sqrMagnitude;
+                if (dist < MinDistance)
+                    return false;
             }
-        }*/
+            return true;
+        }
     }
 }

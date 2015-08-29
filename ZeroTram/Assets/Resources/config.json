@@ -84,7 +84,7 @@
             "StickProbability" : 80
 		},
 	"tram" : {
-			"MaxPassengers" : 20,
+			"MaxPassengers" : 30,
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 90,
 			"InitialSpawnCount" : 5,

@@ -71,7 +71,11 @@ public class BackgroundManager : MonoBehaviour
         {
             float xPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.x - _collider.bounds.size.x * 0.5f;
             float yPos = Randomizer.GetNormalizedRandom() * _collider.bounds.size.y - _collider.bounds.size.y * 0.5f - ColliderOffset;
-            return new Vector2(xPos, yPos);   
+            Vector2 target = new Vector2(xPos, yPos);
+            if (GameController.GetInstance().IsPlaceFree(target))
+            {
+                return new Vector2(xPos, yPos);      
+            }
         }
         return new Vector2(0,0);
     }
