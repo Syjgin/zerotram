@@ -89,7 +89,9 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
-            _hero = GameObject.Find("hero").GetComponent<Hero>();
+            GameObject heroObject = GameObject.Find("hero");
+            if(heroObject != null)
+                _hero = heroObject.GetComponent<Hero>();
 
         }
 

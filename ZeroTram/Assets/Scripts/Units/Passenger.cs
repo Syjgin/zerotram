@@ -84,7 +84,9 @@ namespace Assets
             base.Start();
             _timeForNextUpdate = 0;
             TimeSinceAttackMade = AttackReloadPeriod;
-            _hero = GameObject.Find("hero").GetComponent<Hero>();
+            GameObject heroObject = GameObject.Find("hero");
+            if (heroObject != null)
+                _hero = heroObject.GetComponent<Hero>();
             _indicatorOffset = Indicator.transform.position - Rb2D.transform.position;
         }
 
@@ -324,7 +326,7 @@ namespace Assets
             if (_isFlyingAway)
             {
                 CurrentState = State.Attacked;
-                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 30 * Time.deltaTime);
+                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 50 * Time.deltaTime);
                 Rb2D.MovePosition(newPosition);
                 MoveLifebar(newPosition);
                 Vector2 position2D = GetPosition();

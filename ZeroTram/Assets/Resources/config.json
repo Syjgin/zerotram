@@ -63,7 +63,7 @@
             "CounterAttackProbability" : 70,
             "InitialLifes" : 450,
             "Velocity" : 2,
-            "AttackStrength" : 80,
+            "AttackStrength" : 40,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 60,
             "StickProbability" : 80
@@ -78,10 +78,10 @@
             "CounterAttackProbability" : 100,
             "InitialLifes" : 250,
             "Velocity" : 1,
-            "AttackStrength" : 30,
+            "AttackStrength" : 15,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
-            "StickProbability" : 80
+            "StickProbability" : 95
 		},
 	"tram" : {
 			"MaxPassengers" : 30,

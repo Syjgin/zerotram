@@ -14,7 +14,7 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] private Collider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
 
-    private const float ColliderOffset = 1.5f;
+    private const float ColliderOffset = 1.4f;
 
     private BoxCollider2D _collider;
 	// Use this for initialization
@@ -50,6 +50,7 @@ public class BackgroundManager : MonoBehaviour
     public bool IsPassengerNearDoors(Passenger ps)
     {
         Vector2 position = ps.GetPosition();
+        position.y += ColliderOffset;
         if (_leftDoor.OverlapPoint(position) || _rightDoor.OverlapPoint(position))
         {
             return true;

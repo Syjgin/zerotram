@@ -74,6 +74,11 @@ public class MovableObject : MonoBehaviour {
 
     public virtual void AddDamage(MovableObject attacker)
     {
+        if (attacker.AttackStrength < 0 && Hp >= InitialLifes)
+        {
+            Hp = InitialLifes;
+            return;
+        }
         Hp -= attacker.AttackStrength;
         CurrentState = State.Attacked;
         AttackedStartTime = Time.time;

@@ -5,7 +5,7 @@ using Assets.Scripts.Math;
 using UnityEngine;
 using System.Collections;
 
-public class AudioPlayer : MonoBehaviour
+public class AudioPlayer : MonoBehaviour, GameStateNotificationListener
 {
 
     [SerializeField] private List<AudioClip> _levelAudios;
@@ -13,9 +13,21 @@ public class AudioPlayer : MonoBehaviour
     [SerializeField] private AudioSource _levelAudioSource;
     [SerializeField] private AudioSource _doorsOpenAudioSource;
     private bool _isDoorsOpen;
-    private bool _isGameOverHandled;
+    private bool _isPlayerJustPaused;
 
     private const float PauseVolumeLevel = 0.2f;
+    private const float VolumeIncrementCount = 0.01f;
+    private const float VolumeBarrier = 0.1f;
+
+    void Start()
+    {
+        GameController.GetInstance().AddListener(this);
+    }
+
+    void Destroy()
+    {
+        GameController.GetInstance().RemoveListener(this);
+    }
 
     private void SelectRandomSong()
     {
@@ -27,16 +39,6 @@ public class AudioPlayer : MonoBehaviour
     public void SetDoorsOpen(bool open)
     {
         _isDoorsOpen = open;
-        if (_isDoorsOpen)
-        {
-            _levelAudioSource.Pause();
-            _doorsOpenAudioSource.Play();
-        }
-        else
-        {
-            _levelAudioSource.UnPause();
-            _doorsOpenAudioSource.Pause();
-        }
     }
 
     public void HandlePauseMenu(bool pause)
@@ -52,26 +54,57 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
+    public void UpdateInfo(GameController.StateInformation information)
+    {
+        
+    }
+
     public void GameOver()
     {
-        _levelAudioSource.Stop();
-        _doorsOpenAudioSource.Stop();
-        _levelAudioSource.clip = _gameOverAudio;
-        _levelAudioSource.Play();
+        if (_levelAudioSource != null && _doorsOpenAudioSource != null)
+        {
+            _levelAudioSource.Stop();
+            _doorsOpenAudioSource.Stop();
+            _levelAudioSource.clip = _gameOverAudio;
+            _levelAudioSource.volume = 1;
+            _levelAudioSource.Play();   
+        }
     }
 
 	void Update () {
-	    if (!_isDoorsOpen)
-	    {
-            if (!_levelAudioSource.isPlaying)
+        if (_isDoorsOpen)
+        {
+            _levelAudioSource.volume -= VolumeIncrementCount;
+            if (_levelAudioSource.volume < VolumeBarrier)
+            {
+                _levelAudioSource.Pause();
+                _isPlayerJustPaused = true;
+            }
+            if (!_doorsOpenAudioSource.isPlaying)
+            {
+                _doorsOpenAudioSource.UnPause();
+                _doorsOpenAudioSource.volume = VolumeBarrier;
+            }
+            if(_doorsOpenAudioSource.volume < 1)
+                _doorsOpenAudioSource.volume += VolumeIncrementCount;
+        }
+        else
+        {
+            if (!_levelAudioSource.isPlaying && !_isPlayerJustPaused)
             {
                 SelectRandomSong();
-            }   
-	    }
-	    if (GameController.GetInstance().IsGameFinished && !_isGameOverHandled)
-	    {
-	        _isGameOverHandled = true;
-            GameOver();
-	    }
+            }
+            _doorsOpenAudioSource.volume -= VolumeIncrementCount;
+            if (_doorsOpenAudioSource.volume < VolumeBarrier)
+                _doorsOpenAudioSource.Pause();
+            if (!_levelAudioSource.isPlaying)
+            {
+                _levelAudioSource.UnPause();
+                _levelAudioSource.volume = VolumeBarrier;
+                _isPlayerJustPaused = false;
+            }
+            if (_levelAudioSource.volume < 1)
+                _levelAudioSource.volume += VolumeIncrementCount;
+        }
 	}
 }
