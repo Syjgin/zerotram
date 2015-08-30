@@ -54,6 +54,7 @@ namespace Assets
 
         private int _currentSpawnCount;
         private int _currentStationNumber;
+        private Hero _hero;
 
         public static GameController GetInstance()
         {
@@ -88,6 +89,8 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
+            _hero = GameObject.Find("hero").GetComponent<Hero>();
+
         }
 
         public int GetCurrentStationNumber()
@@ -181,7 +184,7 @@ namespace Assets
                         {
                             _killedPassengers++;  
                         }
-                        if (ps.IsVisibleToHero)
+                        if (!ps.IsVisibleToHero)
                         {
                             if(_totalHares > 0)
                                 _totalHares--;   
@@ -274,6 +277,32 @@ namespace Assets
                     return false;
             }
             return true;
+        }
+
+        public void TryAttackNearThis(Passenger ps)
+        {
+            if (_hero == null)
+            {
+                _hero = GameObject.Find("hero").GetComponent<Hero>();
+            }
+            float dist2Hero = (ps.GetPosition() - _hero.GetPosition()).sqrMagnitude;
+            if (dist2Hero < _minDistance)
+            {
+                ps.TryAttackMovable(_hero);
+                return;
+            }
+            foreach (var passenger in _passengers)
+            {
+                if(passenger == null)
+                    continue;
+                if(passenger == ps)
+                    continue;
+                float dist = (ps.GetPosition() - passenger.GetPosition()).sqrMagnitude;
+                if (dist < _minDistance)
+                {
+                    ps.TryAttackMovable(passenger);
+                } 
+            }
         }
     }
 }

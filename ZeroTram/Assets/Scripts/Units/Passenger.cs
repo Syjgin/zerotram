@@ -48,7 +48,7 @@ namespace Assets
 
         private const int FlyLength = 30;
 
-        private const int MaxStopCount = 3;
+        private float _maxStopCount;
 
         private Vector3 _indicatorOffset;
 
@@ -98,7 +98,8 @@ namespace Assets
         {
             CalculateTicket(TicketProbability);
             CalculateStick();
-            int stopCount = Randomizer.GetInRange(1, MaxStopCount);
+            _maxStopCount = ConfigReader.GetConfig().GetField("tram").GetField("MaxStopCount").n;
+            int stopCount = Randomizer.GetInRange(1, (int)_maxStopCount);
             _tramStopCount = stopCount;
             GameController.GetInstance().RegisterPassenger(this);
         }
@@ -165,6 +166,7 @@ namespace Assets
                 yield return null;
             }
             Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
+            newPosition.z = -1;
             Rb2D.MovePosition(newPosition);
             MoveLifebar(newPosition);
         }
@@ -240,6 +242,8 @@ namespace Assets
 
         public void HandleClick()
         {
+            if(_isDragged)
+                _hero.StopDrag();
             if (_hero.IsInAttackRadius(this))
             {
                 if (!_isVisibleToHero)
@@ -308,13 +312,19 @@ namespace Assets
 
         void Update()
         {
+            if (GetPosition().z > -1)
+            {
+                Vector3 correctPos = GetPosition();
+                correctPos.z = -1;
+                SetPosition(correctPos);
+            }
             CalculateIndicator();
             if(_hero == null)
                 return;
             if (_isFlyingAway)
             {
                 CurrentState = State.Attacked;
-                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 5 * Velocity * Time.deltaTime);
+                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 30 * Time.deltaTime);
                 Rb2D.MovePosition(newPosition);
                 MoveLifebar(newPosition);
                 Vector2 position2D = GetPosition();
@@ -335,7 +345,14 @@ namespace Assets
                     {
                         HandleClick();
                     }
-                }   
+                }
+            }
+            else
+            {
+                if (CurrentState != State.Attack && CurrentState != State.Attacked)
+                {
+                    GameController.GetInstance().TryAttackNearThis(this);
+                }
             }
         }
 
@@ -385,15 +402,20 @@ namespace Assets
             MovableObject movable = other.gameObject.GetComponentInParent<MovableObject>();
             if (movable != null)
             {
-                if (CanAttack())
-                {
-                    AttackTarget = movable;
-                    CurrentState = State.Attack;
-                }
-                else
-                {
-                    CurrentState = State.Idle;
-                }
+                TryAttackMovable(movable);
+            }
+        }
+
+        public void TryAttackMovable(MovableObject movable)
+        {
+            if (CanAttack())
+            {
+                AttackTarget = movable;
+                CurrentState = State.Attack;
+            }
+            else
+            {
+                CurrentState = State.Idle;
             }
         }
 

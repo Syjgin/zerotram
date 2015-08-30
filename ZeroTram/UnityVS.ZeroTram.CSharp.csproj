@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
     <Compile Include="Assets\Scripts\GUI\SuccessfullPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\TimeToStopBus.cs" />
+    <Compile Include="Assets\Scripts\Level\AudioPlayer.cs" />
     <Compile Include="Assets\Scripts\Level\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsAnimationController.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsTimer.cs" />

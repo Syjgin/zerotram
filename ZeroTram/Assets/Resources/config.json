@@ -32,7 +32,7 @@
             "AttackMaxDistance" : 12,
             "CounterAttackProbability" : 70,
             "InitialLifes" : 100,
-            "Velocity" : 12,
+            "Velocity" : 15,
             "AttackStrength" : 5,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 50,
@@ -48,7 +48,7 @@
             "CounterAttackProbability" : 50,
             "InitialLifes" : 150,
             "Velocity" : 5,
-            "AttackStrength" : 40,
+            "AttackStrength" : 10,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 10,
             "StickProbability" : 5
@@ -73,12 +73,12 @@
             "AttackProbability" : 90,
             "ChangeStatePeriod" : 20,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 8,
+            "AttackReloadPeriod" : 3,
             "AttackMaxDistance" : 10,
-            "CounterAttackProbability" : 90,
+            "CounterAttackProbability" : 100,
             "InitialLifes" : 250,
             "Velocity" : 1,
-            "AttackStrength" : 60,
+            "AttackStrength" : 30,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
             "StickProbability" : 80
@@ -88,9 +88,10 @@
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 90,
 			"InitialSpawnCount" : 5,
-			"SpawnIncrementCount" : 1,
+			"SpawnIncrementCount" : 5,
 			"MoveDuration" : 20,
 			"StopDuration" : 5,
-			"MinDistance" : 0.8
+			"MinDistance" : 0.7,
+			"MaxStopCount" : 3
 		}
 }

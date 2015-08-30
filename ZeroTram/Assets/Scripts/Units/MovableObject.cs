@@ -68,7 +68,7 @@ public class MovableObject : MonoBehaviour {
 
     public void SetPosition(Vector3 position)
     {
-        Rb2D.transform.position = position;
+        Rb2D.transform.position = new Vector3(position.x, position.y, -1);
         MoveLifebar(position);
     }
 
@@ -84,6 +84,10 @@ public class MovableObject : MonoBehaviour {
         float newValue = _lifebar.bounds.min.x;
         float difference = newValue - originalValue;
         _lifebar.transform.Translate(new Vector3(-difference, 0, 0));
+        if (lifesPercent > 0.5f)
+        {
+            _lifebar.color = Color.green;
+        }
         if (lifesPercent < 0.5f && lifesPercent > 0.1f)
         {
             _lifebar.color = Color.yellow;

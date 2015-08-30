@@ -18,10 +18,13 @@ public class DoorsTimer : MonoBehaviour {
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private Parallax _parallax;
 
+    private AudioPlayer _player;
+
     void Awake()
     {
         _moveDuration = ConfigReader.GetConfig().GetField("tram").GetField("MoveDuration").n;
         _stopDuration = ConfigReader.GetConfig().GetField("tram").GetField("StopDuration").n;
+        _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
     }
 
     public int GetCurrentRemainingTime()
@@ -47,11 +50,13 @@ public class DoorsTimer : MonoBehaviour {
         {
             if (_isDoorsOpen)
             {
+                _player.SetDoorsOpen(true);
                 _parallax.SetEnabled(false);
                 doorsAnimationController.Open();
             }
             else
             {
+                _player.SetDoorsOpen(false);
                 _parallax.SetEnabled(true);
                 doorsAnimationController.Close();   
             }

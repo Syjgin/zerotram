@@ -53,6 +53,11 @@ namespace Assets
         }
         public void Kick(Passenger obj)
         {
+            if (AttackTarget != null)
+                CalculateOrientation(AttackTarget.GetPosition());
+            else
+                if (_dragTarget != null)
+                    CalculateOrientation(_dragTarget.GetPosition());
             CurrentState = State.Attack;
             if (obj.IsStick)
             {
@@ -133,6 +138,7 @@ namespace Assets
                 CurrentState = State.Idle;
                 if (_dragTarget != null)
                 {
+                    _dragTarget.SetPosition(GetPosition());
                     _dragTarget.SetDragged(false);
                 }   
             }
