@@ -12,6 +12,8 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _exitButton;
     [SerializeField] private Text _countText;
+    [SerializeField] private GameObject _stickCaption;
+
     private const String DeathReason = "Кондуктор погиб";
     private const String HareReason = "Слишком много зайцев";
     private const String KilledPassengersReason = "Слишком много погибших";
@@ -47,19 +49,20 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 
     public void GameOver()
     {
+        _stickCaption.SetActive(false);
         if (_stateInfo.Hares > GameController.GetInstance().MaxHaresPercent)
             _reasonText.text = HareReason;
         if (_stateInfo.Killed > GameController.GetInstance().MaxKilledPercent)
             _reasonText.text = KilledPassengersReason;
         if(_stateInfo.IsConductorDied)
             _reasonText.text = DeathReason;
-        int leadingZeroCount = ZeroCount - _stateInfo.Successfull.ToString().Length;
+        int leadingZeroCount = ZeroCount - _stateInfo.TicketCount.ToString().Length;
         String countText = String.Empty;
         for (int i = 0; i < leadingZeroCount; i++)
         {
             countText += "0";
         }
-        countText += _stateInfo.Successfull;
+        countText += _stateInfo.TicketCount;
         countText = countText.Insert(3, " ");
         _countText.text = countText;
         gameOverMenu.SetActive(true);

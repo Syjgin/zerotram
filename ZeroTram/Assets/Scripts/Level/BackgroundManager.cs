@@ -15,6 +15,7 @@ public class BackgroundManager : MonoBehaviour
     [SerializeField] private DoorsTimer _timer;
 
     private const float ColliderOffset = 1.4f;
+    private const float HeroOffset = 0.6f;
 
     private BoxCollider2D _collider;
 	// Use this for initialization
@@ -99,6 +100,8 @@ public class BackgroundManager : MonoBehaviour
 
     public Vector2 GetCurrentMousePosition()
     {
-        return _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 target = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        target.y += HeroOffset;
+        return target;
     }
 }

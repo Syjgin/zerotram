@@ -19,6 +19,10 @@ public class DoorsTimer : MonoBehaviour {
     [SerializeField] private Parallax _parallax;
 
     private AudioPlayer _player;
+    
+    private const float StickSoundDelay = 1;
+    private float _currentStickSoundRemainingTime;
+    private bool _stickSoundWillBePlayed;
 
     void Awake()
     {
@@ -69,6 +73,8 @@ public class DoorsTimer : MonoBehaviour {
         {
             _isPaused = true;
             _stickNote.SetActive(true);
+            _stickSoundWillBePlayed = true;
+            _currentStickSoundRemainingTime = StickSoundDelay;
         }
         else
         {
@@ -87,8 +93,19 @@ public class DoorsTimer : MonoBehaviour {
 
     void FixedUpdate () 
     {
-        if(_isPaused)
+        if (_isPaused)
+        {
+            if (_stickSoundWillBePlayed)
+            {
+                _currentStickSoundRemainingTime -= Time.fixedDeltaTime;
+                if (_currentStickSoundRemainingTime <= 0)
+                {
+                    _stickSoundWillBePlayed = false;
+                    _player.PlayAudioById("tramdoorstuck");
+                }
+            }
             return;
+        }
 	    if (_isDoorsOpen)
 	    {
 	        _currentStopDuration += Time.fixedDeltaTime;

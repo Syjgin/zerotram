@@ -16,7 +16,8 @@ namespace Assets
         private float _maxDragDistance;
         private bool _isInWayoutZone;
         private Text _lifes;
-        
+        private AudioPlayer _player;
+
         public void SetInWayoutZone(bool inZone)
         {
             _isInWayoutZone = inZone;
@@ -38,6 +39,7 @@ namespace Assets
             AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
             _lifes = GameObject.Find("userLifes").GetComponent<Text>();
             _lifes.text = "100%";
+            _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
         }
 
         public override void AddDamage(MovableObject attacker)
@@ -53,11 +55,8 @@ namespace Assets
         }
         public void Kick(Passenger obj)
         {
-            if (AttackTarget != null)
-                CalculateOrientation(AttackTarget.GetPosition());
-            else
-                if (_dragTarget != null)
-                    CalculateOrientation(_dragTarget.GetPosition());
+            _player.PlayAudioById("kick");
+            CalculateOrientation(obj.GetPosition());
             CurrentState = State.Attack;
             if (obj.IsStick)
             {

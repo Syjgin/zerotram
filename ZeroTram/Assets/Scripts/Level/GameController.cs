@@ -32,7 +32,7 @@ namespace Assets
         {
             public int Killed;
             public int Hares;
-            public int Successfull;
+            public int TicketCount;
             public int StationNumber;
             public bool IsConductorDied;
         }
@@ -41,7 +41,7 @@ namespace Assets
         private int _incomingPassengers;
         private int _killedPassengers;
         private int _totalHares;
-        private int _successfullyFinishedCount;
+        private int _ticketCount;
 
         private List<Passenger> _passengers;
         private List<GameStateNotificationListener> _listeners;
@@ -84,7 +84,7 @@ namespace Assets
             _incomingPassengers = 0;
             _currentSpawnCount = (int)_initialSpawnCount;
             _currentStationNumber = 0;
-            _successfullyFinishedCount = 0;
+            _ticketCount = 0;
             _killedPassengers = 0;
             _killedPercent = 0;
             _haresPercent = 0;
@@ -134,15 +134,10 @@ namespace Assets
             if (ps.HasTicket())
             {
                 if(_totalHares > 0)
-                    _totalHares--;   
+                    _totalHares--;
+                _ticketCount++;
             }
             UpdateStats();
-        }
-
-        public void RegisterTravelFinish()
-        {
-            _successfullyFinishedCount++;
-            UpdateListeners(false);
         }
 
         private void UpdateListeners(bool isCondutctorDied)
@@ -151,7 +146,7 @@ namespace Assets
             info.Hares = _haresPercent;
             info.Killed = _killedPercent;
             info.StationNumber = _currentStationNumber;
-            info.Successfull = _successfullyFinishedCount;
+            info.TicketCount = _ticketCount;
             info.IsConductorDied = isCondutctorDied;
             foreach (var gameStateNotificationListener in _listeners)
             {
@@ -200,6 +195,10 @@ namespace Assets
                 }
                 _passengers.Remove(ps);
                 UpdateStats();
+                if (_killedPercent > _maxKilledPercent)
+                {
+                    GameOver(false);
+                }
             }
         }
 
@@ -241,15 +240,12 @@ namespace Assets
         private bool CheckStats()
         {
             UpdateStats();
-            if (_haresPercent > MaxHaresPercent || _killedPercent > MaxKilledPercent)
+            if (_haresPercent > MaxHaresPercent)
             {
                 GameOver(false);
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
         public void CheckBeforeDoorsOpen()

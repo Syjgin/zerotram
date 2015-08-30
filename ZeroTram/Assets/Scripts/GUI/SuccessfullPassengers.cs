@@ -25,7 +25,7 @@ namespace Assets
 
     public void UpdateInfo(GameController.StateInformation information)
     {
-        _text.text = Prefix + information.Successfull;
+        _text.text = Prefix + information.TicketCount;
     }
 
     public void GameOver()

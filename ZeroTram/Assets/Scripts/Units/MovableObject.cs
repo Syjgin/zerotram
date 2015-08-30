@@ -30,7 +30,7 @@ public class MovableObject : MonoBehaviour {
         get { return _state; }
         set
         {
-            if (_state != State.Stick)
+            if (_state != State.Stick && !IsGoingAway)
             {
                 _state = value;
             }
@@ -51,12 +51,15 @@ public class MovableObject : MonoBehaviour {
     protected float TimeSinceAttackMade;
     protected float InitialLifes;
     private Vector3 _lifebarOffset;
+    protected AudioPlayer Player;
+    protected bool IsGoingAway;
 
     // Use this for initialization
     protected void Start()
     {
         CurrentState = State.Idle;
         Animator = Rb2D.GetComponent<Animator>();
+        Player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
         _lifebarOffset = _lifebar.transform.position - Rb2D.transform.position;
         StartCoroutine(mainLoop());
     }
@@ -79,6 +82,8 @@ public class MovableObject : MonoBehaviour {
             Hp = InitialLifes;
             return;
         }
+        if(attacker.AttackStrength > 0)
+            Player.PlayAudioById("lowkick");
         Hp -= attacker.AttackStrength;
         CurrentState = State.Attacked;
         AttackedStartTime = Time.time;

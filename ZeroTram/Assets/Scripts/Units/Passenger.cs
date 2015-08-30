@@ -34,8 +34,6 @@ namespace Assets
 
         private float _timeForNextUpdate;
 
-        private bool _isGoingAway;
-
         private Hero _hero;
 
         protected BackgroundManager Background;
@@ -51,7 +49,6 @@ namespace Assets
         private float _maxStopCount;
 
         private Vector3 _indicatorOffset;
-
 
         public bool HasTicket()
         {
@@ -156,9 +153,8 @@ namespace Assets
             float sqrRemainingDistance = (GetPosition() - Target).sqrMagnitude;
             if (sqrRemainingDistance <= 1)
             {
-                if (_isGoingAway)
+                if (IsGoingAway)
                 {
-                    GameController.GetInstance().RegisterTravelFinish();
                     CalculateStickOnExit();
                     if(CurrentState != State.Stick)
                         Destroy(gameObject);
@@ -257,40 +253,52 @@ namespace Assets
                         AttackTarget = _hero;
                         CalculateAttackReaction();
                     }
+                    else
+                    {
+                        Player.PlayAudioById("coins");
+                    }
                     StopStick();
                     return;
                 }
                 if (!_hero.IsInWayoutZone())
                 {
-                    if (!_hero.IsUnderAttack())
-                    {
-                        _hero.StartDrag(this);
-                        CurrentState = State.Attacked;   
-                    }
+                    BecomeDragged();
                 }
                 else
                 {
                     if (!_hasTicket)
-                        _hero.Kick(this);
-                    else
                     {
-                        if (AttackTarget == _hero)
-                        {
-                            _hero.Kick(this);
-                        }
+                        _hero.Kick(this);
+                        return;
+                    }
+                    if (AttackTarget == _hero)
+                    {
+                        _hero.Kick(this);
+                        return;
                     }
                     if (IsStick)
                     {
-                        if(_isGoingAway)
+                        if(IsGoingAway)
                             _hero.Kick(this);
                         else
                             _hero.StartDrag(this);
+                        return;
                     }
+                    BecomeDragged();
                 }
             }
             else
             {
                 _hero.SetTarget(GetPosition());
+            }
+        }
+
+        private void BecomeDragged()
+        {
+            if (!_hero.IsUnderAttack())
+            {
+                _hero.StartDrag(this);
+                CurrentState = State.Attacked;
             }
         }
 
@@ -374,6 +382,8 @@ namespace Assets
 
         private bool CanAttack()
         {
+            if (_isFlyingAway || IsGoingAway || IsStick)
+                return false;
             if (AttackTarget == null)
             {
                 int range = Randomizer.GetRandomPercent();
@@ -399,7 +409,7 @@ namespace Assets
 
         public void HandleTriggerEnter(Collider2D other)
         {
-            if (_isDragged || _isFlyingAway || _isGoingAway)
+            if (_isDragged || _isFlyingAway || IsGoingAway)
                 return;
             MovableObject movable = other.gameObject.GetComponentInParent<MovableObject>();
             if (movable != null)
@@ -433,14 +443,10 @@ namespace Assets
                     target = leftDoor.transform.position;
                 else
                     target = rightDoor.transform.position;
+                Velocity *= 2;
                 SetTarget(target);
-                _isGoingAway = true;
+                IsGoingAway = true;
             }
-        }
-
-        public bool IsGoingAway
-        {
-            get { return _isGoingAway; }
         }
 
         public bool IsStick

@@ -10,12 +10,12 @@
 		},
 	"alien": {
 			"MoveProbability" : 50,
-            "AttackProbability" : 20,
+            "AttackProbability" : 5,
             "ChangeStatePeriod" : 5,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 2,
             "AttackMaxDistance" : 50,
-            "CounterAttackProbability" : 5,
+            "CounterAttackProbability" : 0,
             "InitialLifes" : 500,
             "Velocity" : 7,
             "AttackStrength" : -20,
@@ -81,16 +81,16 @@
             "AttackStrength" : 15,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
-            "StickProbability" : 95
+            "StickProbability" : 60
 		},
 	"tram" : {
 			"MaxPassengers" : 30,
 			"MaxKilledPercent" : 50,
-			"MaxHarePercent" : 90,
+			"MaxHarePercent" : 50,
 			"InitialSpawnCount" : 5,
-			"SpawnIncrementCount" : 5,
-			"MoveDuration" : 20,
-			"StopDuration" : 5,
+			"SpawnIncrementCount" : 2,
+			"MoveDuration" : 12,
+			"StopDuration" : 3,
 			"MinDistance" : 0.7,
 			"MaxStopCount" : 3
 		}
