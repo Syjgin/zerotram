@@ -89,8 +89,7 @@ namespace Assets
 
         private void CalculateTicket(float currentTicketProbability)
         {
-            int ticketProbability = Randomizer.GetRandomPercent();
-            _hasTicket = ticketProbability > (100 - currentTicketProbability);
+            _hasTicket = Randomizer.GetPercentageBasedBoolean((int) currentTicketProbability);
         }
 
         public virtual void Init()
@@ -213,8 +212,8 @@ namespace Assets
 
         private void CalculateAttackReaction()
         {
-            float currentCounterAttackProbability = Randomizer.GetRandomPercent();
-            if (currentCounterAttackProbability > (100 - CounterAttackProbability))
+            bool willCounterAttack = Randomizer.GetPercentageBasedBoolean((int) CounterAttackProbability);
+            if (willCounterAttack)
             {
                 if (AttackTarget != null)
                     CurrentState = State.Attack;
@@ -376,8 +375,7 @@ namespace Assets
             if (_timeForNextUpdate > 0)
                 return false;
             _timeForNextUpdate = ChangeStatePeriod;
-            int range = Randomizer.GetRandomPercent();
-            return range > (100 - MoveProbability);
+            return Randomizer.GetPercentageBasedBoolean((int) MoveProbability);
         }
 
         private bool CanAttack()
@@ -386,9 +384,7 @@ namespace Assets
                 return false;
             if (AttackTarget == null)
             {
-                int range = Randomizer.GetRandomPercent();
-                if (range > (100 - AttackProbability))
-                    return true;
+                return Randomizer.GetPercentageBasedBoolean((int) AttackProbability);
             }
             else
             {
@@ -462,8 +458,8 @@ namespace Assets
 
         private void CalculateStick()
         {
-            int random = Randomizer.GetRandomPercent();
-            if (random > (100 - StickProbability) && Background.IsPassengerNearDoors(this))
+            bool stick = Randomizer.GetPercentageBasedBoolean((int) StickProbability);
+            if (stick && Background.IsPassengerNearDoors(this))
             {
                 CurrentState = State.Stick;
                 Indicator.sprite = _stick;   

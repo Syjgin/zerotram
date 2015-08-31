@@ -39,5 +39,26 @@ namespace Assets.Scripts.Math
                 _isInitialized = true;
             }
         }
+
+        public static bool GetPercentageBasedBoolean(int percent)
+        {
+            Dictionary<int, bool> values = new Dictionary<int, bool>();
+            int remainTrueValues = percent;
+            for (int i = 0; i < 100; i++)
+            {
+                if (remainTrueValues > 0)
+                {
+                    values.Add(i, true);
+                    remainTrueValues--;
+                }
+                else
+                {
+                    values.Add(i, false);
+                }
+            }
+            init();
+            int randIndex = Random.Range(0, 100);
+            return values[randIndex];
+        }
     }
 }

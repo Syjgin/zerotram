@@ -27,7 +27,7 @@
 			"MoveProbability" : 100,
             "AttackProbability" : 70,
             "ChangeStatePeriod" : 1,
-            "AttackDistance" : 2,
+            "AttackDistance" : 1.5,
             "AttackReloadPeriod" : 1,
             "AttackMaxDistance" : 12,
             "CounterAttackProbability" : 70,
@@ -78,7 +78,7 @@
             "CounterAttackProbability" : 100,
             "InitialLifes" : 250,
             "Velocity" : 1,
-            "AttackStrength" : 15,
+            "AttackStrength" : 30,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
             "StickProbability" : 60
