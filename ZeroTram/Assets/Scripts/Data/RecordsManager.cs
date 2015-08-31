@@ -79,6 +79,8 @@ namespace Assets
 
         private void WriteRecord(int record)
         {
+            if (_records.ContainsKey(_currentUserName))
+                _records.Remove(_currentUserName);
             _records.Add(_currentUserName, record);
             PlayerPrefs.SetInt(_currentUserName, record);
             String keys = String.Empty;
