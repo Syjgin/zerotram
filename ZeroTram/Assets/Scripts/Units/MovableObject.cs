@@ -25,12 +25,17 @@ public class MovableObject : MonoBehaviour {
 
     private State _state;
 
+    protected virtual bool CanChangeState()
+    {
+        return true;
+    }
+
     protected State CurrentState
     {
         get { return _state; }
         set
         {
-            if (_state != State.Stick && !IsGoingAway)
+            if (CanChangeState())
             {
                 _state = value;
             }

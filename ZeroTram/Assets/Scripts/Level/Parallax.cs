@@ -10,7 +10,7 @@ public class Parallax : MonoBehaviour
 
 	void Start ()
 	{
-	    Vector2 baseVelocity = new Vector2(10, 10);
+	    Vector2 baseVelocity = new Vector2(12, 12);
 	    foreach (var scrollingScript in _layers)
 	    {
 	        scrollingScript.SetSpeed(baseVelocity);

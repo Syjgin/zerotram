@@ -55,6 +55,11 @@ namespace Assets
             return _hasTicket;
         }
 
+        protected override bool CanChangeState()
+        {
+            return CurrentState != State.Stick && !IsGoingAway && !_isFlyingAway;
+        }
+
         public void SetDragged(bool dragged)
         {
             _isDragged = dragged;
