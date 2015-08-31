@@ -11,6 +11,8 @@ namespace Assets
         private static RecordsManager _instance;
 
         private const string KeysString = "RecordKeys";
+        private const string UsernameString = "Username";
+        private const string DefaultUsername = "Безымянный кондуктор";
         private const char Delimiter = ',';
         private String _currentUserName;
 
@@ -38,16 +40,28 @@ namespace Assets
                     _records.Add(key, recordValue);
                 }
             }
+            _currentUserName = PlayerPrefs.GetString(UsernameString, DefaultUsername);
+        }
+
+        public bool IsUsernameWasSet()
+        {
+            return _currentUserName != DefaultUsername;
+        }
+
+        public String GetCurrentUserName()
+        {
+            return _currentUserName;
         }
 
         public void SetCurrentUserName(String currentUserName)
         {
             if (String.IsNullOrEmpty(currentUserName))
             {
-                _currentUserName = "Пользователь по умолчанию";
+                _currentUserName = DefaultUsername;
                 return;
             }
             _currentUserName = currentUserName.Replace(Delimiter.ToString(), "");
+            PlayerPrefs.SetString(UsernameString, _currentUserName);
         }
 
         public void AddRecord(int record)
@@ -120,6 +134,11 @@ namespace Assets
             if(!result.ContainsKey(minKey))
                 result.Add(minKey, minValue);
             return result;
-        } 
+        }
+
+        public int GetRecordCount()
+        {
+            return _records.Count;
+        }
     }
 }

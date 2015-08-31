@@ -12,6 +12,14 @@ public class GUIManager : MonoBehaviour {
 
     [SerializeField] private InputField _userName;
 
+    void Start()
+    {
+        if (RecordsManager.GetInstance().IsUsernameWasSet())
+        {
+            _userName.text = RecordsManager.GetInstance().GetCurrentUserName();
+        }
+    }
+
 	public void StartGame () {
         RecordsManager.GetInstance().SetCurrentUserName(_userName.text);
 		Application.LoadLevel ("Main"); 
