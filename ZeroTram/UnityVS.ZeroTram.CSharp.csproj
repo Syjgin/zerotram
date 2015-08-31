@@ -68,6 +68,7 @@
     <Compile Include="Assets\JSON\VectorTemplates.cs" />
     <Compile Include="Assets\Scripts\Config\ConfigReader.cs" />
     <Compile Include="Assets\Scripts\Data\RecordsManager.cs" />
+    <Compile Include="Assets\Scripts\GUI\ExitButton.cs" />
     <Compile Include="Assets\Scripts\GUI\GUIManager.cs" />
     <Compile Include="Assets\Scripts\GUI\GameOverHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\HaresPassengers.cs" />
