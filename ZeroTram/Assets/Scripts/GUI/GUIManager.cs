@@ -14,6 +14,7 @@ public class GUIManager : MonoBehaviour {
 
     void Start()
     {
+        //PlayerPrefs.DeleteAll();
         if (RecordsManager.GetInstance().IsUsernameWasSet())
         {
             _userName.text = RecordsManager.GetInstance().GetCurrentUserName();
