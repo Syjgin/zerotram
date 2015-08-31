@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace Assets
 {
@@ -8,8 +9,11 @@ public class GUIManager : MonoBehaviour {
 	public GameObject PauseMenu;
 	public GameObject MainUI;
 	public bool isPaused = false;
-	
+
+    [SerializeField] private InputField _userName;
+
 	public void StartGame () {
+        RecordsManager.GetInstance().SetCurrentUserName(_userName.text);
 		Application.LoadLevel ("Main"); 
 	}
 

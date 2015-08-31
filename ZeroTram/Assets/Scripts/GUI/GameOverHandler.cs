@@ -66,5 +66,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         countText = countText.Insert(3, " ");
         _countText.text = countText;
         gameOverMenu.SetActive(true);
+        if(_stateInfo.TicketCount > 0)
+            RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
     }
 }
