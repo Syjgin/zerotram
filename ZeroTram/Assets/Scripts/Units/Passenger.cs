@@ -244,6 +244,7 @@ namespace Assets
 
         public void HandleClick()
         {
+            Debug.Log("click handled");
             if(_isDragged)
                 _hero.StopDrag();
             if (_hero.IsInAttackRadius(this))

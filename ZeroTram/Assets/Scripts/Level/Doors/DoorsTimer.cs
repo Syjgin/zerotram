@@ -14,6 +14,7 @@ public class DoorsTimer : MonoBehaviour {
     private bool _isDoorsOpen;
     private bool _isPaused;
 
+    [SerializeField] private Animator[] _wheels;
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private Parallax _parallax;
@@ -50,6 +51,13 @@ public class DoorsTimer : MonoBehaviour {
 
     void UpdateDoors()
     {
+        foreach (var animator in _wheels)
+        {
+            if(_isDoorsOpen)
+                animator.Play("idle");
+            else 
+                animator.Play("wheel");
+        }
         foreach (var doorsAnimationController in _doorsAnimators)
         {
             if (_isDoorsOpen)
