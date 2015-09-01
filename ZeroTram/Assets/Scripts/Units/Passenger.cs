@@ -327,15 +327,6 @@ namespace Assets
 
         void Update()
         {
-            if (GetPosition().z > -1)
-            {
-                Vector3 correctPos = GetPosition();
-                correctPos.z = -1;
-                SetPosition(correctPos);
-            }
-            CalculateIndicator();
-            if(_hero == null)
-                return;
             if (_isFlyingAway)
             {
                 CurrentState = State.Attacked;
@@ -348,7 +339,17 @@ namespace Assets
                 {
                     Destroy(this.gameObject);
                 }
+                return;
             }
+            if (GetPosition().z > -1)
+            {
+                Vector3 correctPos = GetPosition();
+                correctPos.z = -1;
+                SetPosition(correctPos);
+            }
+            CalculateIndicator();
+            if (_hero == null)
+                return;
             if (IsStick)
             {
                 RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
