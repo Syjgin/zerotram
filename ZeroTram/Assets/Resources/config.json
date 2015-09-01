@@ -16,7 +16,7 @@
             "AttackReloadPeriod" : 2,
             "AttackMaxDistance" : 10,
             "CounterAttackProbability" : 0,
-            "InitialLifes" : 500,
+            "InitialLifes" : 80,
             "Velocity" : 7,
             "AttackStrength" : -10,
             "AttackReactionPeriod" : 0.5,

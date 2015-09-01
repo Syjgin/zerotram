@@ -82,6 +82,8 @@ public class MovableObject : MonoBehaviour {
 
     public virtual void AddDamage(MovableObject attacker)
     {
+        if(attacker.AttackStrength < 0)
+            Player.PlayAudioById("heal");
         if (attacker.AttackStrength < 0 && Hp >= InitialLifes)
         {
             Hp = InitialLifes;
