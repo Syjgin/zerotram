@@ -32,6 +32,8 @@ namespace Assets
         private bool _hasTicket;
         private bool _isVisibleToHero;
 
+        private int _neighboursCount = 0;
+
         private float _timeForNextUpdate;
 
         private Hero _hero;
@@ -154,7 +156,7 @@ namespace Assets
         protected override IEnumerator walk()
         {
             Animator.Play("walk");
-            float sqrRemainingDistance = (GetPosition() - Target).sqrMagnitude;
+            float sqrRemainingDistance = ((Vector2)GetPosition() - (Vector2)Target).sqrMagnitude;
             if (sqrRemainingDistance <= 1)
             {
                 if (IsGoingAway)
@@ -244,9 +246,8 @@ namespace Assets
 
         public void HandleClick()
         {
-            Debug.Log("click handled");
-            if(_isDragged)
-                _hero.StopDrag();
+            /*if(_isDragged)
+                _hero.StopDrag();*/
             if (_hero.IsInAttackRadius(this))
             {
                 if (!_isVisibleToHero)
@@ -367,7 +368,12 @@ namespace Assets
             {
                 if (CurrentState != State.Attack && CurrentState != State.Attacked)
                 {
-                    GameController.GetInstance().TryAttackNearThis(this);
+                    int currentAttackTargetCount = GameController.GetInstance().GetAttackTargetsCount(this);
+                    if (currentAttackTargetCount != _neighboursCount && currentAttackTargetCount != 0)
+                    {
+                        GameController.GetInstance().TryAttackNearThis(this);   
+                    }
+                    _neighboursCount = currentAttackTargetCount;
                 }
             }
         }

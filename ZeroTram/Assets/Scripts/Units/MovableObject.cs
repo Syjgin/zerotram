@@ -180,7 +180,7 @@ public class MovableObject : MonoBehaviour {
     protected virtual IEnumerator walk()
     {
         Animator.Play("walk");
-        float sqrRemainingDistance = (GetPosition() - Target).sqrMagnitude;
+        float sqrRemainingDistance = ((Vector2)GetPosition() - (Vector2)Target).sqrMagnitude;
         if (sqrRemainingDistance <= 1)
         {
             CurrentState = State.Idle;

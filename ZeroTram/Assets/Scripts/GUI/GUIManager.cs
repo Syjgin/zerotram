@@ -23,7 +23,7 @@ public class GUIManager : MonoBehaviour {
 
 	public void StartGame () {
         RecordsManager.GetInstance().SetCurrentUserName(_userName.text);
-		Application.LoadLevel ("Main"); 
+		Application.LoadLevelAsync("Main"); 
 	}
 
 	public void Pause () {
@@ -37,15 +37,15 @@ public class GUIManager : MonoBehaviour {
     }
 
 	public void Authors(){
-		Application.LoadLevel ("Authors");
+		Application.LoadLevelAsync("Authors");
 	}
 
 	public void Records(){
-		Application.LoadLevel ("Records");
+		Application.LoadLevelAsync("Records");
 	}
 
 	public void BacktoMenu(){
-		Application.LoadLevel ("MainMenu");
+		Application.LoadLevelAsync("MainMenu");
     }
 
 	public void Retry(){
