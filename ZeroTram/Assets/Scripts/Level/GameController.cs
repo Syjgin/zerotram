@@ -285,7 +285,7 @@ namespace Assets
                 _hero = GameObject.Find("hero").GetComponent<Hero>();
             }
             float dist2Hero = (ps.GetPosition() - _hero.GetPosition()).sqrMagnitude;
-            if (dist2Hero < _minDistance)
+            if (dist2Hero < _minDistance && !_hero.IsAlreadyInBattle())
             {
                 result++;
             }
@@ -294,6 +294,8 @@ namespace Assets
                 if (passenger == null)
                     continue;
                 if (passenger == ps)
+                    continue;
+                if(passenger.IsAlreadyInBattle())
                     continue;
                 float dist = (ps.GetPosition() - passenger.GetPosition()).sqrMagnitude;
                 if (dist < _minDistance)
@@ -311,7 +313,7 @@ namespace Assets
                 _hero = GameObject.Find("hero").GetComponent<Hero>();
             }
             float dist2Hero = (ps.GetPosition() - _hero.GetPosition()).sqrMagnitude;
-            if (dist2Hero < _minDistance)
+            if (dist2Hero < _minDistance && !_hero.IsAlreadyInBattle())
             {
                 ps.TryAttackMovable(_hero);
                 return;
@@ -321,6 +323,8 @@ namespace Assets
                 if(passenger == null)
                     continue;
                 if(passenger == ps)
+                    continue;
+                if(passenger.IsAlreadyInBattle())
                     continue;
                 float dist = (ps.GetPosition() - passenger.GetPosition()).sqrMagnitude;
                 if (dist < _minDistance)

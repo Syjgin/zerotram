@@ -7,14 +7,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C640B3BD-BCBA-E11D-CE1A-B3B11A833E7D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>5.1.2f1</UnityVersion>
@@ -73,9 +75,9 @@
     <Compile Include="Assets\Scripts\GUI\GameOverHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\HaresPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\KilledPassengers.cs" />
+    <Compile Include="Assets\Scripts\GUI\NewCharacterWindow.cs" />
     <Compile Include="Assets\Scripts\GUI\PauseHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\RecordsVisualizer.cs" />
-    <Compile Include="Assets\Scripts\GUI\Score.cs" />
     <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
     <Compile Include="Assets\Scripts\GUI\SuccessfullPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\TicketCount.cs" />

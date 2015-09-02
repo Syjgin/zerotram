@@ -13,7 +13,7 @@
             "AttackProbability" : 10,
             "ChangeStatePeriod" : 5,
             "AttackDistance" : 3,
-            "AttackReloadPeriod" : 2,
+            "AttackReloadPeriod" : 15,
             "AttackMaxDistance" : 10,
             "CounterAttackProbability" : 0,
             "InitialLifes" : 80,
@@ -28,7 +28,7 @@
             "AttackProbability" : 70,
             "ChangeStatePeriod" : 0.5,
             "AttackDistance" : 1.5,
-            "AttackReloadPeriod" : 1,
+            "AttackReloadPeriod" : 2,
             "AttackMaxDistance" : 50,
             "CounterAttackProbability" : 70,
             "InitialLifes" : 100,
@@ -43,7 +43,7 @@
             "AttackProbability" : 50,
             "ChangeStatePeriod" : 1,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 5,
+            "AttackReloadPeriod" : 8,
             "AttackMaxDistance" : 5,
             "CounterAttackProbability" : 50,
             "InitialLifes" : 150,
@@ -58,7 +58,7 @@
             "AttackProbability" : 5,
             "ChangeStatePeriod" : 20,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 10,
+            "AttackReloadPeriod" : 15,
             "AttackMaxDistance" : 3,
             "CounterAttackProbability" : 95,
             "InitialLifes" : 450,
@@ -73,7 +73,7 @@
             "AttackProbability" : 65,
             "ChangeStatePeriod" : 15,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 3,
+            "AttackReloadPeriod" : 5,
             "AttackMaxDistance" : 10,
             "CounterAttackProbability" : 95,
             "InitialLifes" : 250,
@@ -93,5 +93,12 @@
 			"StopDuration" : 3,
 			"MinDistance" : 0.7,
 			"MaxStopCount" : 3
+		},
+	"descriptions" : {
+			"Gnome" : "гномы с рюкзаками имеют особенность застревать в проходе",
+			"Granny" : "Пенсионерки с тележками - настоящий ночной кошмар для кондуктора. Нет, проезд они оплачивают исправно и от кондуктора по вагону не бегают. Однако постоянно приходится помогать им залезть в вагон и сойти на остановке. К тому же бабули очень целеустремленные и любят вспоминать войну, поэтому тележка часто превращается в их руках в оружие массового поражения. Будьте аккуратны с ними.",
+			"Cat" : "null",
+			"Alien" : "Еще одни пассажиры трамвая - двойняшки.Никто особенно не интересовался их происхождением, но с ними лучше однозначно дружить. Если твой пассажир получил повреждения или замечаешь, что счетчик твоей жизни стремится к нулю - беги к ним за исцелением. Но сначала пусть оплатят проезд!",
+			"Bird" : "Эта раса - частые пассажиры нашего трамвая. Их длинные клювы и цепкие когти могут представлять угрозу для остальных, тем более нрав у них вспыльчивый и задиристый, как у дворовой шпаны. Так что пугать их никому не рекомендуется."
 		}
 }

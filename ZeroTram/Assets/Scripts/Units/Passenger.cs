@@ -29,6 +29,8 @@ namespace Assets
         protected float StickProbability = 0;
         protected float TicketProbability;
 
+        protected NewCharacterWindow Window;
+
         private bool _hasTicket;
         private bool _isVisibleToHero;
 
@@ -81,6 +83,7 @@ namespace Assets
         void Awake()
         {
             Background = GameObject.Find("background").GetComponent<BackgroundManager>();
+            Window = GameObject.Find("Spawner").GetComponent<NewCharacterWindow>();
         }
 
         new void Start()
@@ -264,6 +267,7 @@ namespace Assets
                         Player.PlayAudioById("coins");
                     }
                     StopStick();
+                    ShowCharacterInfo();
                     return;
                 }
                 if (!_hero.IsInWayoutZone())
@@ -366,7 +370,7 @@ namespace Assets
             }
             else
             {
-                if (CurrentState != State.Attack && CurrentState != State.Attacked)
+                if (CurrentState != State.Attack && CurrentState != State.Attacked && TimeSinceAttackMade > AttackReloadPeriod)
                 {
                     int currentAttackTargetCount = GameController.GetInstance().GetAttackTargetsCount(this);
                     if (currentAttackTargetCount != _neighboursCount && currentAttackTargetCount != 0)
@@ -376,6 +380,11 @@ namespace Assets
                     _neighboursCount = currentAttackTargetCount;
                 }
             }
+        }
+
+        protected virtual void ShowCharacterInfo()
+        {
+            
         }
 
         void OnMouseUp()
@@ -399,20 +408,17 @@ namespace Assets
             {
                 return Randomizer.GetPercentageBasedBoolean((int) AttackProbability);
             }
-            else
+            Passenger ps = AttackTarget.GetComponent<Passenger>();
+            if (ps != null)
             {
-                Passenger ps = AttackTarget.GetComponent<Passenger>();
-                if (ps != null)
+                if (ps.IsGoingAway || ps.IsStick)
                 {
-                    if (ps.IsGoingAway || ps.IsStick)
-                    {
-                        AttackTarget = null;
-                        return false;   
-                    }
+                    AttackTarget = null;
+                    return false;
                 }
-                if (TimeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
-                    return true;
             }
+            if (TimeSinceAttackMade >= AttackReloadPeriod && AttackTargetDistance() <= AttackDistance)
+                return true;
             return false;
         }
 
@@ -437,6 +443,7 @@ namespace Assets
             else
             {
                 CurrentState = State.Idle;
+                TimeSinceAttackMade = 0;
             }
         }
 

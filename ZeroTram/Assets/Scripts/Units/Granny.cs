@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets
 {
@@ -23,6 +24,13 @@ namespace Assets
             TicketProbability = ConfigReader.GetConfig().GetField("granny").GetField("TicketProbability").n;
             StickProbability = ConfigReader.GetConfig().GetField("granny").GetField("StickProbability").n;
             base.Init();
+        }
+
+        protected override void ShowCharacterInfo()
+        {
+            if (PlayerPrefs.HasKey(NewCharacterWindow.Prefix + NewCharacterWindow.Character.Granny))
+                return;
+            Window.SetCharacterToShow(NewCharacterWindow.Character.Granny);
         }
     }
 }

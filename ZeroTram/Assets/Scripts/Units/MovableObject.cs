@@ -80,6 +80,11 @@ public class MovableObject : MonoBehaviour {
         MoveLifebar(position);
     }
 
+    public bool IsAlreadyInBattle()
+    {
+        return CurrentState == State.Attack || CurrentState == State.Attacked;
+    }
+
     public virtual void AddDamage(MovableObject attacker)
     {
         if(attacker.AttackStrength < 0)

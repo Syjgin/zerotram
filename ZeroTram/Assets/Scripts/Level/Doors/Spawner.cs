@@ -7,13 +7,14 @@ using System.Collections;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> unitPrefabs;
-    private bool _isFirstStation;
     private float _maxPassengers;
 
     public static float StickYOffset = 0.8f;
 
     void Awake()
     {
+        //PlayerPrefs.DeleteAll();
+
         _maxPassengers = ConfigReader.GetConfig().GetField("tram").GetField("MaxPassengers").n;
     }
 
@@ -21,14 +22,9 @@ public class Spawner : MonoBehaviour
     {
         if(GameController.GetInstance().IsGameFinished)
             return;
-        int minCount = 0;
-        if (_isFirstStation)
-        {
-            _isFirstStation = false;
-            minCount = 1;
-        }
         int maxCount = GameController.GetInstance().GetCurrentSpawnCount();
-        int realCount = Randomizer.GetInRange(minCount, maxCount);
+        int realCount = Randomizer.GetInRange(0, maxCount);
+        
         for (int i = 0; i < realCount; i++)
         {
             if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
@@ -48,6 +44,6 @@ public class Spawner : MonoBehaviour
                 timer.SetPaused(true);
                 return;
             }
-        }
+        } 
     }
 }
