@@ -11,6 +11,8 @@ public class GUIManager : MonoBehaviour {
 	public bool isPaused = false;
 
     [SerializeField] private InputField _userName;
+    [SerializeField] private GameObject _loadingText;
+    [SerializeField] private Button _loadingButton;
 
     void Start()
     {
@@ -23,7 +25,12 @@ public class GUIManager : MonoBehaviour {
 
 	public void StartGame () {
         RecordsManager.GetInstance().SetCurrentUserName(_userName.text);
-		Application.LoadLevelAsync("Main"); 
+        _loadingText.SetActive(true);
+	    _loadingButton.enabled = false;
+	    if (!PlayerPrefs.HasKey("WasTutorialFinished"))
+	        Application.LoadLevelAsync("tutorial");
+        else
+    		Application.LoadLevelAsync("Main"); 
 	}
 
 	public void Pause () {
