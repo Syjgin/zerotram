@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\GUI\TicketCount.cs" />
     <Compile Include="Assets\Scripts\GUI\TimeToStopBus.cs" />
     <Compile Include="Assets\Scripts\GUI\TitlesScroller.cs" />
+    <Compile Include="Assets\Scripts\GUI\TutorialScroller.cs" />
     <Compile Include="Assets\Scripts\Level\AudioPlayer.cs" />
     <Compile Include="Assets\Scripts\Level\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsAnimationController.cs" />
