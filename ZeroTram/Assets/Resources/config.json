@@ -24,7 +24,7 @@
             "StickProbability" : 25
 		},
 	"bird": {
-			"MoveProbability" : 75,
+			"MoveProbability" : 80,
             "AttackProbability" : 70,
             "ChangeStatePeriod" : 0.5,
             "AttackDistance" : 1.5,
@@ -41,13 +41,13 @@
 	"cat": {
 			"MoveProbability" : 50,
             "AttackProbability" : 50,
-            "ChangeStatePeriod" : 1,
+            "ChangeStatePeriod" : 3,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 8,
             "AttackMaxDistance" : 5,
             "CounterAttackProbability" : 50,
             "InitialLifes" : 150,
-            "Velocity" : 15,
+            "Velocity" : 16,
             "AttackStrength" : 15,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 50,
