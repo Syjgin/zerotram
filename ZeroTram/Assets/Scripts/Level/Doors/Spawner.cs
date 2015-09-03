@@ -16,6 +16,7 @@ public class Spawner : MonoBehaviour
         //PlayerPrefs.DeleteAll();
 
         _maxPassengers = ConfigReader.GetConfig().GetField("tram").GetField("MaxPassengers").n;
+        GameController.GetInstance().StartNewGame();
     }
 
     public void Spawn(GameObject spawnPoint)

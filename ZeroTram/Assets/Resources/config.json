@@ -13,12 +13,12 @@
             "AttackProbability" : 10,
             "ChangeStatePeriod" : 5,
             "AttackDistance" : 3,
-            "AttackReloadPeriod" : 15,
+            "AttackReloadPeriod" : 6,
             "AttackMaxDistance" : 10,
             "CounterAttackProbability" : 0,
             "InitialLifes" : 80,
             "Velocity" : 7,
-            "AttackStrength" : -10,
+            "AttackStrength" : -20,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 20,
             "StickProbability" : 25
@@ -33,7 +33,7 @@
             "CounterAttackProbability" : 70,
             "InitialLifes" : 100,
             "Velocity" : 10,
-            "AttackStrength" : 4,
+            "AttackStrength" : 8,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 10,
             "StickProbability" : 5
@@ -43,12 +43,12 @@
             "AttackProbability" : 50,
             "ChangeStatePeriod" : 3,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 8,
+            "AttackReloadPeriod" : 4,
             "AttackMaxDistance" : 5,
             "CounterAttackProbability" : 50,
             "InitialLifes" : 150,
             "Velocity" : 16,
-            "AttackStrength" : 15,
+            "AttackStrength" : 20,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 50,
             "StickProbability" : 5
@@ -58,12 +58,12 @@
             "AttackProbability" : 5,
             "ChangeStatePeriod" : 20,
             "AttackDistance" : 1,
-            "AttackReloadPeriod" : 15,
+            "AttackReloadPeriod" : 7,
             "AttackMaxDistance" : 3,
             "CounterAttackProbability" : 95,
             "InitialLifes" : 450,
             "Velocity" : 2,
-            "AttackStrength" : 45,
+            "AttackStrength" : 70,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 60,
             "StickProbability" : 80
@@ -78,7 +78,7 @@
             "CounterAttackProbability" : 95,
             "InitialLifes" : 250,
             "Velocity" : 0.5,
-            "AttackStrength" : 20,
+            "AttackStrength" : 30,
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
             "StickProbability" : 60
@@ -87,7 +87,7 @@
 			"MaxPassengers" : 20,
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 50,
-			"InitialSpawnCount" : 5,
+			"InitialSpawnCount" : 7,
 			"SpawnIncrementCount" : 2,
 			"MoveDuration" : 10,
 			"StopDuration" : 3,
@@ -97,8 +97,8 @@
 	"descriptions" : {
 			"Gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",
 			"Granny" : "Бабушки с тележками - они повсюду. Что они возят - большая загадка. Но даже одна бабушка - ночной кошмар для любого кондуктора. Нет, проезд они оплачивают исправно и от кондуктора по вагону не бегают. Однако постоянно приходится помогать им залезть в вагон и сойти на остановке. К тому же бабули очень целеустремленные и любят вспоминать войну, поэтому тележка часто превращается в их руках в оружие массового поражения. Будьте аккуратны с ними.",
-			"Cat" : "null",
-			"Alien" : "Еще одни пассажиры трамвая - двойняшки.Никто особенно не интересовался их происхождением, но с ними лучше однозначно дружить. Если твой пассажир получил повреждения или замечаешь, что счетчик твоей жизни стремится к нулю - беги к ним за исцелением. Но сначала пусть оплатят проезд!",
+			"Cat" : "Волновые Коты - непредсказуемые существа. Они всегда находятся наполовину в другом измерении, поэтому в трамваях стараются проехать за полцены, а лучше бесплатно. Не поддавайся их зубастому обаянию и не забывай применять к ним дисциплинирующий пендаль. Если, конечно, сможешь их догнать.",
+			"Alien" : "Двойняшки.- те самые “зеленые человечки”, инопланетяне, которые всегда ходят вдвоем. Этих пассажиров нужно особенно беречь - они могут исцелять раны окружающих. Поэтому, если кто-то пострадал в потасовке или досталось самому - подходи к ним смело. Но сначала пусть оплатят проезд!",
 			"Bird" : "Страусы - существа нелетающие, поэтому очень не против прокатиться на трамвае. Но по характеру они - вечные подростки. Нрав у них вспыльчивый и задиристый, как у дворовой шпаны. Так что за ними приходится приглядывать, хотя бы потому, что их длинные клювы и цепкие когти могут представлять угрозу для окружающих."
 		}
 }

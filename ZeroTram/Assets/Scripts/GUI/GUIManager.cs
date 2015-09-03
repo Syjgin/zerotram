@@ -14,6 +14,7 @@ public class GUIManager : MonoBehaviour {
     [SerializeField] private GameObject _loadingText;
     [SerializeField] private Button _loadingButton;
     [SerializeField] private AudioSource _startClip;
+    [SerializeField] private Button _tut;
     void Start()
     {
         //PlayerPrefs.DeleteAll();
@@ -21,6 +22,7 @@ public class GUIManager : MonoBehaviour {
         {
             _userName.text = RecordsManager.GetInstance().GetCurrentUserName();
         }
+        _tut.onClick.AddListener(() => Application.LoadLevelAsync("tutorial"));
     }
 
 	public void StartGame () {
@@ -28,10 +30,7 @@ public class GUIManager : MonoBehaviour {
         _loadingText.SetActive(true);
 	    _loadingButton.enabled = false;
         _startClip.Play();
-	    if (!PlayerPrefs.HasKey("WasTutorialFinished"))
-	        Application.LoadLevelAsync("tutorial");
-        else
-    		Application.LoadLevelAsync("Main"); 
+    	Application.LoadLevelAsync("Main"); 
 	}
 
 	public void Pause () {

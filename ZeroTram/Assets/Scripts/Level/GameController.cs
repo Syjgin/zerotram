@@ -71,10 +71,9 @@ namespace Assets
             _initialSpawnCount = ConfigReader.GetConfig().GetField("tram").GetField("InitialSpawnCount").n;
             _spawnIncrementCount = ConfigReader.GetConfig().GetField("tram").GetField("SpawnIncrementCount").n;
             _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
-            Init();
         }
 
-        public void Init()
+        public void StartNewGame()
         {
             if(_passengers == null)
                 _passengers = new List<Passenger>();

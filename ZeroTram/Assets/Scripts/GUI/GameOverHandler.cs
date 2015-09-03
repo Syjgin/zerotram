@@ -26,7 +26,6 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         _restartButton.onClick.AddListener(() =>
         {
             Time.timeScale = 1;
-            GameController.GetInstance().Init();
             Application.LoadLevel("main");
         });
         _exitButton.onClick.AddListener(() =>
