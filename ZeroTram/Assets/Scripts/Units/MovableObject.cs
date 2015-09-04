@@ -85,6 +85,11 @@ public class MovableObject : MonoBehaviour {
         return CurrentState == State.Attack || CurrentState == State.Attacked;
     }
 
+    public virtual bool CanBeAttacked()
+    {
+        return false;
+    }
+
     public virtual void AddDamage(MovableObject attacker)
     {
         if(attacker.AttackStrength < 0)

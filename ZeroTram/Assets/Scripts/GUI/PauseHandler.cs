@@ -38,6 +38,7 @@ public class PauseHandler : MonoBehaviour
         _toMenuButton.onClick.AddListener(() =>
         {
             Application.LoadLevelAsync("MainMenu");
+            _toMenuButton.enabled = false;
             Time.timeScale = 1;
         });
 	}

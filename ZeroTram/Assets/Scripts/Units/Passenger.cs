@@ -249,8 +249,6 @@ namespace Assets
 
         public void HandleClick()
         {
-            /*if(_isDragged)
-                _hero.StopDrag();*/
             if (_hero.IsInAttackRadius(this))
             {
                 if (!_isVisibleToHero)
@@ -281,7 +279,7 @@ namespace Assets
                         _hero.Kick(this);
                         return;
                     }
-                    if (AttackTarget == _hero)
+                    if (AttackTarget == _hero && AttackStrength > 0)
                     {
                         _hero.Kick(this);
                         return;
@@ -330,8 +328,21 @@ namespace Assets
                 Indicator.sprite = _hare;
         }
 
+        public override bool CanBeAttacked()
+        {
+            return !_isFlyingAway;
+        }
+
         void Update()
         {
+            if (AttackTarget != null)
+            {
+                if (!AttackTarget.CanBeAttacked())
+                {
+                    AttackTarget = null;
+                    CurrentState = State.Idle;
+                }   
+            }
             if (_isFlyingAway)
             {
                 CurrentState = State.Attacked;
@@ -362,13 +373,13 @@ namespace Assets
                 {
                     Vector2 transform2d = GetPosition();
                     float distance = (transform2d - hit.centroid).sqrMagnitude;
-                    if (distance < 1)
+                    if (distance < 1 && _hero.IsInAttackRadius(this))
                     {
                         HandleClick();
                     }
                 }
             }
-            else
+            /*else
             {
                 if (CurrentState != State.Attack && CurrentState != State.Attacked && TimeSinceAttackMade > AttackReloadPeriod)
                 {
@@ -379,7 +390,7 @@ namespace Assets
                     }
                     _neighboursCount = currentAttackTargetCount;
                 }
-            }
+            }*/
         }
 
         protected virtual void ShowCharacterInfo()

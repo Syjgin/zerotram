@@ -4,7 +4,7 @@
 			"InitialLifes": 500,
 			"AttackMaxDistance": 2,
 			"AttackReloadPeriod": 0.5,
-			"Velocity": 5,
+			"Velocity": 6,
 			"AttackReactionPeriod" : 0.5,
 			"AttackReloadPeriod" : 0.5
 		},
@@ -35,7 +35,7 @@
             "Velocity" : 10,
             "AttackStrength" : 8,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 10,
+            "TicketProbability" : 30,
             "StickProbability" : 5
 		},
 	"cat": {
@@ -50,7 +50,7 @@
             "Velocity" : 16,
             "AttackStrength" : 20,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 50,
+            "TicketProbability" : 10,
             "StickProbability" : 5
 		},
 	"gnome": {
