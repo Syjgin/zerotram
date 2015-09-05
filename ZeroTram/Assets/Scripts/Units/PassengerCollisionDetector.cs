@@ -10,6 +10,7 @@ public class PassengerCollisionDetector : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Hero hero = other.GetComponentInParent<Hero>();
         _passenger.HandleTriggerEnter(other);
     }
 

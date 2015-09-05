@@ -150,5 +150,9 @@ namespace Assets
             }
         }
 
+        public override bool CanBeAttacked()
+        {
+            return true;
+        }
     }
 }
