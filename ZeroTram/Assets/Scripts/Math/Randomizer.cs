@@ -17,12 +17,22 @@ namespace Assets.Scripts.Math
             return result;
         }
 
+        public static float GetBetweenOneAndMinusOne()
+        {
+            init();
+            int percent = Random.Range(0, 200);
+            if (percent%2 == 0)
+                percent *= -1;
+            float result = percent * 0.01f;
+            return result;
+        }
+
         public static int GetRandomPercent()
         {
             init();
             return Random.Range(0, 100);
         }
-
+        
         public static int GetInRange(int min, int max)
         {
             init();

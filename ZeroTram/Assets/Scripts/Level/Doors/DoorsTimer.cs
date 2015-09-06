@@ -65,12 +65,14 @@ public class DoorsTimer : MonoBehaviour {
                 _player.SetDoorsOpen(true);
                 _parallax.SetEnabled(false);
                 doorsAnimationController.Open();
+                GameController.GetInstance().SetDoorsOpen(true);
             }
             else
             {
                 _player.SetDoorsOpen(false);
                 _parallax.SetEnabled(true);
-                doorsAnimationController.Close();   
+                doorsAnimationController.Close();
+                GameController.GetInstance().SetDoorsOpen(false);
             }
         }
     }

@@ -58,6 +58,8 @@ public class MovableObject : MonoBehaviour {
     private Vector3 _lifebarOffset;
     protected AudioPlayer Player;
     protected bool IsGoingAway;
+    
+    public BoxCollider2D BoxCollider2D;
 
     // Use this for initialization
     protected void Start()

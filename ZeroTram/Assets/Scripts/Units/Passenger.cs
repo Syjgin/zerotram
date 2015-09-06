@@ -33,7 +33,7 @@ namespace Assets
 
         private bool _hasTicket;
         private bool _isVisibleToHero;
-
+        private bool _isStickOnExitCalculated;
         private int _neighboursCount = 0;
 
         private float _timeForNextUpdate;
@@ -138,17 +138,18 @@ namespace Assets
                 {
                     if (dist > AttackDistance)
                     {
-                        SetTarget(AttackTarget.GetPosition());
+                        Vector3 result = AttackTarget.BoxCollider2D.bounds.ClosestPoint(GetPosition());
+                        SetTarget(result);
                     }
                     else
                     {
                         CurrentState = State.Attack;
-                    }   
+                    } 
                 }
             }
             yield return null;
         }
-
+        
         private void CalculateRandomTarget()
         {
             Vector2 target = Background.GetRandomPosition();
@@ -164,9 +165,12 @@ namespace Assets
             {
                 if (IsGoingAway)
                 {
-                    CalculateStickOnExit();
-                    if(CurrentState != State.Stick)
-                        Destroy(gameObject);
+                    if (GameController.GetInstance().IsDoorsOpen())
+                    {
+                        CalculateStickOnExit();
+                        if (CurrentState != State.Stick)
+                            Destroy(gameObject);
+                    }
                 }
                 if(CurrentState != State.Stick)
                     CurrentState = State.Idle;
@@ -335,6 +339,11 @@ namespace Assets
 
         void Update()
         {
+            if (IsGoingAway && GameController.GetInstance().IsDoorsOpen() && CurrentState != State.Stick && Background.IsPassengerNearDoors(this))
+            {
+                Destroy(gameObject);
+                return;
+            }
             if (AttackTarget != null)
             {
                 if (!AttackTarget.CanBeAttacked())
@@ -353,7 +362,7 @@ namespace Assets
                 float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
                 if (sqrRemainingDistance <= 1)
                 {
-                    Destroy(this.gameObject);
+                    Destroy(gameObject);
                 }
                 return;
             }
@@ -499,6 +508,8 @@ namespace Assets
 
         public void CalculateStickOnExit()
         {
+            if (CurrentState == State.Stick)
+                return;
             CalculateStick();
             if (IsStick)
             {

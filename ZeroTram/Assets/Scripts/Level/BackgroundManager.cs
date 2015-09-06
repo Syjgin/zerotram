@@ -31,20 +31,13 @@ public class BackgroundManager : MonoBehaviour
 	    {
 	        _hero.UpdatePositionForDrag();
 	    }
-	    if (IsHeroNearWayout(_centralWayout))
+	    if (IsHeroNearCentralWayout())
 	    {
             _hero.SetInWayoutZone(true);
 	    }
 	    else
 	    {
-	        if (IsHeroNearWayout(_leftDoor) || IsHeroNearWayout(_rightDoor))
-	        {
-                _hero.SetInWayoutZone(_timer.IsDoorsOpen);
-	        }
-	        else
-	        {
-                _hero.SetInWayoutZone(false);   
-	        }
+	        _hero.SetInWayoutZone(IsHeroNearDoors() && _timer.IsDoorsOpen);
 	    }
 	}
 
@@ -59,11 +52,23 @@ public class BackgroundManager : MonoBehaviour
         return false;
     }
 
-    private bool IsHeroNearWayout(Collider2D wayout)
+    private bool IsHeroNearCentralWayout()
+    {
+        return IsHeroNearWayout(_centralWayout, true);
+    }
+
+    private bool IsHeroNearDoors()
+    {
+        return IsHeroNearWayout(_leftDoor, false) || IsHeroNearWayout(_rightDoor, false);
+    }
+
+    private bool IsHeroNearWayout(Collider2D wayout, bool central)
     {
         if (_hero == null)
             return false;
         Vector2 position = _hero.GetPosition();
+        if (central)
+            position.y -= 0.7f;
         return wayout.OverlapPoint(position);
     }
 

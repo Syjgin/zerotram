@@ -10,6 +10,7 @@ public class Spawner : MonoBehaviour
     private float _maxPassengers;
 
     public static float StickYOffset = 0.8f;
+    private const int AttemptCount = 3;
 
     void Awake()
     {
@@ -35,15 +36,30 @@ public class Spawner : MonoBehaviour
             float horisontalOffset = Random.Range(-2f, 2f);
             float verticalOffset = Random.Range(1f, 2f);
             Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset);
-            GameObject instantiated = (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
-            Passenger ps = instantiated.GetComponent<Passenger>();
-            ps.Init();
-            if (ps.IsStick)
+            
+            int currectAttempt = 0;
+            while (currectAttempt < AttemptCount)
             {
-                instantiated.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y - StickYOffset);
-                DoorsTimer timer = GetComponent<DoorsTimer>();
-                timer.SetPaused(true);
-                return;
+                if (GameController.GetInstance().IsPlaceFree(spawnPosition))
+                {
+                    GameObject instantiated =
+                        (GameObject) Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
+                    Passenger ps = instantiated.GetComponent<Passenger>();
+                    ps.Init();
+                    if (ps.IsStick)
+                    {
+                        instantiated.transform.position = new Vector3(spawnPoint.transform.position.x,
+                            spawnPoint.transform.position.y - StickYOffset);
+                        DoorsTimer timer = GetComponent<DoorsTimer>();
+                        timer.SetPaused(true);
+                        return;
+                    }
+                    break;
+                }
+                currectAttempt++;
+                horisontalOffset = Random.Range(-2f, 2f);
+                verticalOffset = Random.Range(1f, 2f);
+                spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset);
             }
         } 
     }

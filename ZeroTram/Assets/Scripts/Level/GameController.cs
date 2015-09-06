@@ -14,6 +14,18 @@ namespace Assets
 
         private bool _isGameFinished;
 
+        private bool _isDoorsOpen;
+
+        public bool IsDoorsOpen()
+        {
+            return _isDoorsOpen;
+        }
+
+        public void SetDoorsOpen(bool open)
+        {
+            _isDoorsOpen = open;
+        }
+
         public bool IsGameFinished
         {
             get { return _isGameFinished; }
@@ -223,11 +235,11 @@ namespace Assets
         private void UpdateStats()
         {
             float haresPercent = _totalHares / (float)_passengers.Count;
-            _haresPercent = Mathf.RoundToInt(haresPercent * 100);
+            _haresPercent = Mathf.Min(Mathf.RoundToInt(haresPercent * 100), 100);
             if (_incomingPassengers > 0)
             {
                 float killedPercent = _killedPassengers/(float) _incomingPassengers;
-                _killedPercent = Mathf.RoundToInt(killedPercent*100);
+                _killedPercent = Mathf.Min(Mathf.RoundToInt(killedPercent*100), 100);
             }
             else
             {
@@ -276,61 +288,7 @@ namespace Assets
             return true;
         }
 
-        public int GetAttackTargetsCount(Passenger ps)
-        {
-            int result = 0;
-            if (_hero == null)
-            {
-                _hero = GameObject.Find("hero").GetComponent<Hero>();
-            }
-            float dist2Hero = (ps.GetPosition() - _hero.GetPosition()).sqrMagnitude;
-            if (dist2Hero < _minDistance && !_hero.IsAlreadyInBattle())
-            {
-                result++;
-            }
-            foreach (var passenger in _passengers)
-            {
-                if (passenger == null)
-                    continue;
-                if (passenger == ps)
-                    continue;
-                if(passenger.IsAlreadyInBattle())
-                    continue;
-                float dist = (ps.GetPosition() - passenger.GetPosition()).sqrMagnitude;
-                if (dist < _minDistance)
-                {
-                    result++;
-                }
-            }
-            return result;
-        }
 
-        public void TryAttackNearThis(Passenger ps)
-        {
-            if (_hero == null)
-            {
-                _hero = GameObject.Find("hero").GetComponent<Hero>();
-            }
-            float dist2Hero = (ps.GetPosition() - _hero.GetPosition()).sqrMagnitude;
-            if (dist2Hero < _minDistance && !_hero.IsAlreadyInBattle())
-            {
-                ps.TryAttackMovable(_hero);
-                return;
-            }
-            foreach (var passenger in _passengers)
-            {
-                if(passenger == null)
-                    continue;
-                if(passenger == ps)
-                    continue;
-                if(passenger.IsAlreadyInBattle())
-                    continue;
-                float dist = (ps.GetPosition() - passenger.GetPosition()).sqrMagnitude;
-                if (dist < _minDistance)
-                {
-                    ps.TryAttackMovable(passenger);
-                } 
-            }
-        }
+        
     }
 }
