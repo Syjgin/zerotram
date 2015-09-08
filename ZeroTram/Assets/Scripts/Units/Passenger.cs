@@ -44,8 +44,6 @@ namespace Assets
 
         private bool _isDragged;
 
-        private bool _isFlyingAway;
-
         private Vector2 _flyTarget;
 
         private const int FlyLength = 30;
@@ -61,7 +59,7 @@ namespace Assets
 
         protected override bool CanChangeState()
         {
-            return CurrentState != State.Stick && !IsGoingAway && !_isFlyingAway;
+            return CurrentState != State.Stick && !IsGoingAway && CurrentState != State.FlyingAway;
         }
 
         public void SetDragged(bool dragged)
@@ -73,10 +71,10 @@ namespace Assets
 
         public void FlyAway()
         {
-            _isFlyingAway = true;
             _isDragged = true;
-            CurrentState = State.Attacked;
+            CurrentState = State.FlyingAway;
             _flyTarget = new Vector2(Rb2D.transform.position.x, Rb2D.transform.position.y + FlyLength);
+            AttackTarget = null;
             GameController.GetInstance().RegisterDeath(this);
         }
 
@@ -150,7 +148,7 @@ namespace Assets
             yield return null;
         }
         
-        private void CalculateRandomTarget()
+        public void CalculateRandomTarget()
         {
             Vector2 target = Background.GetRandomPosition();
             if (target != default(Vector2))
@@ -334,11 +332,28 @@ namespace Assets
 
         public override bool CanBeAttacked()
         {
-            return !_isFlyingAway;
+            return CurrentState != State.FlyingAway;
+        }
+
+        protected override IEnumerator flyAway()
+        {
+            Animator.Play("attacked");
+            Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 50 * Time.deltaTime);
+            Rb2D.MovePosition(newPosition);
+            MoveLifebar(newPosition);
+            Vector2 position2D = GetPosition();
+            float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
+            if (sqrRemainingDistance <= 1)
+            {
+                Destroy(gameObject);
+            }
+            yield return null;
         }
 
         void Update()
         {
+            if (_hero == null)
+                return;
             if (IsGoingAway && GameController.GetInstance().IsDoorsOpen() && CurrentState != State.Stick && Background.IsPassengerNearDoors(this))
             {
                 Destroy(gameObject);
@@ -352,20 +367,6 @@ namespace Assets
                     CurrentState = State.Idle;
                 }   
             }
-            if (_isFlyingAway)
-            {
-                CurrentState = State.Attacked;
-                Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 50 * Time.deltaTime);
-                Rb2D.MovePosition(newPosition);
-                MoveLifebar(newPosition);
-                Vector2 position2D = GetPosition();
-                float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
-                if (sqrRemainingDistance <= 1)
-                {
-                    Destroy(gameObject);
-                }
-                return;
-            }
             if (GetPosition().z > -1)
             {
                 Vector3 correctPos = GetPosition();
@@ -373,8 +374,6 @@ namespace Assets
                 SetPosition(correctPos);
             }
             CalculateIndicator();
-            if (_hero == null)
-                return;
             if (IsStick)
             {
                 RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -388,18 +387,16 @@ namespace Assets
                     }
                 }
             }
-            /*else
+            else
             {
-                if (CurrentState != State.Attack && CurrentState != State.Attacked && TimeSinceAttackMade > AttackReloadPeriod)
+                if (CurrentState == State.Idle)
                 {
-                    int currentAttackTargetCount = GameController.GetInstance().GetAttackTargetsCount(this);
-                    if (currentAttackTargetCount != _neighboursCount && currentAttackTargetCount != 0)
+                    if (GameController.GetInstance().IsNearOtherPassenger(this))
                     {
-                        GameController.GetInstance().TryAttackNearThis(this);   
-                    }
-                    _neighboursCount = currentAttackTargetCount;
+                        CalculateRandomTarget();
+                    }   
                 }
-            }*/
+            }
         }
 
         protected virtual void ShowCharacterInfo()
@@ -422,7 +419,7 @@ namespace Assets
 
         private bool CanAttack()
         {
-            if (_isFlyingAway || IsGoingAway || IsStick)
+            if (CurrentState == State.FlyingAway || IsGoingAway || IsStick)
                 return false;
             if (AttackTarget == null)
             {
@@ -444,7 +441,7 @@ namespace Assets
 
         public void HandleTriggerEnter(Collider2D other)
         {
-            if (_isDragged || _isFlyingAway || IsGoingAway)
+            if (_isDragged || CurrentState == State.FlyingAway || IsGoingAway)
                 return;
             MovableObject movable = other.gameObject.GetComponentInParent<MovableObject>();
             if (movable != null)
@@ -493,6 +490,8 @@ namespace Assets
         public void StopStick()
         {
             ForceChangeState(State.Idle);
+            if(!IsGoingAway)
+                CalculateRandomTarget();
             GetTimer().SetPaused(false);
         }
 

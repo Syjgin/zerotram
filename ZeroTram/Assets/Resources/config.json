@@ -84,15 +84,15 @@
             "StickProbability" : 60
 		},
 	"tram" : {
-			"MaxPassengers" : 20,
+			"MaxPassengers" : 25,
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 50,
-			"InitialSpawnCount" : 7,
+			"InitialSpawnCount" : 2,
 			"SpawnIncrementCount" : 2,
 			"MoveDuration" : 10,
 			"StopDuration" : 3,
 			"MinDistance" : 0.7,
-			"MaxStopCount" : 1
+			"MaxStopCount" : 3
 		},
 	"descriptions" : {
 			"Gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",

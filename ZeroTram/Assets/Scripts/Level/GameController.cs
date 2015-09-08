@@ -234,6 +234,7 @@ namespace Assets
 
         private void UpdateStats()
         {
+            _passengers.RemoveAll(item => item == null);
             float haresPercent = _totalHares / (float)_passengers.Count;
             _haresPercent = Mathf.Min(Mathf.RoundToInt(haresPercent * 100), 100);
             if (_incomingPassengers > 0)
@@ -288,7 +289,19 @@ namespace Assets
             return true;
         }
 
-
-        
+        public bool IsNearOtherPassenger(Passenger ps)
+        {
+            _passengers.RemoveAll(item => item == null);
+            foreach (var passenger in _passengers)
+            {
+                if (passenger != ps)
+                {
+                    float dist = (passenger.GetPosition() - ps.GetPosition()).sqrMagnitude;
+                    if (dist < _minDistance)
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }

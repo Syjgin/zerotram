@@ -10,7 +10,6 @@ public class Spawner : MonoBehaviour
     private float _maxPassengers;
 
     public static float StickYOffset = 0.8f;
-    private const int AttemptCount = 3;
 
     void Awake()
     {
@@ -25,7 +24,9 @@ public class Spawner : MonoBehaviour
         if(GameController.GetInstance().IsGameFinished)
             return;
         int maxCount = GameController.GetInstance().GetCurrentSpawnCount();
-        int realCount = Randomizer.GetInRange(0, maxCount);
+        int realCount = 1;
+        if(GameController.GetInstance().GetCurrentStationNumber() > 0)
+            realCount = Randomizer.GetInRange(1, maxCount);
         
         for (int i = 0; i < realCount; i++)
         {
@@ -33,33 +34,20 @@ public class Spawner : MonoBehaviour
                 return;
             int randomIndex = Randomizer.GetInRange(0, unitPrefabs.Count);
             GameObject randomNPC = unitPrefabs[randomIndex];
-            float horisontalOffset = Random.Range(-2f, 2f);
-            float verticalOffset = Random.Range(1f, 2f);
-            Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset);
-            
-            int currectAttempt = 0;
-            while (currectAttempt < AttemptCount)
+            Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y);
+            GameObject instantiated =
+                        (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
+            Passenger ps = instantiated.GetComponent<Passenger>();
+            ps.Init();
+            if (ps.IsStick)
             {
-                if (GameController.GetInstance().IsPlaceFree(spawnPosition))
-                {
-                    GameObject instantiated =
-                        (GameObject) Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
-                    Passenger ps = instantiated.GetComponent<Passenger>();
-                    ps.Init();
-                    if (ps.IsStick)
-                    {
-                        instantiated.transform.position = new Vector3(spawnPoint.transform.position.x,
-                            spawnPoint.transform.position.y - StickYOffset);
-                        DoorsTimer timer = GetComponent<DoorsTimer>();
-                        timer.SetPaused(true);
-                        return;
-                    }
-                    break;
-                }
-                currectAttempt++;
-                horisontalOffset = Random.Range(-2f, 2f);
-                verticalOffset = Random.Range(1f, 2f);
-                spawnPosition = new Vector3(spawnPoint.transform.position.x + horisontalOffset, spawnPoint.transform.position.y - verticalOffset);
+                DoorsTimer timer = GetComponent<DoorsTimer>();
+                timer.SetPaused(true);
+                return;
+            }
+            else
+            {
+                ps.CalculateRandomTarget();
             }
         } 
     }

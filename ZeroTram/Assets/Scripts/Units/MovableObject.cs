@@ -20,7 +20,8 @@ public class MovableObject : MonoBehaviour {
         Drag, 
         Attack,
         Attacked, 
-        Stick
+        Stick,
+        FlyingAway
     }
 
     private State _state;
@@ -185,6 +186,9 @@ public class MovableObject : MonoBehaviour {
                 case State.Stick:
                     yield return StartCoroutine(stick());
                     break;
+                case State.FlyingAway:
+                    yield return StartCoroutine(flyAway());
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -247,6 +251,12 @@ public class MovableObject : MonoBehaviour {
         {
             CurrentState = State.Idle;
         }
+        yield return null;
+    }
+
+    protected virtual IEnumerator flyAway()
+    {
+        Animator.Play("attacked");
         yield return null;
     }
 }
