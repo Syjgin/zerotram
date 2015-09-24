@@ -56,7 +56,6 @@ public class MovableObject : MonoBehaviour {
     protected float AttackReloadPeriod = 0.5f;
     protected float TimeSinceAttackMade;
     protected float InitialLifes;
-    private Vector3 _lifebarOffset;
     protected AudioPlayer Player;
     protected bool IsGoingAway;
     
@@ -68,19 +67,17 @@ public class MovableObject : MonoBehaviour {
         CurrentState = State.Idle;
         Animator = Rb2D.GetComponent<Animator>();
         Player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
-        _lifebarOffset = _lifebar.transform.position - Rb2D.transform.position;
         StartCoroutine(mainLoop());
     }
 
     public Vector3 GetPosition()
     {
-        return Rb2D.transform.position;
+        return transform.position;
     }
 
     public void SetPosition(Vector3 position)
     {
-        Rb2D.transform.position = new Vector3(position.x, position.y, -1);
-        MoveLifebar(position);
+        transform.position = new Vector3(position.x, position.y, -1);
     }
 
     public bool IsAlreadyInBattle()
@@ -146,7 +143,7 @@ public class MovableObject : MonoBehaviour {
     {
         if (Rb2D != null)
         {
-            if (target.x > Rb2D.position.x)
+            if (target.x > transform.position.x)
             {
                 Rb2D.transform.localScale = new Vector3(-1, 1, 1);
             }
@@ -204,17 +201,11 @@ public class MovableObject : MonoBehaviour {
             CurrentState = State.Idle;
             yield return null;
         }
-        Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
+        Vector3 newPosition = Vector3.MoveTowards(transform.position, Target, Velocity * Time.deltaTime);
         newPosition.z = -1;
-        Rb2D.MovePosition(newPosition);
-        MoveLifebar(newPosition);
+        transform.position = newPosition;
     }
-
-    protected virtual void MoveLifebar(Vector3 position)
-    {
-        _lifebar.transform.position = position + _lifebarOffset;
-    }
-
+    
     protected virtual IEnumerator idle()
     {
         Animator.Play("idle");

@@ -176,8 +176,7 @@ namespace Assets
             }
             Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, Target, Velocity * Time.deltaTime);
             newPosition.z = -1;
-            Rb2D.MovePosition(newPosition);
-            MoveLifebar(newPosition);
+            transform.position = newPosition;
         }
 
         private float AttackTargetDistance()
@@ -338,11 +337,9 @@ namespace Assets
         protected override IEnumerator flyAway()
         {
             Animator.Play("attacked");
-            Vector3 newPosition = Vector3.MoveTowards(Rb2D.position, _flyTarget, 50 * Time.deltaTime);
-            Rb2D.MovePosition(newPosition);
-            MoveLifebar(newPosition);
-            Vector2 position2D = GetPosition();
-            float sqrRemainingDistance = (position2D - _flyTarget).sqrMagnitude;
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, _flyTarget, 50 * Time.deltaTime);
+            transform.position = newPosition;
+            float sqrRemainingDistance = ((Vector2)transform.position - _flyTarget).sqrMagnitude;
             if (sqrRemainingDistance <= 1)
             {
                 Destroy(gameObject);
@@ -520,12 +517,6 @@ namespace Assets
         private DoorsTimer GetTimer()
         {
             return GameObject.Find("Spawner").GetComponent<DoorsTimer>();
-        }
-
-        protected override void MoveLifebar(Vector3 position)
-        {
-            base.MoveLifebar(position);
-            Indicator.transform.position = position + _indicatorOffset;
         }
     }
 }
