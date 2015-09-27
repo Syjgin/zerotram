@@ -1,8 +1,8 @@
 {
 	"hero": {
-			"MaxDragDistance": 8.0,
+			"MaxDragDistance": 20.0,
 			"InitialLifes": 500,
-			"AttackMaxDistance": 2,
+			"AttackMaxDistance": 1,
 			"AttackReloadPeriod": 0.5,
 			"Velocity": 6,
 			"AttackReactionPeriod" : 0.5,

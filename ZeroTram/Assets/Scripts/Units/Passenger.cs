@@ -484,6 +484,11 @@ namespace Assets
             get { return CurrentState == State.Stick; }
         }
 
+        public void StopDrag()
+        {
+            Background.OnMouseUp();
+        }
+
         public void StopStick()
         {
             ForceChangeState(State.Idle);

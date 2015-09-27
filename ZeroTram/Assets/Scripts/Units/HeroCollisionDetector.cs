@@ -19,5 +19,6 @@ public class HeroCollisionDetector : MonoBehaviour
         if (Time.timeScale == 0)
             return;
         _hero.StopDrag();
+        GameController.GetInstance().UndragAll();
     }
 }

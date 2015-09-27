@@ -94,10 +94,16 @@ public class BackgroundManager : MonoBehaviour
         if(_hero == null)
             return;
         Vector2 pos = GetCurrentMousePosition();
+        Passenger passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
+        if (passengerNearClick != null)
+        {
+            passengerNearClick.HandleClick();
+            return;
+        }
         _hero.SetTarget(pos);
     }
 
-    void OnMouseUp()
+    public void OnMouseUp()
     {
         _hero.StopDrag();
         GameController.GetInstance().UndragAll();

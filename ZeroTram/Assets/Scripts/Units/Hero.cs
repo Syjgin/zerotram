@@ -12,6 +12,7 @@ namespace Assets
         private BackgroundManager _backgroundManager;
         private Passenger _dragTarget;
         private Vector2 _dragStartPoint;
+        private Vector2 _dragOffset;
         private float _maxDragDistance;
         private bool _isInWayoutZone;
         private Text _lifes;
@@ -94,28 +95,26 @@ namespace Assets
             obj.SetDragged(true);
             _dragTarget = obj;
             _dragStartPoint = _backgroundManager.GetCurrentMousePosition();
+            _dragOffset = transform.position - obj.transform.position;
             CalculateOrientation(_dragStartPoint);
         }
 
         public void UpdatePositionForDrag()
         {
-            if (_dragTarget == null)
+            if (_dragTarget == null || !Input.GetMouseButton(0))
             {
                 StopDrag();
                 return;
             }
             Vector2 targetPos = _backgroundManager.GetCurrentMousePosition();
-            Vector2 position2D = GetPosition();
-            float dist = (position2D - targetPos).sqrMagnitude;
-            if(dist > 0.001f)
-                CalculateOrientation(targetPos);
             float currentDist = (targetPos - _dragStartPoint).sqrMagnitude;
             if (currentDist > _maxDragDistance)
             {
                 StopDrag();
                 return;
             }
-            SetPosition(targetPos);
+            CalculateOrientation(targetPos + _dragOffset);
+            SetPosition(targetPos + _dragOffset);
             _dragTarget.SetPosition(targetPos);
         }
 
@@ -136,7 +135,6 @@ namespace Assets
                 CurrentState = State.Idle;
                 if (_dragTarget != null)
                 {
-                    _dragTarget.SetPosition(GetPosition());
                     _dragTarget.SetDragged(false);
                 }   
             }
@@ -144,7 +142,7 @@ namespace Assets
 
         public void HandleClick()
         {
-            if (_dragTarget != null)
+            if (_dragTarget != null && _dragOffset.sqrMagnitude < AttackMaxDistance)
             {
                 _dragTarget.HandleClick();
             }

@@ -5,8 +5,20 @@ using UnityEngine.UI;
 public class TitlesScroller : MonoBehaviour
 {
     [SerializeField] private ScrollRect _rect;
+    [SerializeField] private Button _exit;
 
     private bool _finished = false;
+
+    void Start()
+    {
+        _exit.onClick.AddListener(Exit);
+    }
+
+    void Exit()
+    {
+        Application.LoadLevelAsync("MainMenu");
+        _finished = true;
+    }
 
 	void Update () {
         if(_finished)
@@ -15,8 +27,7 @@ public class TitlesScroller : MonoBehaviour
 	        _rect.verticalNormalizedPosition -= 0.02f*Time.deltaTime;
 	    else
 	    {
-	        Application.LoadLevelAsync("MainMenu");
-	        _finished = true;
+            Exit();
 	    }
 	}
 }

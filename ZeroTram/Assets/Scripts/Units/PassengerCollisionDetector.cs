@@ -21,4 +21,8 @@ public class PassengerCollisionDetector : MonoBehaviour
         _passenger.HandleClick();
     }
 
+    void OmMouseUp()
+    {
+        _passenger.StopDrag();
+    }
 }

@@ -303,5 +303,19 @@ namespace Assets
             }
             return false;
         }
+
+        public Passenger GetPassengerNearClick(Vector2 point)
+        {
+            _passengers.RemoveAll(item => item == null);
+            foreach (var passenger in _passengers)
+            {
+                float dist = ((Vector2)passenger.GetPosition() - point).sqrMagnitude;
+                if (dist < _minDistance)
+                {
+                    return passenger;
+                }
+            }
+            return null;
+        }
     }
 }
