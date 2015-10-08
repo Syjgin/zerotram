@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class Gnome : Passenger
+    public class Gnome : PassengerSM
     {
         public override void Init()
         {

@@ -4,15 +4,16 @@ using Assets.Scripts.Math;
 using UnityEngine;
 using System.Collections;
 
-public class BackgroundManager : MonoBehaviour
+public class Floor : MonoBehaviour
 {
 
     [SerializeField] private Camera _mainCamera;
-    [SerializeField] private Hero _hero;
+    [SerializeField] private ConductorSM _hero;
     [SerializeField] private Collider2D _leftDoor;
     [SerializeField] private Collider2D _rightDoor;
     [SerializeField] private Collider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
+
 
     private const float ColliderOffset = 1.4f;
     private const float HeroOffset = 0.6f;
@@ -23,33 +24,17 @@ public class BackgroundManager : MonoBehaviour
 	{
 	    _collider = GetComponent<BoxCollider2D>();
 	}
-	
-	void Update ()
-	{
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-	    if (_hero.IsDragging() && hit.collider == _collider)
-	    {
-	        _hero.UpdatePositionForDrag();
-	    }
-	    if (IsHeroNearCentralWayout())
-	    {
-            _hero.SetInWayoutZone(true);
-	    }
-	    else
-	    {
-	        _hero.SetInWayoutZone(IsHeroNearDoors() && _timer.IsDoorsOpen);
-	    }
-	}
 
-    public bool IsPassengerNearDoors(Passenger ps)
+    void Update()
     {
-        Vector2 position = ps.GetPosition();
-        position.y += ColliderOffset;
-        if (_leftDoor.OverlapPoint(position) || _rightDoor.OverlapPoint(position))
+        if (IsHeroNearCentralWayout())
         {
-            return true;
+            _hero.IsInWayoutZone = true;
         }
-        return false;
+        else
+        {
+            _hero.IsInWayoutZone = (IsHeroNearDoors() && _timer.IsDoorsOpen);
+        }
     }
 
     private bool IsHeroNearCentralWayout()
@@ -66,10 +51,15 @@ public class BackgroundManager : MonoBehaviour
     {
         if (_hero == null)
             return false;
-        Vector2 position = _hero.GetPosition();
+        Vector2 position = _hero.transform.position;
         if (central)
             position.y -= 0.7f;
         return wayout.OverlapPoint(position);
+    }
+
+    public ConductorSM GetHero()
+    {
+        return _hero;
     }
 
     public Vector2 GetRandomPosition()
@@ -87,14 +77,14 @@ public class BackgroundManager : MonoBehaviour
         return new Vector2(0,0);
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
-        if(Time.timeScale == 0)
+        if (Time.timeScale == 0)
             return;
-        if(_hero == null)
+        if (_hero == null)
             return;
         Vector2 pos = GetCurrentMousePosition();
-        Passenger passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
+        PassengerSM passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
         if (passengerNearClick != null)
         {
             passengerNearClick.HandleClick();
@@ -109,10 +99,33 @@ public class BackgroundManager : MonoBehaviour
         GameController.GetInstance().UndragAll();
     }
 
+    public bool IsBeyondFloor(Vector2 target)
+    {
+        target.y -= HeroOffset;
+        if(target.y > _collider.bounds.max.y)
+            target.y = _collider.bounds.max.y - HeroOffset;
+        return !_collider.OverlapPoint(target);
+    }
+
     public Vector2 GetCurrentMousePosition()
     {
         Vector2 target = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        if (target.y > _collider.bounds.max.y)
+            target.y = _collider.bounds.max.y;
+        if (target.y < _collider.bounds.min.y)
+            target.y = _collider.bounds.min.y;
         target.y += HeroOffset;
         return target;
+    }
+
+    public bool IsPassengerNearDoors(PassengerSM ps)
+    {
+        Vector2 position = ps.transform.position;
+        position.y += ColliderOffset;
+        if (_leftDoor.OverlapPoint(position) || _rightDoor.OverlapPoint(position))
+        {
+            return true;
+        }
+        return false;
     }
 }

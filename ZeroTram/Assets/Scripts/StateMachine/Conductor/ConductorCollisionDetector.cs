@@ -2,23 +2,23 @@
 using UnityEngine;
 using System.Collections;
 
-public class HeroCollisionDetector : MonoBehaviour
+public class ConductorCollisionDetector : MonoBehaviour
 {
 
-    [SerializeField] public Hero _hero;
+    [SerializeField] public ConductorSM _conductor;
 
     void OnMouseDown()
     {
         if(Time.timeScale == 0)
             return;
-        _hero.HandleClick();
+        _conductor.HandleClick();
     }
 
     void OnMouseUp()
     {
         if (Time.timeScale == 0)
             return;
-        _hero.StopDrag();
+        _conductor.StopDrag();
         GameController.GetInstance().UndragAll();
     }
 }

@@ -37,9 +37,9 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y);
             GameObject instantiated =
                         (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
-            Passenger ps = instantiated.GetComponent<Passenger>();
+            PassengerSM ps = instantiated.GetComponent<PassengerSM>();
             ps.Init();
-            if (ps.IsStick)
+            if (ps.IsStick())
             {
                 DoorsTimer timer = GetComponent<DoorsTimer>();
                 timer.SetPaused(true);

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class Alien : Passenger
+    public class Alien : PassengerSM
     {
         public override void Init()
         {

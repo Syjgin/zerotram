@@ -55,7 +55,7 @@ namespace Assets
         private int _totalHares;
         private int _ticketCount;
 
-        private List<Passenger> _passengers;
+        private List<PassengerSM> _passengers;
         private List<GameStateNotificationListener> _listeners;
 
         private int _killedPercent;
@@ -66,8 +66,7 @@ namespace Assets
 
         private int _currentSpawnCount;
         private int _currentStationNumber;
-        private Hero _hero;
-
+        
         public static GameController GetInstance()
         {
             if(_instance == null)
@@ -83,12 +82,13 @@ namespace Assets
             _initialSpawnCount = ConfigReader.GetConfig().GetField("tram").GetField("InitialSpawnCount").n;
             _spawnIncrementCount = ConfigReader.GetConfig().GetField("tram").GetField("SpawnIncrementCount").n;
             _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
+            _passengers = new List<PassengerSM>();
         }
 
         public void StartNewGame()
         {
             if(_passengers == null)
-                _passengers = new List<Passenger>();
+                _passengers = new List<PassengerSM>();
             else 
                 _passengers.Clear();
             _totalHares = 0;
@@ -100,10 +100,6 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
-            GameObject heroObject = GameObject.Find("hero");
-            if(heroObject != null)
-                _hero = heroObject.GetComponent<Hero>();
-
         }
 
         public int GetCurrentStationNumber()
@@ -131,7 +127,7 @@ namespace Assets
             _listeners.Remove(listener);
         }
 
-        public void RegisterPassenger(Passenger ps)
+        public void RegisterPassenger(PassengerSM ps)
         {
             if (ps.HasTicket())
                 _incomingPassengers++;
@@ -140,7 +136,7 @@ namespace Assets
             UpdateStats();
         }
 
-        public void UpdatePassenger(Passenger ps)
+        public void UpdatePassenger(PassengerSM ps)
         {
             if (ps.HasTicket())
             {
@@ -169,30 +165,30 @@ namespace Assets
         {
             foreach (var passenger in _passengers)
             {
-                if (passenger.IsStick)
+                if (passenger.IsStick())
                     return true;
             }
             return false;
         }
 
-        public void RegisterDeath(MovableObject obj)
+        public void RegisterDeath(MovableCharacterSM obj)
         {
-            if (obj as Hero != null)
+            if (obj is ConductorSM)
             {
                 GameOver(true);
             }
             else
             {
-                Passenger ps = obj as Passenger;
-                if (ps != null)
+                if (obj is PassengerSM)
                 {
+                    var ps = obj as PassengerSM;
                     if (ps.HasTicket())
                     {
                         if (!ps.WasStickWhenFlyAway)
                         {
                             _killedPassengers++;  
                         }
-                        if (!ps.IsVisibleToHero)
+                        if (!ps.IsVisibleToHero())
                         {
                             if(_totalHares > 0)
                                 _totalHares--;   
@@ -203,8 +199,9 @@ namespace Assets
                         if(_totalHares > 0)
                             _totalHares--;
                     }
+
+                    _passengers.Remove(ps);
                 }
-                _passengers.Remove(ps);
                 UpdateStats();
                 if (_killedPercent > _maxKilledPercent)
                 {
@@ -215,6 +212,7 @@ namespace Assets
 
         public void UndragAll()
         {
+            FloorHandler.GetFloor().GetHero().StopDrag();
             foreach (var passenger in _passengers)
             {
                 passenger.SetDragged(false);
@@ -223,6 +221,7 @@ namespace Assets
 
         public void GameOver(bool isConductorDied)
         {
+            UndragAll();
             _isGameFinished = true;
             Time.timeScale = 0;
             UpdateListeners(isConductorDied);
@@ -281,7 +280,7 @@ namespace Assets
             _passengers.RemoveAll(item => item == null);
             foreach (var passenger in _passengers)
             {
-                Vector2 position = passenger.GetPosition();
+                Vector2 position = passenger.transform.position;
                 float dist = (place - position).sqrMagnitude;
                 if (dist < _minDistance)
                     return false;
@@ -289,14 +288,14 @@ namespace Assets
             return true;
         }
 
-        public bool IsNearOtherPassenger(Passenger ps)
+        public bool IsNearOtherPassenger(PassengerSM ps)
         {
             _passengers.RemoveAll(item => item == null);
             foreach (var passenger in _passengers)
             {
                 if (passenger != ps)
                 {
-                    float dist = (passenger.GetPosition() - ps.GetPosition()).sqrMagnitude;
+                    float dist = ((Vector2)passenger.transform.position - (Vector2)ps.transform.position).sqrMagnitude;
                     if (dist < _minDistance)
                         return true;
                 }
@@ -304,13 +303,13 @@ namespace Assets
             return false;
         }
 
-        public Passenger GetPassengerNearClick(Vector2 point)
+        public PassengerSM GetPassengerNearClick(Vector2 point)
         {
             _passengers.RemoveAll(item => item == null);
             foreach (var passenger in _passengers)
             {
-                float dist = ((Vector2)passenger.GetPosition() - point).sqrMagnitude;
-                if (dist < _minDistance)
+                float dist = ((Vector2)passenger.transform.position - point).sqrMagnitude;
+                if (dist < 1)
                 {
                     return passenger;
                 }
