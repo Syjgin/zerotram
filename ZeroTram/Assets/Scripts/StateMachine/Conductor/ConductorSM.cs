@@ -78,17 +78,18 @@ public class ConductorSM : MovableCharacterSM
         if (GetActiveState().Equals((int)MovableCharacterStates.Drag))
         {
             MakeIdle();
-            if (_dragTarget != null)
-            {
-                _dragTarget.SetDragged(false);
-                _dragTarget = null;
-            }
+            _dragTarget = null;
         }
     }
 
     public bool IsDragged()
     {
         return GetActiveState().Equals((int) MovableCharacterStates.Drag);
+    }
+
+    public override bool CanNotInteract()
+    {
+        return IsDragging();
     }
 
     public PassengerSM GetDragTarget()

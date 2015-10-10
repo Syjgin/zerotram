@@ -47,15 +47,8 @@ public class PassengerAttackState : AttackState
     {
         if (_passenger.CanNotInteract())
             return false;
-        PassengerSM ps = _passenger.AttackTarget.GetComponent<PassengerSM>();
-        if (ps != null)
-        {
-            if (ps.CanNotInteract())
-            {
-                _passenger.AttackTarget = null;
-                return false;
-            }
-        }
+        if (_passenger.AttackTarget.CanNotInteract())
+            return false;
         if (_passenger.AttackTargetDistance() <= MovableCharacter.AttackDistance)
             return true;
         return false;

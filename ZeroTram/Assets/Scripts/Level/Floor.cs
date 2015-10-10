@@ -95,16 +95,7 @@ public class Floor : MonoBehaviour
 
     public void OnMouseUp()
     {
-        _hero.StopDrag();
         GameController.GetInstance().UndragAll();
-    }
-
-    public bool IsBeyondFloor(Vector2 target)
-    {
-        target.y -= HeroOffset;
-        if(target.y > _collider.bounds.max.y)
-            target.y = _collider.bounds.max.y - HeroOffset;
-        return !_collider.OverlapPoint(target);
     }
 
     public Vector2 GetCurrentMousePosition()

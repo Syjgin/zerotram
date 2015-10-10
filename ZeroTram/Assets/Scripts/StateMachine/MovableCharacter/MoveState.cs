@@ -6,7 +6,7 @@ public class MoveState : MovableCharacterState
     {
         MovableCharacter.CalculateOrientation(MovableCharacter.GetTarget());
     }
-
+    
     public override void OnUpdate()
     {
         MovableCharacter.Animator.Play("walk");

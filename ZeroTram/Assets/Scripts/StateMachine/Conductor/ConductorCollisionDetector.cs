@@ -18,7 +18,6 @@ public class ConductorCollisionDetector : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-        _conductor.StopDrag();
         GameController.GetInstance().UndragAll();
     }
 }
