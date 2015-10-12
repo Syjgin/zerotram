@@ -19,11 +19,13 @@ public class DoorsTimer : MonoBehaviour {
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private Parallax _parallax;
 
+    private PassengerSM _currentStickPassenger;
+    private DoorsAnimationController _currentStickDoor;
+
     private AudioPlayer _player;
     
     private const float StickSoundDelay = 1;
     private float _currentStickSoundRemainingTime;
-    private bool _stickSoundWillBePlayed;
 
     void Awake()
     {
@@ -58,32 +60,37 @@ public class DoorsTimer : MonoBehaviour {
             else 
                 animator.Play("wheel");
         }
-        foreach (var doorsAnimationController in _doorsAnimators)
+        
+        if (_isDoorsOpen)
         {
-            if (_isDoorsOpen)
+            _player.SetDoorsOpen(true);
+            _parallax.SetEnabled(false);
+            foreach (var doorsAnimationController in _doorsAnimators)
             {
-                _player.SetDoorsOpen(true);
-                _parallax.SetEnabled(false);
-                doorsAnimationController.Open();
-                GameController.GetInstance().SetDoorsOpen(true);
+                doorsAnimationController.Open(true);
             }
-            else
+            GameController.GetInstance().SetDoorsOpen(true);
+        }
+        else
+        {
+            _player.SetDoorsOpen(false);
+            _parallax.SetEnabled(true);
+            foreach (var doorsAnimationController in _doorsAnimators)
             {
-                _player.SetDoorsOpen(false);
-                _parallax.SetEnabled(true);
                 doorsAnimationController.Close();
-                GameController.GetInstance().SetDoorsOpen(false);
             }
+            GameController.GetInstance().SetDoorsOpen(false);
         }
     }
 
     public void SetPaused(bool paused)
     {
+        if(paused == _isPaused)
+            return;
         if (paused)
         {
             _isPaused = true;
             _stickNote.SetActive(true);
-            _stickSoundWillBePlayed = true;
             _currentStickSoundRemainingTime = StickSoundDelay;
         }
         else
@@ -91,6 +98,13 @@ public class DoorsTimer : MonoBehaviour {
             if (!GameController.GetInstance().IsAnybodyStick())
             {
                 _stickNote.SetActive(false);
+                if (_currentStickDoor != null)
+                {
+                    if(_isDoorsOpen)
+                        _currentStickDoor.Open(false);
+                    else 
+                        _currentStickDoor.Close();  
+                }
                 _isPaused = false;
             }
         }
@@ -105,15 +119,21 @@ public class DoorsTimer : MonoBehaviour {
     {
         if (_isPaused)
         {
-            if (_stickSoundWillBePlayed)
+            _currentStickSoundRemainingTime -= Time.fixedDeltaTime;
+            if (_currentStickSoundRemainingTime <= 0)
             {
-                _currentStickSoundRemainingTime -= Time.fixedDeltaTime;
-                if (_currentStickSoundRemainingTime <= 0)
-                {
-                    _stickSoundWillBePlayed = false;
-                    _player.PlayAudioById("tramdoorstuck");
-                }
+                _currentStickSoundRemainingTime = StickSoundDelay;
+                _player.PlayAudioById("tramdoorstuck");
             }
+            if (_currentStickPassenger == null)
+            {
+                _currentStickPassenger = GameController.GetInstance().GetStickPassenger();
+                _currentStickDoor =
+                    FloorHandler.GetFloor()
+                        .GetPassengerDoor(_currentStickPassenger)
+                        .GetComponent<DoorsAnimationController>();
+            }
+            _currentStickDoor.Glitch();
             return;
         }
 	    if (_isDoorsOpen)

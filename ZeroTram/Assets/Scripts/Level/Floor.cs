@@ -119,4 +119,19 @@ public class Floor : MonoBehaviour
         }
         return false;
     }
+
+    public GameObject GetPassengerDoor(PassengerSM passenger)
+    {
+        Vector2 position = passenger.transform.position;
+        position.y += ColliderOffset;
+        if (_leftDoor.OverlapPoint(position))
+        {
+            return _leftDoor.gameObject;
+        }
+        if (_rightDoor.OverlapPoint(position))
+        {
+            return _rightDoor.gameObject;
+        }
+        return null;
+    }
 }

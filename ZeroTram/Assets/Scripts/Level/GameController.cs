@@ -74,6 +74,13 @@ namespace Assets
             return _instance;
         }
 
+        private int _stickPeriod;
+
+        public int GetStickPeriod()
+        {
+            return _stickPeriod;
+        }
+
         GameController()
         {
             _listeners = new List<GameStateNotificationListener>();
@@ -82,6 +89,7 @@ namespace Assets
             _initialSpawnCount = ConfigReader.GetConfig().GetField("tram").GetField("InitialSpawnCount").n;
             _spawnIncrementCount = ConfigReader.GetConfig().GetField("tram").GetField("SpawnIncrementCount").n;
             _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
+            _stickPeriod = (int)ConfigReader.GetConfig().GetField("tram").GetField("StickPeriod").n;
             _passengers = new List<PassengerSM>();
         }
 
@@ -312,6 +320,31 @@ namespace Assets
                 if (dist < 1)
                 {
                     return passenger;
+                }
+            }
+            return null;
+        }
+
+        public void KillStickPassenger()
+        {
+            foreach (var passengerSm in _passengers)
+            {
+                if (passengerSm.IsStick())
+                {
+                    RegisterDeath(passengerSm);
+                    MonoBehaviour.Destroy(passengerSm.gameObject);
+                    return;
+                }
+            }
+        }
+
+        public PassengerSM GetStickPassenger()
+        {
+            foreach (var passengerSm in _passengers)
+            {
+                if (passengerSm.IsStick())
+                {
+                    return passengerSm;
                 }
             }
             return null;

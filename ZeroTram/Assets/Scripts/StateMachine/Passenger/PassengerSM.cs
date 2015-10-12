@@ -126,6 +126,8 @@ public class PassengerSM : MovableCharacterSM
     
     public void CalculateStick()
     {
+        if(GameController.GetInstance().IsAnybodyStick())
+            return;
         bool stick = Randomizer.GetPercentageBasedBoolean((int)StickProbability);
         if (stick && FloorHandler.GetFloor().IsPassengerNearDoors(this))
         {

@@ -16,15 +16,21 @@ public class DoorsAnimationController : MonoBehaviour
 	
 	}
 
-    public void Open()
+    public void Open(bool spawn)
     {
         _animator.enabled = true;
         _animator.Play("doors_open");
-        _unitSpawner.Spawn(gameObject);
+        if(spawn)
+            _unitSpawner.Spawn(gameObject);
     }
 
     public void Close()
     {
         _animator.Play("doors_close");
+    }
+
+    public void Glitch()
+    {
+        _animator.Play("doors_glitch");
     }
 }
