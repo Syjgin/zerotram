@@ -67,7 +67,7 @@ public class PassengerMoveState : MoveState
         if (_passenger.IsStick())
         {
             _passenger.transform.position = new Vector3(_passenger.GetTarget().x, _passenger.GetTarget().y - Spawner.StickYOffset, -1);
-            DoorsHandler.GetTimer().SetPaused(true);
+            MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(true);
         }
     }
 }

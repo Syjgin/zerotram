@@ -51,7 +51,7 @@ public class ConductorSM : MovableCharacterSM
             obj.StopStick();
         }
         _dragTarget = obj;
-        _dragStartPoint = FloorHandler.GetFloor().GetCurrentMousePosition();
+        _dragStartPoint = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
         _dragOffset = transform.position - obj.transform.position;
         CalculateOrientation(_dragStartPoint);//maybe inverted obj position will be used
         ActivateState((int)MovableCharacterStates.Drag);
@@ -60,7 +60,7 @@ public class ConductorSM : MovableCharacterSM
 
     public void Kick(PassengerSM obj)
     {
-        AudioController.GetPlayer().PlayAudioById("kick");
+        MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("kick");
         CalculateOrientation(obj.transform.position);
         ActivateState((int)MovableCharacterStates.Attack);
         if (obj.IsStick())
@@ -126,6 +126,6 @@ public class ConductorSM : MovableCharacterSM
 
     public void HandleClick()
     {
-        FloorHandler.GetFloor().OnMouseDown();
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseDown();
     }
 }

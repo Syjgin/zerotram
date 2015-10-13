@@ -16,7 +16,7 @@ public class PassengerCollisionDetector : MonoBehaviour
 
     void OnMouseDown()
     {
-        FloorHandler.GetFloor().OnMouseDown();
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseDown();
     }
 
     void OmMouseUp()

@@ -4,7 +4,7 @@ public class PassengerDraggedState : MovableCharacterState
     public override void OnUpdate()
     {
         MovableCharacter.Animator.Play("attacked");
-        Vector2 targetPos = FloorHandler.GetFloor().GetCurrentMousePosition();
+        Vector2 targetPos = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
         MovableCharacter.transform.position = new Vector3(targetPos.x, targetPos.y, -1);
     }
 
@@ -14,6 +14,6 @@ public class PassengerDraggedState : MovableCharacterState
 
     public override bool IsTransitionAllowed()
     {
-        return !FloorHandler.GetFloor().GetHero().IsDragging();
+        return !MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().IsDragging();
     }
 }

@@ -103,7 +103,8 @@ public class DoorsTimer : MonoBehaviour {
                     if(_isDoorsOpen)
                         _currentStickDoor.Open(false);
                     else 
-                        _currentStickDoor.Close();  
+                        _currentStickDoor.Close();
+                    _currentStickPassenger = null;
                 }
                 _isPaused = false;
             }
@@ -128,9 +129,7 @@ public class DoorsTimer : MonoBehaviour {
             if (_currentStickPassenger == null)
             {
                 _currentStickPassenger = GameController.GetInstance().GetStickPassenger();
-                _currentStickDoor =
-                    FloorHandler.GetFloor()
-                        .GetPassengerDoor(_currentStickPassenger)
+                _currentStickDoor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetPassengerDoor(_currentStickPassenger)
                         .GetComponent<DoorsAnimationController>();
             }
             _currentStickDoor.Glitch();

@@ -15,7 +15,7 @@ public class PassengerStickState : MovableCharacterState
         {
             Vector2 transform2d = MovableCharacter.transform.position;
             float distance = (transform2d - hit.centroid).sqrMagnitude;
-            if (distance < 1 && FloorHandler.GetFloor().GetHero().IsInAttackRadius(MovableCharacter.transform.position))
+            if (distance < 1 && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().IsInAttackRadius(MovableCharacter.transform.position))
             {
                 _passenger.HandleClick();
             }

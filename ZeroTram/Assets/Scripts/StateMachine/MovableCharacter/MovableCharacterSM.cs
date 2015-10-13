@@ -53,14 +53,14 @@ public class MovableCharacterSM : StateMachine
         AttackedStartTime = Time.time;
         ActivateState((int)MovableCharacterStates.Attacked);
         if (attacker.AttackStrength < 0)
-            AudioController.GetPlayer().PlayAudioById("heal");
+            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("heal");
         if (attacker.AttackStrength < 0 && Hp >= InitialLifes)
         {
             Hp = InitialLifes;
             return;
         }
         if (attacker.AttackStrength > 0)
-            AudioController.GetPlayer().PlayAudioById("lowkick");
+            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("lowkick");
         Hp -= attacker.AttackStrength;
         AttackTarget = attacker;
         float lifesPercent = Hp / (float)InitialLifes;

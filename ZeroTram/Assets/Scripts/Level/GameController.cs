@@ -220,7 +220,7 @@ namespace Assets
 
         public void UndragAll()
         {
-            FloorHandler.GetFloor().GetHero().StopDrag();
+            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag();
             foreach (var passenger in _passengers)
             {
                 passenger.SetDragged(false);

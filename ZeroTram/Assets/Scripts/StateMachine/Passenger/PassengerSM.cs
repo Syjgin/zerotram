@@ -129,7 +129,7 @@ public class PassengerSM : MovableCharacterSM
         if(GameController.GetInstance().IsAnybodyStick())
             return;
         bool stick = Randomizer.GetPercentageBasedBoolean((int)StickProbability);
-        if (stick && FloorHandler.GetFloor().IsPassengerNearDoors(this))
+        if (stick && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
         {
             ActivateState((int)MovableCharacterStates.Stick);
             Indicator.sprite = _stick;
@@ -169,7 +169,7 @@ public class PassengerSM : MovableCharacterSM
 
     public void CalculateRandomTarget()
     {
-        Vector2 target = FloorHandler.GetFloor().GetRandomPosition();
+        Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
         if (target != default(Vector2))
             SetTarget(target);
     }
@@ -196,7 +196,7 @@ public class PassengerSM : MovableCharacterSM
         MakeIdle();
         if (!IsGoingAway)
             CalculateRandomTarget();
-        DoorsHandler.GetTimer().SetPaused(false);
+        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(false);
     }
 
     protected virtual void ShowCharacterInfo()
@@ -213,7 +213,7 @@ public class PassengerSM : MovableCharacterSM
 
     public void HandleClick()
     {
-        ConductorSM hero = FloorHandler.GetFloor().GetHero();
+        ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero.IsInAttackRadius(transform.position))
         {
             if (!_isVisibleToHero)
@@ -227,7 +227,7 @@ public class PassengerSM : MovableCharacterSM
                 }
                 else
                 {
-                    AudioController.GetPlayer().PlayAudioById("coins");
+                    MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("coins");
                 }
                 StopStick();
                 ShowCharacterInfo();
@@ -283,19 +283,19 @@ public class PassengerSM : MovableCharacterSM
 
     public void StopDrag()
     {
-        FloorHandler.GetFloor().OnMouseUp();
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseUp();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (FloorHandler.GetFloor().GetHero() == null)
+        if (MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero() == null)
             return;
         if (IsGoingAway && 
             GameController.GetInstance().IsDoorsOpen() && 
-            !IsStick() && 
-            FloorHandler.GetFloor().IsPassengerNearDoors(this))
+            !IsStick() &&
+            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
         {
             Destroy(gameObject);
             return;

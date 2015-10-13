@@ -75,7 +75,6 @@
     <Compile Include="Assets\JSON\VectorTemplates.cs" />
     <Compile Include="Assets\Scripts\Config\ConfigReader.cs" />
     <Compile Include="Assets\Scripts\Data\RecordsManager.cs" />
-    <Compile Include="Assets\Scripts\GUI\StickNote.cs" />
     <Compile Include="Assets\Scripts\GUI\ExitButton.cs" />
     <Compile Include="Assets\Scripts\GUI\FadeTimer.cs" />
     <Compile Include="Assets\Scripts\GUI\GUIManager.cs" />
@@ -87,19 +86,17 @@
     <Compile Include="Assets\Scripts\GUI\PauseHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\RecordsVisualizer.cs" />
     <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
+    <Compile Include="Assets\Scripts\GUI\StickNote.cs" />
     <Compile Include="Assets\Scripts\GUI\SuccessfullPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\TicketCount.cs" />
     <Compile Include="Assets\Scripts\GUI\TimeToStopBus.cs" />
     <Compile Include="Assets\Scripts\GUI\TitlesScroller.cs" />
     <Compile Include="Assets\Scripts\GUI\TutorialScroller.cs" />
-    <Compile Include="Assets\Scripts\Level\AudioController.cs" />
     <Compile Include="Assets\Scripts\Level\AudioPlayer.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsAnimationController.cs" />
-    <Compile Include="Assets\Scripts\Level\Doors\DoorsHandler.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsTimer.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\Spawner.cs" />
     <Compile Include="Assets\Scripts\Level\Floor.cs" />
-    <Compile Include="Assets\Scripts\Level\FloorHandler.cs" />
     <Compile Include="Assets\Scripts\Level\GameController.cs" />
     <Compile Include="Assets\Scripts\Level\GameStateNotificationListener.cs" />
     <Compile Include="Assets\Scripts\Level\Parallax.cs" />
@@ -130,6 +127,7 @@
     <Compile Include="Assets\Scripts\Units\Cat.cs" />
     <Compile Include="Assets\Scripts\Units\Gnome.cs" />
     <Compile Include="Assets\Scripts\Units\Granny.cs" />
+    <Compile Include="Assets\Scripts\Utils\MonobehaviorHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\JSON\readme.txt" />
