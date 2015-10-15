@@ -28,6 +28,7 @@ public class MonobehaviorHandler
             T obj = (T)_instance._behaviorDict[id];
             if (obj != null)
                 return obj;
+            _instance._behaviorDict.Remove(id);
         }
         T found = GameObject.Find(id).GetComponent<T>();
         _instance._behaviorDict.Add(id, found);

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Assets;
+using Assets.Scripts.Math;
 
 public class MovableCharacterSM : StateMachine
 {
@@ -61,7 +62,8 @@ public class MovableCharacterSM : StateMachine
         }
         if (attacker.AttackStrength > 0)
             MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("lowkick");
-        Hp -= attacker.AttackStrength;
+        float currentStrength = attacker.AttackStrength*Randomizer.GetNormalizedRandom();
+        Hp -= currentStrength;
         AttackTarget = attacker;
         float lifesPercent = Hp / (float)InitialLifes;
         float originalValue = _lifebar.bounds.min.x;

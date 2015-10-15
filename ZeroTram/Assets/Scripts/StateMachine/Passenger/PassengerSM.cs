@@ -10,7 +10,6 @@ public class PassengerSM : MovableCharacterSM
 {
     private int _tramStopCount;
     private int _currentTramStopCount;
-    public float MoveProbability = 50;
     public float AttackProbability = 50;
     public float ChangeStatePeriod = 10;
     protected float CounterAttackProbability = 50;
@@ -169,6 +168,8 @@ public class PassengerSM : MovableCharacterSM
 
     public void CalculateRandomTarget()
     {
+        if(AttackTarget != null)
+            return;
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
         if (target != default(Vector2))
             SetTarget(target);
@@ -300,19 +301,13 @@ public class PassengerSM : MovableCharacterSM
             Destroy(gameObject);
             return;
         }
-        if (AttackTarget != null)
+        /*if (AttackTarget != null)
         {
             if (CanNotInteract() || AttackTarget.CanNotInteract())
             {
                 AttackTarget = null;
                 MakeIdle();
             }
-        }
-        /*if (GetPosition().z > -1)
-        {
-            Vector3 correctPos = GetPosition();
-            correctPos.z = -1;
-            SetPosition(correctPos);
         }*/
         CalculateIndicator();
         

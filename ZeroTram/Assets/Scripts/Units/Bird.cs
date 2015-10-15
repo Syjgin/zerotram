@@ -10,7 +10,6 @@ namespace Assets
     {
         public override void Init()
         {
-            MoveProbability = ConfigReader.GetConfig().GetField("bird").GetField("MoveProbability").n;
             AttackProbability = ConfigReader.GetConfig().GetField("bird").GetField("AttackProbability").n;
             ChangeStatePeriod = ConfigReader.GetConfig().GetField("bird").GetField("ChangeStatePeriod").n;
             AttackDistance = ConfigReader.GetConfig().GetField("bird").GetField("AttackDistance").n;

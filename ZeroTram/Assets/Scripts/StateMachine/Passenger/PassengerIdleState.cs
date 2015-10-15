@@ -26,7 +26,7 @@ public class PassengerIdleState : IdleState
         if (_timeForNextUpdate > 0)
             return false;
         _timeForNextUpdate = _passenger.ChangeStatePeriod;
-        return Randomizer.GetPercentageBasedBoolean((int)_passenger.MoveProbability);
+        return true;
     }
 
     public override void OnUpdate()

@@ -269,7 +269,9 @@ namespace Assets
 
         public void CheckBeforeDoorsOpen()
         {
-            if(CheckStats())
+            _killedPassengers = 0;
+            _incomingPassengers = _passengers.Count;
+            if (CheckStats())
                 NextStationReached();
         }
 

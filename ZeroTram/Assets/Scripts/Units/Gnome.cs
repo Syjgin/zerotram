@@ -10,7 +10,6 @@ namespace Assets
     {
         public override void Init()
         {
-            MoveProbability = ConfigReader.GetConfig().GetField("gnome").GetField("MoveProbability").n;
             AttackProbability = ConfigReader.GetConfig().GetField("gnome").GetField("AttackProbability").n;
             ChangeStatePeriod = ConfigReader.GetConfig().GetField("gnome").GetField("ChangeStatePeriod").n;
             AttackDistance = ConfigReader.GetConfig().GetField("gnome").GetField("AttackDistance").n;
