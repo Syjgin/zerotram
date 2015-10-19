@@ -217,19 +217,10 @@ namespace Assets
                 }
             }
         }
-
-        public void UndragAll()
-        {
-            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag();
-            foreach (var passenger in _passengers)
-            {
-                passenger.SetDragged(false);
-            }
-        }
-
+        
         public void GameOver(bool isConductorDied)
         {
-            UndragAll();
+            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag();
             _isGameFinished = true;
             Time.timeScale = 0;
             UpdateListeners(isConductorDied);

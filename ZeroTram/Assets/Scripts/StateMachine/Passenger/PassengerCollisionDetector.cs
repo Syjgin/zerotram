@@ -3,22 +3,20 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class PassengerCollisionDetector : MonoBehaviour
+public class PassengerCollisionDetector : CollisionDetector
 {
-
-    [SerializeField]
     private PassengerSM _passenger;
+
+    void Awake()
+    {
+        _passenger = (PassengerSM) Character;
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         _passenger.HandleTriggerEnter(other);
     }
-
-    void OnMouseDown()
-    {
-        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseDown();
-    }
-
+    
     void OmMouseUp()
     {
         _passenger.StopDrag();

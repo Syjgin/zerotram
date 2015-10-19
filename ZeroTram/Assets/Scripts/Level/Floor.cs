@@ -93,9 +93,19 @@ public class Floor : MonoBehaviour
         _hero.SetTarget(pos);
     }
 
+    public void DoubleClick()
+    {
+        Vector2 pos = GetCurrentMousePosition();
+        PassengerSM passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
+        if (passengerNearClick != null)
+        {
+            passengerNearClick.HandleDoubleClick();
+        }
+    }
+
     public void OnMouseUp()
     {
-        GameController.GetInstance().UndragAll();
+        _hero.StopDrag();
     }
 
     public Vector2 GetCurrentMousePosition()
@@ -119,7 +129,7 @@ public class Floor : MonoBehaviour
         }
         return false;
     }
-
+    
     public GameObject GetPassengerDoor(PassengerSM passenger)
     {
         Vector2 position = passenger.transform.position;

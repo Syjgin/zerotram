@@ -25,6 +25,7 @@ public class MovableCharacterSM : StateMachine
     protected float InitialLifes;
     public bool IsGoingAway;
     public float AttackDistance = 1;
+    public float TimeSincePreviousClickMade;
 
     public enum MovableCharacterStates
     {
@@ -38,6 +39,7 @@ public class MovableCharacterSM : StateMachine
         Dragged = 7
     }
 
+    
     public Vector2 GetTarget()
     {
         return _target;
@@ -133,5 +135,19 @@ public class MovableCharacterSM : StateMachine
     public virtual bool CanNotInteract()
     {
         return false;
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        TimeSincePreviousClickMade += Time.fixedDeltaTime;
+    }
+
+    public virtual void HandleClick()
+    {   
+    }
+
+    public virtual void HandleDoubleClick()
+    {
     }
 }

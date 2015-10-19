@@ -45,10 +45,7 @@ public class Spawner : MonoBehaviour
                 timer.SetPaused(true);
                 return;
             }
-            else
-            {
-                ps.CalculateRandomTarget();
-            }
+            ps.CalculateRandomTarget();
         } 
     }
 }

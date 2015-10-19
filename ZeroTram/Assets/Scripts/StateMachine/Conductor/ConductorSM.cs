@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using Assets;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -12,9 +13,10 @@ public class ConductorSM : MovableCharacterSM
 
     private PassengerSM _dragTarget;
     private Vector2 _dragStartPoint;
-    private Vector2 _dragOffset;
     private float _maxDragDistance;
     private Text _lifes;
+    public float MovingToDragTargetVelocity;
+    private PassengerSM _stickTarget;
 
     void Awake()
     {
@@ -25,11 +27,12 @@ public class ConductorSM : MovableCharacterSM
         Velocity = ConfigReader.GetConfig().GetField("hero").GetField("Velocity").n;
         AttackReactionPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReactionPeriod").n;
         AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
+        MovingToDragTargetVelocity = ConfigReader.GetConfig().GetField("hero").GetField("MovingToDragTargetVelocity").n;
         _lifes = GameObject.Find("userLifes").GetComponent<Text>();
         _lifes.text = "100%";
 
         IdleState idleState = new IdleState(this);
-        MoveState moveState = new MoveState(this);
+        ConductorMoveState moveState = new ConductorMoveState(this);
         ConductorDragState dragState = new ConductorDragState(this);
         AttackState attackState = new AttackState(this);
         AttackedState attackedState = new AttackedState(this);
@@ -44,18 +47,40 @@ public class ConductorSM : MovableCharacterSM
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
 
+    public void StartSaveStickPassenger(PassengerSM passenger)
+    {
+        _stickTarget = passenger;
+    }
+
+    public void StopStickIfNeeded()
+    {
+        if (_stickTarget != null)
+        {
+            _stickTarget.StopStick();
+            _stickTarget = null;
+        }
+    }
+
     public void StartDrag(PassengerSM obj)
     {
+        if(_dragTarget != null)
+            _dragTarget.StopDrag();
         if (obj.IsStick())
         {
             obj.StopStick();
         }
         _dragTarget = obj;
         _dragStartPoint = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
-        _dragOffset = transform.position - obj.transform.position;
-        CalculateOrientation(_dragStartPoint);//maybe inverted obj position will be used
+        CalculateOrientation(_dragStartPoint);
         ActivateState((int)MovableCharacterStates.Drag);
-        obj.SetDragged(true);
+        obj.StartDrag();
+    }
+
+    public bool CanKick(PassengerSM obj)
+    {
+        if (IsInWayoutZone && IsInAttackRadius(obj.transform.position))
+            return true;
+        return false;
     }
 
     public void Kick(PassengerSM obj)
@@ -78,6 +103,10 @@ public class ConductorSM : MovableCharacterSM
         if (GetActiveState().Equals((int)MovableCharacterStates.Drag))
         {
             MakeIdle();
+            if (_dragTarget != null)
+            {
+                _dragTarget.StopDrag();
+            }
             _dragTarget = null;
         }
     }
@@ -104,7 +133,7 @@ public class ConductorSM : MovableCharacterSM
 
     public Vector2 GetDragOffset()
     {
-        return _dragOffset;
+        return ((Vector2) transform.position - (Vector2) _dragTarget.transform.position);
     }
 
     public float GetMaxDragDistance()
@@ -124,8 +153,15 @@ public class ConductorSM : MovableCharacterSM
         return GetActiveState().Equals((int) MovableCharacterStates.Drag);
     }
 
-    public void HandleClick()
+    public override void HandleClick()
     {
         MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseDown();
+    }
+
+    public override void HandleDoubleClick()
+    {
+        if (Time.timeScale == 0)
+            return;
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").DoubleClick();
     }
 }

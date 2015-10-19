@@ -2,22 +2,20 @@
 using UnityEngine;
 using System.Collections;
 
-public class ConductorCollisionDetector : MonoBehaviour
+public class ConductorCollisionDetector : CollisionDetector
 {
 
-    [SerializeField] public ConductorSM _conductor;
+    private ConductorSM _conductor;
 
-    void OnMouseDown()
+    void Awake()
     {
-        if(Time.timeScale == 0)
-            return;
-        _conductor.HandleClick();
+        _conductor = (ConductorSM) Character;
     }
-
+    
     void OnMouseUp()
     {
         if (Time.timeScale == 0)
             return;
-        GameController.GetInstance().UndragAll();
+        _conductor.StopDrag();
     }
 }

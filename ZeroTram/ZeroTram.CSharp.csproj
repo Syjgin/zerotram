@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.2.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -100,9 +102,11 @@
     <Compile Include="Assets\Scripts\Level\Parallax.cs" />
     <Compile Include="Assets\Scripts\Level\ScrollingScript.cs" />
     <Compile Include="Assets\Scripts\Math\Randomizer.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\CollisionDetector.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Conductor\ConductorCollisionDetector.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Conductor\ConductorDragState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Conductor\ConductorSM.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\Conductor\ConductorMoveState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\AttackState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\AttackedState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\IdleState.cs" />

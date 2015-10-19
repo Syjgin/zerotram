@@ -6,7 +6,8 @@
 			"AttackReloadPeriod": 0.5,
 			"Velocity": 6,
 			"AttackReactionPeriod" : 0.5,
-			"AttackReloadPeriod" : 0.5
+			"AttackReloadPeriod" : 0.5,
+			"MovingToDragTargetVelocity" : 20
 		},
 	"alien": {
             "AttackProbability" : 10,

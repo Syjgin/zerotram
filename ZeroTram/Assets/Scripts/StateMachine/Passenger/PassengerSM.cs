@@ -90,19 +90,9 @@ public class PassengerSM : MovableCharacterSM
         return _isVisibleToHero;
     }
 
-    public void SetDragged(bool dragged)
+    public void StartDrag()
     {
-        if (dragged)
-        {
-            ActivateState((int) MovableCharacterStates.Dragged);
-        }
-        else
-        {
-            if (GetActiveState().Equals((int) MovableCharacterStates.Dragged))
-            {
-                MakeIdle();
-            }
-        }
+        ActivateState((int)MovableCharacterStates.Dragged);
     }
 
     public void IncrementStationCount()
@@ -212,12 +202,22 @@ public class PassengerSM : MovableCharacterSM
         GameController.GetInstance().RegisterDeath(this);
     }
 
-    public void HandleClick()
+    public void StartUnstick(ConductorSM hero)
+    {
+        hero.SetTarget(transform.position);
+        hero.StartSaveStickPassenger(this);
+    }
+
+    public override void HandleClick()
     {
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
-        if (hero.IsInAttackRadius(transform.position))
+        if (!_isVisibleToHero)
         {
-            if (!_isVisibleToHero)
+            if (IsStick())
+            {
+                StartUnstick(hero);
+            }
+            else
             {
                 _isVisibleToHero = true;
                 GameController.GetInstance().UpdatePassenger(this);
@@ -230,38 +230,27 @@ public class PassengerSM : MovableCharacterSM
                 {
                     MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("coins");
                 }
-                StopStick();
                 ShowCharacterInfo();
-                return;
             }
-            if (hero.IsInWayoutZone)
-            {
-                if (!_hasTicket)
-                {
-                    hero.Kick(this);
-                    return;
-                }
-                if (AttackTarget != null && AttackStrength > 0)
-                {
-                    hero.Kick(this);
-                    return;
-                }
-                if (IsStick())
-                {
-                    if (IsGoingAway)
-                        hero.Kick(this);
-                    else
-                        hero.StartDrag(this);
-                    return;
-                }
-            }
-            hero.StartDrag(this);
-            ActivateState((int)MovableCharacterStates.Dragged);
+            return;
         }
-        else
+        if (IsStick())
         {
-            hero.SetTarget(transform.position);
+            StartUnstick(hero);
+            return;
         }
+        hero.StartDrag(this);
+    }
+
+    public override void HandleDoubleClick()
+    {
+        ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        if (hero.CanKick(this))
+        {
+            hero.Kick(this);
+            return;
+        }
+        hero.StartDrag(this);
     }
 
     private void CalculateIndicator()
@@ -284,14 +273,22 @@ public class PassengerSM : MovableCharacterSM
 
     public void StopDrag()
     {
+        if(GetActiveState() != (int)MovableCharacterStates.Dragged)
+            return;
         MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseUp();
+        ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        MakeIdle();
+        if (conductor.CanKick(this))
+        {
+            CalculateRandomTarget();
+        }
     }
 
     protected override void Update()
     {
         base.Update();
-
-        if (MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero() == null)
+        ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        if (hero == null)
             return;
         if (IsGoingAway && 
             GameController.GetInstance().IsDoorsOpen() && 
@@ -301,15 +298,8 @@ public class PassengerSM : MovableCharacterSM
             Destroy(gameObject);
             return;
         }
-        /*if (AttackTarget != null)
-        {
-            if (CanNotInteract() || AttackTarget.CanNotInteract())
-            {
-                AttackTarget = null;
-                MakeIdle();
-            }
-        }*/
         CalculateIndicator();
-        
+        if(!hero.IsDragging())
+            StopDrag();
     }
 }
