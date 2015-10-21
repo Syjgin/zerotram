@@ -22,12 +22,6 @@ public class ConductorDragState : MovableCharacterState
             return;
         }
         Vector2 targetPos = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
-        float currentDist = (targetPos - _conductor.GetDragStartPoint()).sqrMagnitude;
-        if (currentDist > _conductor.GetMaxDragDistance())
-        {
-            _conductor.StopDrag();
-            return;
-        }
         Vector2 dragOffset = _conductor.GetDragOffset();
         if (dragOffset.sqrMagnitude > 0.1f)
         {

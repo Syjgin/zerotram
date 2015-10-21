@@ -13,14 +13,12 @@ public class ConductorSM : MovableCharacterSM
 
     private PassengerSM _dragTarget;
     private Vector2 _dragStartPoint;
-    private float _maxDragDistance;
     private Text _lifes;
     public float MovingToDragTargetVelocity;
     private PassengerSM _stickTarget;
 
     void Awake()
     {
-        _maxDragDistance = ConfigReader.GetConfig().GetField("hero").GetField("MaxDragDistance").n;
         Hp = InitialLifes = ConfigReader.GetConfig().GetField("hero").GetField("InitialLifes").n;
         AttackDistance = ConfigReader.GetConfig().GetField("hero").GetField("AttackDistance").n;
         AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
@@ -135,12 +133,7 @@ public class ConductorSM : MovableCharacterSM
     {
         return ((Vector2) transform.position - (Vector2) _dragTarget.transform.position);
     }
-
-    public float GetMaxDragDistance()
-    {
-        return _maxDragDistance;
-    }
-
+    
     public override void AddDamage(MovableCharacterSM attacker)
     {
         base.AddDamage(attacker);
