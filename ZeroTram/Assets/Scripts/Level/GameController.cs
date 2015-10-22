@@ -10,12 +10,12 @@ namespace Assets
 {
     public class GameController
     {
+        private const int MAX_BONUS_COUNT = 3;
+        private Dictionary<int, IBonus> _bonuses;
         private float _minDistance;
-
         private bool _isGameFinished;
 
         private bool _isDoorsOpen;
-
         public bool IsDoorsOpen()
         {
             return _isDoorsOpen;
@@ -91,6 +91,29 @@ namespace Assets
             _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
             _stickPeriod = (int)ConfigReader.GetConfig().GetField("tram").GetField("StickPeriod").n;
             _passengers = new List<PassengerSM>();
+            _bonuses = new Dictionary<int, IBonus>();
+        }
+
+        public bool IsBonusCanBeCreated()
+        {
+            return _bonuses.Count < MAX_BONUS_COUNT;
+        }
+
+        public void AddBonus(IBonus bonus)
+        {
+            int index = _bonuses.Count;
+            _bonuses.Add(index, bonus);
+        }
+
+        public IBonus ActivateBonusByNumber(int number)
+        {
+            IBonus bonusToActivate = null;
+            if(_bonuses.TryGetValue(number, out bonusToActivate))
+            {
+                bonusToActivate.Activate();
+                _bonuses.Remove(number);
+            }
+            return bonusToActivate;
         }
 
         public void StartNewGame()
