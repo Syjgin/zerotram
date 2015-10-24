@@ -11,6 +11,7 @@
 	"alien": {
             "AttackProbability" : 10,
             "ChangeStatePeriod" : 5,
+			"DragChangeStatePeriod" : 5,
             "AttackDistance" : 3,
             "AttackReloadPeriod" : 6,
             "AttackMaxDistance" : 10,
@@ -25,6 +26,7 @@
 	"bird": {
             "AttackProbability" : 70,
             "ChangeStatePeriod" : 1,
+			"DragChangeStatePeriod" : 1,
             "AttackDistance" : 1.5,
             "AttackReloadPeriod" : 1,
             "AttackMaxDistance" : 50,
@@ -39,6 +41,7 @@
 	"cat": {
             "AttackProbability" : 50,
             "ChangeStatePeriod" : 3,
+			"DragChangeStatePeriod" : 3,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 2,
             "AttackMaxDistance" : 5,
@@ -53,6 +56,7 @@
 	"gnome": {
             "AttackProbability" : 5,
             "ChangeStatePeriod" : 20,
+			"DragChangeStatePeriod" : 20,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 5,
             "AttackMaxDistance" : 3,
@@ -67,6 +71,7 @@
 	"granny": {
             "AttackProbability" : 85,
             "ChangeStatePeriod" : 15,
+			"DragChangeStatePeriod" : 15,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 3,
             "AttackMaxDistance" : 10,
@@ -90,6 +95,9 @@
 			"MaxStopCount" : 10,
 			"StickPeriod" : 5
 		},
+	"wheelBonus" : {
+		"TTL" : 30
+	},
 	"descriptions" : {
 			"Gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",
 			"Granny" : "Бабушки с тележками - они повсюду. Что они возят - большая загадка. Но даже одна бабушка - ночной кошмар для любого кондуктора. Нет, проезд они оплачивают исправно и от кондуктора по вагону не бегают. Однако постоянно приходится помогать им залезть в вагон и сойти на остановке. К тому же бабули очень целеустремленные и любят вспоминать войну, поэтому тележка часто превращается в их руках в оружие массового поражения. Будьте аккуратны с ними.",

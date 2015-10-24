@@ -7,14 +7,36 @@ public class BonusTimer : MonoBehaviour
 {
     private List<IBonus> _activeBonuses;  
 
-	void Start () {
+	void Awake () {
         _activeBonuses = new List<IBonus>();	
 	}
 
-    void ActivateBonusByNumber(int number)
+    public void ActivateBonusByNumber(int number)
     {
+        if (_activeBonuses == null)
+        {
+            _activeBonuses = new List<IBonus>();
+        }
         IBonus activatedBonus = GameController.GetInstance().ActivateBonusByNumber(number);
         _activeBonuses.Add(activatedBonus);
+    }
+
+    public bool IsBonusActiveByType(GameController.BonusTypes bonusType)
+    {
+        foreach (var activeBonus in _activeBonuses)
+        {
+            if (activeBonus.GetBonusType().Equals(bonusType) && activeBonus.IsActive())
+                return true;
+        }
+        return false;
+    }
+
+    public void AddBonusEffectToSpawnedPassenger(PassengerSM passenger)
+    {
+        foreach (var activeBonus in _activeBonuses)
+        {
+            activeBonus.AddEffect(passenger);
+        }
     }
 
 	void FixedUpdate () {
@@ -25,7 +47,10 @@ public class BonusTimer : MonoBehaviour
 	            IBonus bonus = _activeBonuses[i];
                 bonus.DecrementTimer(Time.deltaTime);
 	            if (!bonus.IsActive())
-	                _activeBonuses.RemoveAt(i);
+	            {
+	                bonus.Deactivate();
+                    _activeBonuses.RemoveAt(i);
+                }
 	        }
 	    }
 

@@ -39,6 +39,7 @@ public class Spawner : MonoBehaviour
                         (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
             PassengerSM ps = instantiated.GetComponent<PassengerSM>();
             ps.Init();
+            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").AddBonusEffectToSpawnedPassenger(ps);
             if (ps.IsStick())
             {
                 DoorsTimer timer = GetComponent<DoorsTimer>();

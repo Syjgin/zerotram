@@ -11,6 +11,7 @@ namespace Assets
         public override void Init()
         {
             AttackProbability = ConfigReader.GetConfig().GetField("granny").GetField("AttackProbability").n;
+            DragChangeStatePeriod = ConfigReader.GetConfig().GetField("granny").GetField("DragChangeStatePeriod").n;
             ChangeStatePeriod = ConfigReader.GetConfig().GetField("granny").GetField("ChangeStatePeriod").n;
             AttackDistance = ConfigReader.GetConfig().GetField("granny").GetField("AttackDistance").n;
             AttackReloadPeriod = ConfigReader.GetConfig().GetField("granny").GetField("AttackReloadPeriod").n;

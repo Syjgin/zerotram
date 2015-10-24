@@ -12,11 +12,14 @@ public class PassengerSM : MovableCharacterSM
     private int _currentTramStopCount;
     public float AttackProbability = 50;
     public float ChangeStatePeriod = 10;
+    public float DragChangeStatePeriod = 10;
     protected float CounterAttackProbability = 50;
     protected float StickProbability = 0;
     protected float TicketProbability;
     private bool _hasTicket;
     private float _maxStopCount;
+
+    public List<GameController.BonusTypes> ActiveBonuses; 
 
     protected NewCharacterWindow Window;
 
@@ -33,6 +36,7 @@ public class PassengerSM : MovableCharacterSM
 
     void Awake()
     {
+        ActiveBonuses = new List<GameController.BonusTypes>();
         PassengerIdleState idleState = new PassengerIdleState(this);
         PassengerMoveState moveState = new PassengerMoveState(this);
         PassengerAttackState attackState = new PassengerAttackState(this);
@@ -204,6 +208,7 @@ public class PassengerSM : MovableCharacterSM
 
     public void StartUnstick(ConductorSM hero)
     {
+        TimeSincePreviousClickMade = MaxClickDuration;
         hero.SetTarget(transform.position);
         hero.StartSaveStickPassenger(this);
     }

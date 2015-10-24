@@ -12,6 +12,7 @@ namespace Assets
         {
             AttackProbability = ConfigReader.GetConfig().GetField("cat").GetField("AttackProbability").n;
             ChangeStatePeriod = ConfigReader.GetConfig().GetField("cat").GetField("ChangeStatePeriod").n;
+            DragChangeStatePeriod = ConfigReader.GetConfig().GetField("cat").GetField("DragChangeStatePeriod").n;
             AttackDistance = ConfigReader.GetConfig().GetField("cat").GetField("AttackDistance").n;
             AttackReloadPeriod = ConfigReader.GetConfig().GetField("cat").GetField("AttackReloadPeriod").n;
             AttackMaxDistance = ConfigReader.GetConfig().GetField("cat").GetField("AttackMaxDistance").n;

@@ -10,8 +10,34 @@ namespace Assets
 {
     public class GameController
     {
+        public enum BonusTypes
+        {
+            Wheel,
+            Ticket,
+            Boot,
+            Magnet,
+            Smile,
+            AntiHare,
+            SandGlass,
+            Vortex,
+            Snow,
+            Wrench,
+            Cogwheel
+        }
         private const int MAX_BONUS_COUNT = 3;
         private Dictionary<int, IBonus> _bonuses;
+
+        public void BonusEffectToPassengers(IBonus bonus, bool additition)
+        {
+            foreach (var passengerSm in _passengers)
+            {
+                if(additition)
+                    bonus.AddEffect(passengerSm);
+                else
+                    bonus.RemoveEffect(passengerSm);
+            }
+        }
+        
         private float _minDistance;
         private bool _isGameFinished;
 
@@ -118,10 +144,7 @@ namespace Assets
 
         public void StartNewGame()
         {
-            if(_passengers == null)
-                _passengers = new List<PassengerSM>();
-            else 
-                _passengers.Clear();
+            _passengers.Clear();
             _totalHares = 0;
             _incomingPassengers = 0;
             _currentSpawnCount = (int)_initialSpawnCount;
@@ -131,6 +154,9 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
+            WheelBonus bonus = new WheelBonus();
+            AddBonus(bonus);
+            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }
 
         public int GetCurrentStationNumber()

@@ -27,6 +27,8 @@ public class MovableCharacterSM : StateMachine
     public float AttackDistance = 1;
     public float TimeSincePreviousClickMade;
 
+    public const float MaxClickDuration = 0.6f;
+
     public enum MovableCharacterStates
     {
         Idle = 0,

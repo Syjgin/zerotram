@@ -12,6 +12,7 @@ namespace Assets
         {
             AttackProbability = ConfigReader.GetConfig().GetField("gnome").GetField("AttackProbability").n;
             ChangeStatePeriod = ConfigReader.GetConfig().GetField("gnome").GetField("ChangeStatePeriod").n;
+            DragChangeStatePeriod = ConfigReader.GetConfig().GetField("gnome").GetField("DragChangeStatePeriod").n;
             AttackDistance = ConfigReader.GetConfig().GetField("gnome").GetField("AttackDistance").n;
             AttackReloadPeriod = ConfigReader.GetConfig().GetField("gnome").GetField("AttackReloadPeriod").n;
             AttackMaxDistance = ConfigReader.GetConfig().GetField("gnome").GetField("AttackMaxDistance").n;
