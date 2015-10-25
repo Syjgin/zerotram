@@ -3,6 +3,7 @@ using Assets;
 using Assets.Scripts.Math;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Floor : MonoBehaviour
 {
@@ -79,28 +80,39 @@ public class Floor : MonoBehaviour
 
     public void OnMouseDown()
     {
+        OnMouseDown(false);
+    }
+
+    private void OnMouseDown(bool doubleClick)
+    {
         if (Time.timeScale == 0)
             return;
         if (_hero == null)
             return;
         Vector2 pos = GetCurrentMousePosition();
-        PassengerSM passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
-        if (passengerNearClick != null)
+        List<MovableCharacterSM> affectedCharacters = new List<MovableCharacterSM>();
+        if (MonobehaviorHandler.GetMonobeharior()
+            .GetObject<BonusTimer>("bonusTimer").IsAnyBonusActive())
         {
-            passengerNearClick.HandleClick();
+            affectedCharacters = MonobehaviorHandler.GetMonobeharior()
+                .GetObject<BonusTimer>("bonusTimer").HandleClick(pos, doubleClick);
+        }
+        PassengerSM passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
+        if (passengerNearClick != null && !affectedCharacters.Contains(passengerNearClick))
+        {
+            if(doubleClick)
+                passengerNearClick.HandleDoubleClick();
+            else
+                passengerNearClick.HandleClick();
             return;
         }
-        _hero.SetTarget(pos);
+        if(!doubleClick)
+            _hero.SetTarget(pos);
     }
 
     public void DoubleClick()
     {
-        Vector2 pos = GetCurrentMousePosition();
-        PassengerSM passengerNearClick = GameController.GetInstance().GetPassengerNearClick(pos);
-        if (passengerNearClick != null)
-        {
-            passengerNearClick.HandleDoubleClick();
-        }
+        OnMouseDown(true);
     }
 
     public void OnMouseUp()

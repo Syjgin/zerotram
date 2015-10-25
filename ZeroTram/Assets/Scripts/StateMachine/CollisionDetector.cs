@@ -7,7 +7,7 @@ public class CollisionDetector : MonoBehaviour
 
     [SerializeField] public MovableCharacterSM Character;
     
-    void OnMouseDown()
+    protected virtual void OnMouseDown()
     {
         if(Time.timeScale == 0)
             return;

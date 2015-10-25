@@ -154,7 +154,9 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
-            WheelBonus bonus = new WheelBonus();
+            
+            //for debug
+            TicketBonus bonus = new TicketBonus();
             AddBonus(bonus);
             MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }
@@ -365,6 +367,20 @@ namespace Assets
                 }
             }
             return null;
+        }
+
+        public List<PassengerSM> AllPassengersInDist(Vector2 point, float targetDist)
+        {
+            List<PassengerSM> result = new List<PassengerSM>();
+            foreach (var passenger in _passengers)
+            {
+                float dist = ((Vector2)passenger.transform.position - point).sqrMagnitude;
+                if (dist < targetDist)
+                {
+                    result.Add(passenger);
+                }
+            }
+            return result;
         }
 
         public void KillStickPassenger()

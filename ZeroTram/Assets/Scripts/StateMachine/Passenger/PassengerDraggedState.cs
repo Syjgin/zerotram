@@ -15,7 +15,6 @@ public class PassengerDraggedState : MovableCharacterState
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
-            Debug.Log(_passenger.DragChangeStatePeriod);
             if (Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability))
             {
                 ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();

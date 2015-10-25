@@ -1,4 +1,6 @@
 ﻿using Assets;
+using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class AbstractBonus :IBonus
 {
@@ -28,4 +30,14 @@ public abstract class AbstractBonus :IBonus
     public abstract void AddEffect(PassengerSM passenger);
 
     public abstract void RemoveEffect(PassengerSM passenger);
+
+    protected bool IsBonusExist(PassengerSM passenger)
+    {
+        return passenger.ActiveBonuses.Contains(GetBonusType());
+    }
+
+    public virtual List<MovableCharacterSM> HandleClick(Vector2 pos, bool isDouble)
+    {
+        return new List<MovableCharacterSM>();
+    }
 }

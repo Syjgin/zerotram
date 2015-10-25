@@ -8,7 +8,8 @@ public class BonusTimer : MonoBehaviour
     private List<IBonus> _activeBonuses;  
 
 	void Awake () {
-        _activeBonuses = new List<IBonus>();	
+        if(_activeBonuses == null)
+            _activeBonuses = new List<IBonus>();	
 	}
 
     public void ActivateBonusByNumber(int number)
@@ -29,6 +30,26 @@ public class BonusTimer : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    public bool IsAnyBonusActive()
+    {
+        return _activeBonuses.Count > 0;
+    }
+
+    public List<MovableCharacterSM> HandleClick(Vector2 pos, bool doubleClick)
+    {
+        List<MovableCharacterSM> affectedCharacters = new List<MovableCharacterSM>();
+        foreach (var activeBonus in _activeBonuses)
+        {
+            List<MovableCharacterSM> characters = activeBonus.HandleClick(pos, doubleClick);
+            foreach (var movableCharacterSm in characters)
+            {
+                if(!affectedCharacters.Contains(movableCharacterSm))
+                    affectedCharacters.Add(movableCharacterSm);
+            }
+        }
+        return affectedCharacters;
     }
 
     public void AddBonusEffectToSpawnedPassenger(PassengerSM passenger)

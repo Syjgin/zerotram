@@ -6,6 +6,9 @@ using Debug = UnityEngine.Debug;
 
 public class WheelBonus : AbstractBonus
 {
+    private float _incrementCoef;
+    private float _decrementCoef;
+
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Wheel;
@@ -24,22 +27,24 @@ public class WheelBonus : AbstractBonus
 
     public override void AddEffect(PassengerSM passenger)
     {
-        if (passenger.ActiveBonuses.Contains(GetBonusType()))
+        if (IsBonusExist(passenger))
             return;
         passenger.ActiveBonuses.Add(GetBonusType());
-        passenger.DragChangeStatePeriod *= 2;
+        passenger.DragChangeStatePeriod *= _incrementCoef;
     }
 
     public override void RemoveEffect(PassengerSM passenger)
     {
-        if (!passenger.ActiveBonuses.Contains(GetBonusType()))
+        if (!IsBonusExist(passenger))
             return;
         passenger.ActiveBonuses.Remove(GetBonusType());
-        passenger.DragChangeStatePeriod *= 0.5f;
+        passenger.DragChangeStatePeriod *= _decrementCoef;
     }
 
     public WheelBonus()
     {
         TTL = ConfigReader.GetConfig().GetField("wheelBonus").GetField("TTL").n;
+        _incrementCoef = ConfigReader.GetConfig().GetField("wheelBonus").GetField("incrementCoef").n;
+        _decrementCoef = 1/_incrementCoef;
     }
 }
