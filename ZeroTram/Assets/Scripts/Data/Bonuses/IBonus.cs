@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Assets;
 using JetBrains.Annotations;
+using UnityEngine;
 
 public interface IBonus
 {
@@ -14,4 +15,5 @@ public interface IBonus
     GameController.BonusTypes GetBonusType();
     void AddEffect(PassengerSM passenger);
     void RemoveEffect(PassengerSM passenger);
+    List<MovableCharacterSM> HandleClick(Vector2 position, bool doubleClick);
 }

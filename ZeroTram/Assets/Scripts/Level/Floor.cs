@@ -10,9 +10,9 @@ public class Floor : MonoBehaviour
 
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private ConductorSM _hero;
-    [SerializeField] private Collider2D _leftDoor;
-    [SerializeField] private Collider2D _rightDoor;
-    [SerializeField] private Collider2D _centralWayout;
+    [SerializeField] private BoxCollider2D _leftDoor;
+    [SerializeField] private BoxCollider2D _rightDoor;
+    [SerializeField] private BoxCollider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
 
 
@@ -155,5 +155,10 @@ public class Floor : MonoBehaviour
             return _rightDoor.gameObject;
         }
         return null;
+    }
+
+    public void ChangeWayoutSquare(float coef)
+    {
+        _centralWayout.size *= coef;
     }
 }

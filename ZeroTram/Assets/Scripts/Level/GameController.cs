@@ -156,7 +156,7 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            TicketBonus bonus = new TicketBonus();
+            BootBonus bonus = new BootBonus();
             AddBonus(bonus);
             MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }

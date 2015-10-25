@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\Data\Bonuses\IBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AbstractBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\TicketBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\BootBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
     <Compile Include="Assets\Scripts\Data\RecordsManager.cs" />
     <Compile Include="Assets\Scripts\GUI\ExitButton.cs" />
