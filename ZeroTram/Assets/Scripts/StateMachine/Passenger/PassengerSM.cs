@@ -18,6 +18,8 @@ public class PassengerSM : MovableCharacterSM
     protected float TicketProbability;
     private bool _hasTicket;
     private float _maxStopCount;
+    private bool _isMagnetTurnedOn;
+    private float _magnetDistance;
 
     public List<GameController.BonusTypes> ActiveBonuses; 
 
@@ -78,6 +80,17 @@ public class PassengerSM : MovableCharacterSM
     public bool HasTicket()
     {
         return _hasTicket;
+    }
+
+    public void TurnOnMagnet(float dist)
+    {
+        _isMagnetTurnedOn = true;
+        _magnetDistance = dist;
+    }
+
+    public void TurnOffMagnet()
+    {
+        _isMagnetTurnedOn = false;
     }
 
     public bool IsStick()
@@ -287,6 +300,25 @@ public class PassengerSM : MovableCharacterSM
         {
             CalculateRandomTarget();
         }
+    }
+
+    public void CalculateMagnet()
+    {
+        ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        Vector2 heroPosition = hero.transform.position;
+        float heroDist = ((Vector2)transform.position - heroPosition).sqrMagnitude;
+        if (heroDist < _magnetDistance)
+        {
+            if (heroDist < 0.1f)
+                return;
+            if (!GetTarget().Equals(heroPosition))
+                SetTarget(hero.transform.position);
+        }
+    }
+
+    public bool IsMagnetTurnedOn()
+    {
+        return _isMagnetTurnedOn;
     }
 
     protected override void Update()

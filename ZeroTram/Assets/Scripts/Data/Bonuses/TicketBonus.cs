@@ -35,16 +35,8 @@ public class TicketBonus : AbstractBonus
         {
             if (!passengerSm.IsVisibleToHero())
             {
-                if (doubleClick)
-                {
-                    passengerSm.HandleDoubleClick();
-                    affectedPassengers.Add(passengerSm);
-                }
-                else
-                {
-                    passengerSm.HandleClick();
-                    affectedPassengers.Add(passengerSm);
-                }
+                passengerSm.HandleClick();
+                affectedPassengers.Add(passengerSm);
             }
         }
         return affectedPassengers;

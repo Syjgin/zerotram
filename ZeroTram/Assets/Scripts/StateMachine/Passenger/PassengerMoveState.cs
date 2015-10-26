@@ -8,6 +8,10 @@ public class PassengerMoveState : MoveState
     public override void OnUpdate()
     {
         MovableCharacter.Animator.Play("walk");
+        if (_passenger.IsMagnetTurnedOn())
+        {
+            _passenger.CalculateMagnet();
+        }
         float sqrRemainingDistance = MovableCharacter.GetTargetDistance();
         if (sqrRemainingDistance <= 0.1)
         {

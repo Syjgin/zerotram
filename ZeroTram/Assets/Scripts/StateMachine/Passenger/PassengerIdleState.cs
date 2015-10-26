@@ -32,6 +32,10 @@ public class PassengerIdleState : IdleState
     public override void OnUpdate()
     {
         MovableCharacter.Animator.Play("idle");
+        if (_passenger.IsMagnetTurnedOn())
+        {
+            _passenger.CalculateMagnet();
+        }
         if (GameController.GetInstance().IsNearOtherPassenger(_passenger))
         {
             _passenger.CalculateRandomTarget();
