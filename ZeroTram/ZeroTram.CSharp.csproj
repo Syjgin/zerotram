@@ -75,9 +75,13 @@
     <Compile Include="Assets\JSON\VectorTemplates.cs" />
     <Compile Include="Assets\Scripts\Config\ConfigReader.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AbstractBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\SandGlassBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\BootBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\IBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\MagnetBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\PassengerEffectBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\SmileBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\TicketBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
     <Compile Include="Assets\Scripts\Data\RecordsManager.cs" />

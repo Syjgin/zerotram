@@ -22,15 +22,8 @@ public class BootBonus : AbstractBonus
 
     public override void Deactivate()
     {
+        base.Deactivate();
         MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").ChangeWayoutSquare(_decrementCoef);
-    }
-
-    public override void AddEffect(PassengerSM passenger)
-    {
-    }
-
-    public override void RemoveEffect(PassengerSM passenger)
-    {
     }
 
     public BootBonus()

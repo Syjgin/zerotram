@@ -16,20 +16,29 @@ public abstract class AbstractBonus :IBonus
         _isActive = true;
     }
 
-    public abstract void Deactivate();
+    public virtual void Deactivate()
+    {
+        _isActive = false;
+    }
 
     public void DecrementTimer(float delta)
     {
         TTL -= delta;
         if (TTL <= 0)
-            _isActive = false;
+            Deactivate();
     }
 
     public abstract GameController.BonusTypes GetBonusType();
 
-    public abstract void AddEffect(PassengerSM passenger);
+    public virtual void AddEffect(PassengerSM passenger)
+    {
+        
+    }
 
-    public abstract void RemoveEffect(PassengerSM passenger);
+    public virtual void RemoveEffect(PassengerSM passenger)
+    {
+        
+    }
 
     protected bool IsBonusExist(PassengerSM passenger)
     {

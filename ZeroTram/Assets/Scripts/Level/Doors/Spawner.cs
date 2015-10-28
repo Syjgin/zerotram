@@ -7,6 +7,7 @@ using System.Collections;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> unitPrefabs;
+    [SerializeField] private BonusTimer _bonusTimer;
     private float _maxPassengers;
 
     public static float StickYOffset = 0.8f;
@@ -39,7 +40,7 @@ public class Spawner : MonoBehaviour
                         (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);
             PassengerSM ps = instantiated.GetComponent<PassengerSM>();
             ps.Init();
-            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").AddBonusEffectToSpawnedPassenger(ps);
+            _bonusTimer.AddBonusEffectToSpawnedPassenger(ps);
             if (ps.IsStick())
             {
                 DoorsTimer timer = GetComponent<DoorsTimer>();

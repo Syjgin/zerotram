@@ -76,7 +76,7 @@ public class ConductorSM : MovableCharacterSM
 
     public bool CanKick(PassengerSM obj)
     {
-        if (IsInWayoutZone && IsInAttackRadius(obj.transform.position))
+        if (IsInWayoutZone && IsInAttackRadius(obj.transform.position) && !obj.IsStick())
             return true;
         return false;
     }

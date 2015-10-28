@@ -69,7 +69,6 @@ public class BonusTimer : MonoBehaviour
                 bonus.DecrementTimer(Time.deltaTime);
 	            if (!bonus.IsActive())
 	            {
-	                bonus.Deactivate();
                     _activeBonuses.RemoveAt(i);
                 }
 	        }

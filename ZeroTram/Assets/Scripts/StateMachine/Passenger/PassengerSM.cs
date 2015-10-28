@@ -59,6 +59,14 @@ public class PassengerSM : MovableCharacterSM
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
 
+    public void RecalculateTicketProbability(float coef, bool onlyForInvisible)
+    {
+        TicketProbability *= coef;
+        if(onlyForInvisible && _isVisibleToHero)
+            return;
+        _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
+    }
+
     public virtual void Init()
     {
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);

@@ -12,18 +12,6 @@ public class TicketBonus : AbstractBonus
     {
         return GameController.BonusTypes.Ticket;
     }
-    
-    public override void Deactivate()
-    {
-    }
-
-    public override void AddEffect(PassengerSM passenger)
-    {
-    }
-
-    public override void RemoveEffect(PassengerSM passenger)
-    {
-    }
 
     public override List<MovableCharacterSM> HandleClick(Vector2 point, bool doubleClick)
     {

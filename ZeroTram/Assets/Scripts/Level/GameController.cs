@@ -156,7 +156,7 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            MagnetBonus bonus = new MagnetBonus();
+            SandGlassBonus bonus = new SandGlassBonus();
             AddBonus(bonus);
             MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }

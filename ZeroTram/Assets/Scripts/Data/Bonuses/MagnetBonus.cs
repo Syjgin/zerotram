@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class MagnetBonus : AbstractBonus
+public class MagnetBonus : PassengerEffectBonus
 {
     private float _dist;
     public override GameController.BonusTypes GetBonusType()
@@ -13,18 +13,16 @@ public class MagnetBonus : AbstractBonus
         return GameController.BonusTypes.Magnet;
     }
     
-    public override void Deactivate()
-    {
-    }
-
     public override void AddEffect(PassengerSM passenger)
     {
-        passenger.TurnOnMagnet(_dist);
+        if (IsEffectAdditionPossible(passenger))
+            passenger.TurnOnMagnet(_dist);
     }
 
     public override void RemoveEffect(PassengerSM passenger)
     {
-        passenger.TurnOffMagnet();
+        if (IsEffectRemovingPossible(passenger))
+            passenger.TurnOffMagnet();
     }
 
     public MagnetBonus()
