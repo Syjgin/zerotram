@@ -17,8 +17,13 @@ public class PassengerCollisionDetector : CollisionDetector
         _passenger.HandleTriggerEnter(other);
     }
     
-    void OmMouseUp()
+    void OnMouseUp()
     {
+        if (Time.timeScale == 0)
+            return;
+        MonobehaviorHandler.GetMonobeharior()
+                .GetObject<BonusTimer>("bonusTimer")
+                .HandleTouchUp(_passenger.transform.position);
         _passenger.StopDrag();
     }
 

@@ -52,6 +52,14 @@ public class BonusTimer : MonoBehaviour
         return affectedCharacters;
     }
 
+    public void HandleTouchUp(Vector2 pos)
+    {
+        foreach (var activeBonus in _activeBonuses)
+        {
+            activeBonus.HandleTouchUp(pos);
+        }
+    }
+
     public void AddBonusEffectToSpawnedPassenger(PassengerSM passenger)
     {
         foreach (var activeBonus in _activeBonuses)

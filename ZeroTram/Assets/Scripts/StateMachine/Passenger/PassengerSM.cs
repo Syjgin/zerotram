@@ -329,6 +329,21 @@ public class PassengerSM : MovableCharacterSM
         return _isMagnetTurnedOn;
     }
 
+    public void AddVortexEffect(Vector2 point, float dist)
+    {
+        float randomAngleInDegrees = Randomizer.GetInRange(0, 360);
+        float radians = randomAngleInDegrees*Mathf.Deg2Rad;
+        float finalDist = Mathf.Min(dist*0.5f, Randomizer.GetNormalizedRandom() * dist);
+        float xOffset = finalDist * Mathf.Cos(radians);
+        float yOffset = finalDist * Mathf.Sin(radians);
+        Vector3 oldPos = transform.position;
+        Vector3 newPos = new Vector3(oldPos.x + xOffset, oldPos.y + yOffset, oldPos.z);
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").NormalizePosition(ref newPos);
+        StopStick();
+        MakeIdle();
+        transform.position = newPos;
+    }
+
     protected override void Update()
     {
         base.Update();

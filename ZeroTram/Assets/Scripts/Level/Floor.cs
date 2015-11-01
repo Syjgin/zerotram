@@ -14,7 +14,7 @@ public class Floor : MonoBehaviour
     [SerializeField] private BoxCollider2D _rightDoor;
     [SerializeField] private BoxCollider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
-
+    [SerializeField] private BonusTimer _bonusTimer;
 
     private const float ColliderOffset = 1.4f;
     private const float HeroOffset = 0.6f;
@@ -118,6 +118,20 @@ public class Floor : MonoBehaviour
     public void OnMouseUp()
     {
         _hero.StopDrag();
+        _bonusTimer.HandleTouchUp(GetCurrentMousePosition());
+    }
+
+    public void NormalizePosition(ref Vector3 position)
+    {
+        if (position.y > _collider.bounds.max.y)
+            position.y = _collider.bounds.max.y;
+        if (position.y < _collider.bounds.min.y)
+            position.y = _collider.bounds.min.y;
+        if (position.x > _collider.bounds.max.x)
+            position.x = _collider.bounds.max.x;
+        if (position.x < _collider.bounds.min.x)
+            position.x = _collider.bounds.min.x;
+        position.y += HeroOffset;
     }
 
     public Vector2 GetCurrentMousePosition()

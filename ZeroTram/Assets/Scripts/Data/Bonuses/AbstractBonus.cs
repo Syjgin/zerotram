@@ -49,4 +49,9 @@ public abstract class AbstractBonus :IBonus
     {
         return new List<MovableCharacterSM>();
     }
+
+    public virtual void HandleTouchUp(Vector2 position)
+    {
+        
+    }
 }
