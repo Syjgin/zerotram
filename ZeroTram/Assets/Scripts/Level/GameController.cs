@@ -156,7 +156,7 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            VortexBonus bonus = new VortexBonus();
+            SnowBonus bonus = new SnowBonus();
             AddBonus(bonus);
             MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }

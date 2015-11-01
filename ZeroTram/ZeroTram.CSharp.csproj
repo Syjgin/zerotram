@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Data\Bonuses\PassengerEffectBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SandGlassBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SmileBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\SnowBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\TicketBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\VortexBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Assets\Scripts\StateMachine\Conductor\ConductorSM.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\AttackState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\AttackedState.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\FrozenState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\IdleState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\MovableCharacterSM.cs" />
     <Compile Include="Assets\Scripts\StateMachine\MovableCharacter\MovableCharacterState.cs" />

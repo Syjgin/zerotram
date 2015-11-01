@@ -21,7 +21,7 @@ public abstract class AbstractBonus :IBonus
         _isActive = false;
     }
 
-    public void DecrementTimer(float delta)
+    public virtual void DecrementTimer(float delta)
     {
         TTL -= delta;
         if (TTL <= 0)
@@ -51,7 +51,6 @@ public abstract class AbstractBonus :IBonus
     }
 
     public virtual void HandleTouchUp(Vector2 position)
-    {
-        
+    {     
     }
 }

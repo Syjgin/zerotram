@@ -13,19 +13,17 @@ public class AntiHareBonus : PassengerEffectBonus
     {
         return GameController.BonusTypes.AntiHare;
     }
-    
-    public override void AddEffect(PassengerSM passenger)
+
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectAdditionPossible(passenger))
-            passenger.RecalculateTicketProbability(_coef, true);
+        passenger.RecalculateTicketProbability(_coef, true);
     }
 
-    public override void RemoveEffect(PassengerSM passenger)
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectRemovingPossible(passenger))
-            passenger.RecalculateTicketProbability(_decrementCoef, true);
+        passenger.RecalculateTicketProbability(_decrementCoef, true);
     }
-    
+
     public AntiHareBonus()
     {
         TTL = ConfigReader.GetConfig().GetField("antiHareBonus").GetField("TTL").n;

@@ -34,13 +34,15 @@ public class ConductorSM : MovableCharacterSM
         ConductorDragState dragState = new ConductorDragState(this);
         AttackState attackState = new AttackState(this);
         AttackedState attackedState = new AttackedState(this);
+        FrozenState frozenState = new FrozenState(this);
         Dictionary<int, State> stateMap = new Dictionary<int, State>
         {
             {(int) MovableCharacterStates.Idle, idleState},
             {(int) MovableCharacterStates.Move, moveState},
             {(int) MovableCharacterStates.Drag, dragState},
             {(int) MovableCharacterStates.Attack, attackState},
-            {(int) MovableCharacterStates.Attacked, attackedState}
+            {(int) MovableCharacterStates.Attacked, attackedState},
+            {(int) MovableCharacterStates.Frozen, frozenState}
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
@@ -83,6 +85,10 @@ public class ConductorSM : MovableCharacterSM
 
     public void Kick(PassengerSM obj)
     {
+        if (obj.IsFrozen())
+        {
+            obj.TemporalyUnfreeze();
+        }
         MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("kick");
         CalculateOrientation(obj.transform.position);
         ActivateState((int)MovableCharacterStates.Attack);

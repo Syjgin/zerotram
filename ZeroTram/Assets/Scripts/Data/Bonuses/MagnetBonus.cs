@@ -12,17 +12,15 @@ public class MagnetBonus : PassengerEffectBonus
     {
         return GameController.BonusTypes.Magnet;
     }
-    
-    public override void AddEffect(PassengerSM passenger)
+
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectAdditionPossible(passenger))
-            passenger.TurnOnMagnet(_dist);
+        passenger.TurnOnMagnet(_dist);
     }
 
-    public override void RemoveEffect(PassengerSM passenger)
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectRemovingPossible(passenger))
-            passenger.TurnOffMagnet();
+        passenger.TurnOffMagnet();
     }
 
     public MagnetBonus()

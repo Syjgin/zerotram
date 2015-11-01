@@ -10,6 +10,12 @@ public class PassengerDraggedState : MovableCharacterState
         _timeSinceStateChanged = 0;
     }
 
+    protected override void OnEnd()
+    {
+        if(MovableCharacter.IsUnfreezeIsTemporary())
+            MovableCharacter.Freeze();
+    }
+
     public override void OnUpdate()
     {
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)

@@ -14,16 +14,14 @@ public class WheelBonus : PassengerEffectBonus
         return GameController.BonusTypes.Wheel;
     }
     
-    public override void AddEffect(PassengerSM passenger)
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        if(IsEffectAdditionPossible(passenger))
-            passenger.DragChangeStatePeriod *= _incrementCoef;
+        passenger.DragChangeStatePeriod *= _incrementCoef;
     }
 
-    public override void RemoveEffect(PassengerSM passenger)
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        if(IsEffectRemovingPossible(passenger))
-            passenger.DragChangeStatePeriod *= _decrementCoef;
+        passenger.DragChangeStatePeriod *= _decrementCoef;
     }
 
     public WheelBonus()

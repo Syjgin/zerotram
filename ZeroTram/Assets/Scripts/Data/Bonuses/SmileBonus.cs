@@ -14,16 +14,14 @@ public class SmileBonus : PassengerEffectBonus
         return GameController.BonusTypes.Smile;
     }
     
-    public override void AddEffect(PassengerSM passenger)
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectAdditionPossible(passenger))
-            passenger.AttackProbability *= _coef;
+        passenger.AttackProbability *= _coef;
     }
 
-    public override void RemoveEffect(PassengerSM passenger)
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectRemovingPossible(passenger))
-            passenger.AttackProbability *= _incrementCoef;
+        passenger.AttackProbability *= _incrementCoef;
     }
     
     public SmileBonus()

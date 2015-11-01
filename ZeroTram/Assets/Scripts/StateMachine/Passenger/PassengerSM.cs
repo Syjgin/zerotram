@@ -46,6 +46,7 @@ public class PassengerSM : MovableCharacterSM
         PassengerStickState stickState = new PassengerStickState(this);
         PassengerFlyingAwayState flyingAwayState = new PassengerFlyingAwayState(this);
         PassengerDraggedState draggedState = new PassengerDraggedState(this);
+        FrozenState frozenState = new FrozenState(this);
         Dictionary<int, State> stateMap = new Dictionary<int, State>
         {
             {(int) MovableCharacterStates.Idle, idleState},
@@ -55,6 +56,7 @@ public class PassengerSM : MovableCharacterSM
             {(int) MovableCharacterStates.Stick, stickState},
             {(int) MovableCharacterStates.FlyingAway, flyingAwayState},
             {(int) MovableCharacterStates.Dragged, draggedState},
+            {(int) MovableCharacterStates.Frozen, frozenState},
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
@@ -117,6 +119,10 @@ public class PassengerSM : MovableCharacterSM
 
     public void StartDrag()
     {
+        if (IsFrozen())
+        {
+            TemporalyUnfreeze();
+        }
         ActivateState((int)MovableCharacterStates.Dragged);
     }
 

@@ -11,7 +11,7 @@ public class VortexBonus : AbstractBonus
     private bool _isFired;
     public override GameController.BonusTypes GetBonusType()
     {
-        return GameController.BonusTypes.Ticket;
+        return GameController.BonusTypes.Vortex;
     }
 
     public override void HandleTouchUp(Vector2 point)

@@ -26,6 +26,8 @@ public class MovableCharacterSM : StateMachine
     public bool IsGoingAway;
     public float AttackDistance = 1;
     public float TimeSincePreviousClickMade;
+    private bool _isFreezeInProgress;
+    private bool _isFreezeTemporalyDisabled;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -38,7 +40,8 @@ public class MovableCharacterSM : StateMachine
         Attacked = 4,
         Stick = 5,
         FlyingAway = 6,
-        Dragged = 7
+        Dragged = 7,
+        Frozen = 8
     }
 
     
@@ -151,5 +154,35 @@ public class MovableCharacterSM : StateMachine
 
     public virtual void HandleDoubleClick()
     {
+    }
+
+    public void Freeze()
+    {
+        _isFreezeInProgress = true;
+        ActivateState((int)MovableCharacterStates.Frozen);
+    }
+
+    public void UnFreeze()
+    {
+        _isFreezeInProgress = false;
+        _isFreezeTemporalyDisabled = false;
+        Animator.enabled = true;
+        MakeIdle();
+    }
+
+    public void TemporalyUnfreeze()
+    {
+        _isFreezeInProgress = false;
+        _isFreezeTemporalyDisabled = true;
+    }
+
+    public bool IsUnfreezeIsTemporary()
+    {
+        return _isFreezeTemporalyDisabled;
+    }
+
+    public bool IsFrozen()
+    {
+        return _isFreezeInProgress;
     }
 }

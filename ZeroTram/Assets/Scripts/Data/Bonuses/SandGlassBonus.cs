@@ -14,16 +14,14 @@ public class SandGlassBonus : PassengerEffectBonus
         return GameController.BonusTypes.SandGlass;
     }
     
-    public override void AddEffect(PassengerSM passenger)
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectAdditionPossible(passenger))
-            passenger.Velocity *= _decrementCoef;
+        passenger.Velocity *= _decrementCoef;
     }
 
-    public override void RemoveEffect(PassengerSM passenger)
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        if (IsEffectRemovingPossible(passenger))
-            passenger.Velocity *= _incrementCoef;
+        passenger.Velocity *= _incrementCoef;
     }
     
     public SandGlassBonus()
