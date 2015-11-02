@@ -21,6 +21,8 @@ public class PassengerSM : MovableCharacterSM
     private bool _isMagnetTurnedOn;
     private float _magnetDistance;
 
+    private float _savedStickProbability;
+
     public List<GameController.BonusTypes> ActiveBonuses; 
 
     protected NewCharacterWindow Window;
@@ -367,5 +369,21 @@ public class PassengerSM : MovableCharacterSM
         CalculateIndicator();
         if(!hero.IsDragging())
             StopDrag();
+    }
+
+    public void ApplyWrenchBonus(bool add)
+    {
+        if(!_hasTicket)
+            return;
+        if (add)
+        {
+            _savedStickProbability = StickProbability;
+            StickProbability = 0;
+            MakeIdle();
+        }
+        else
+        {
+            StickProbability = _savedStickProbability;
+        }
     }
 }
