@@ -5,10 +5,9 @@ using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class VortexBonus : AbstractBonus
+public class VortexBonus : PointBonus
 {
     private float _dist;
-    private bool _isFired;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Vortex;
@@ -16,9 +15,6 @@ public class VortexBonus : AbstractBonus
 
     public override void HandleTouchUp(Vector2 point)
     {
-        if (_isFired)
-            return;
-        _isFired = true;
         List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, _dist);
         foreach (var passengerSm in passengersNear)
         {
@@ -31,5 +27,15 @@ public class VortexBonus : AbstractBonus
     {
         TTL = ConfigReader.GetConfig().GetField("vortexBonus").GetField("TTL").n;
         _dist = ConfigReader.GetConfig().GetField("vortexBonus").GetField("dist").n;
+    }
+
+    protected override void AddEffectAfterCheck(PassengerSM passenger)
+    {
+        
+    }
+
+    protected override void RemoveEffectAfterCheck(PassengerSM passenger)
+    {
+        
     }
 }
