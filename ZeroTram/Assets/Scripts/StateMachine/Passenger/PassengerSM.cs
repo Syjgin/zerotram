@@ -16,10 +16,13 @@ public class PassengerSM : MovableCharacterSM
     protected float CounterAttackProbability = 50;
     protected float StickProbability = 0;
     protected float TicketProbability;
+    protected float BonusProbability = 0;
     private bool _hasTicket;
     private float _maxStopCount;
     private bool _isMagnetTurnedOn;
     private float _magnetDistance;
+
+    private Dictionary<GameController.BonusTypes, float> _bonusProbabilities; 
 
     private float _savedStickProbability;
 
@@ -73,6 +76,21 @@ public class PassengerSM : MovableCharacterSM
 
     public virtual void Init()
     {
+        AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
+        DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
+        ChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("ChangeStatePeriod").n;
+        AttackDistance = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackDistance").n;
+        AttackReloadPeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackReloadPeriod").n;
+        AttackMaxDistance = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackMaxDistance").n;
+        CounterAttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("CounterAttackProbability").n;
+        Hp = InitialLifes = ConfigReader.GetConfig().GetField(GetClassName()).GetField("InitialLifes").n;
+        Velocity = ConfigReader.GetConfig().GetField(GetClassName()).GetField("Velocity").n;
+        AttackStrength = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackStrength").n;
+        AttackReactionPeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackReactionPeriod").n;
+        TicketProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("TicketProbability").n;
+        StickProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("StickProbability").n;
+        BonusProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("BonusProbability").n;
+        ParseBonusMap();
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
         CalculateStick();
         _maxStopCount = ConfigReader.GetConfig().GetField("tram").GetField("MaxStopCount").n;
@@ -223,9 +241,11 @@ public class PassengerSM : MovableCharacterSM
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(false);
     }
 
-    protected virtual void ShowCharacterInfo()
+    private void ShowCharacterInfo()
     {
-
+        if (PlayerPrefs.HasKey(NewCharacterWindow.Prefix + GetClassName()))
+            return;
+        Window.SetCharacterToShow(GetClassName());
     }
 
     public void FlyAway()
@@ -385,5 +405,24 @@ public class PassengerSM : MovableCharacterSM
         {
             StickProbability = _savedStickProbability;
         }
+    }
+
+    protected void ParseBonusMap()
+    {
+        _bonusProbabilities = new Dictionary<GameController.BonusTypes, float>();
+        JSONObject unparsedMap = ConfigReader.GetConfig().GetField(GetClassName()).GetField("BonusMap");
+        foreach (var bonus in Enum.GetValues(typeof(GameController.BonusTypes)))
+        {
+            String representation = bonus.ToString();
+            if (unparsedMap.HasField(representation))
+            {
+                _bonusProbabilities.Add((GameController.BonusTypes)bonus, unparsedMap.GetField(representation).n);
+            }
+        }
+    }
+
+    protected virtual string GetClassName()
+    {
+        return String.Empty;
     }
 }

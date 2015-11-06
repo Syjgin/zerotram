@@ -12,16 +12,16 @@ public class NewCharacterWindow : MonoBehaviour
     [SerializeField] private Image _image;
     [SerializeField] private GameObject _window;
 
-    public enum Character
+    public Dictionary<string, int> CharacterIndices = new Dictionary<string, int>()
     {
-        Gnome = 0,
-        Granny = 1,
-        Cat = 2,
-        Alien = 3,
-        Bird = 4
-    }
-
-    private Character _currentCharacter;
+        {"gnome", 0},
+        {"granny", 1},
+        {"cat", 2},
+        {"alien", 3},
+        {"bird", 4}
+    }; 
+    
+    private string _currentCharacter;
 
     public const string Prefix = "CharacterWindow";
 
@@ -32,7 +32,7 @@ public class NewCharacterWindow : MonoBehaviour
         _window.SetActive(false);
     }
     
-    public void SetCharacterToShow(Character character)
+    public void SetCharacterToShow(string character)
     {
         if(_window.activeSelf)
             return;
@@ -43,11 +43,14 @@ public class NewCharacterWindow : MonoBehaviour
     private void ShowCharacter()
     {
         Time.timeScale = 0;
-        int imageIndex = (int)_currentCharacter;
-        _image.sprite = _images[imageIndex];
-        _image.SetNativeSize();
-        string charStr = _currentCharacter.ToString();
-        _description.text = ConfigReader.GetConfig().GetField("descriptions").GetField(charStr).str;
-        _window.SetActive(true);
+        int imageIndex = -1;
+        CharacterIndices.TryGetValue(_currentCharacter, out imageIndex);
+        if (imageIndex > 0)
+        {
+            _image.sprite = _images[imageIndex];
+            _image.SetNativeSize();
+            _description.text = ConfigReader.GetConfig().GetField("descriptions").GetField(_currentCharacter).str;
+            _window.SetActive(true);
+        }
     }
 }
