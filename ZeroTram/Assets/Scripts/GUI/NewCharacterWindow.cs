@@ -27,13 +27,14 @@ public class NewCharacterWindow : MonoBehaviour
 
     public void OnExit()
     {
-        PlayerPrefs.SetInt(Prefix + _currentCharacter, 1);
         Time.timeScale = 1;
         _window.SetActive(false);
     }
     
     public void SetCharacterToShow(string character)
     {
+        if(_window == null)
+            return;
         if(_window.activeSelf)
             return;
         _currentCharacter = character;

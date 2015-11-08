@@ -24,16 +24,14 @@
             "StickProbability" : 25,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"bird": {
@@ -52,16 +50,14 @@
             "StickProbability" : 5,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"cat": {
@@ -80,16 +76,14 @@
             "StickProbability" : 5,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"gnome": {
@@ -108,16 +102,14 @@
             "StickProbability" : 80,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"granny": {
@@ -136,16 +128,14 @@
             "StickProbability" : 60,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"tram" : {
@@ -161,16 +151,16 @@
 			"StickPeriod" : 5,
 			"BonusProbability" : 50,
 			"BonusMap" : {
-				"Wheel" : 10,
-				"Ticket" : 10,
-				"Boot" : 10,
-				"Magnet" : 10,
-				"Smile" : 10,
-				"AntiHare" : 10,
-				"SandGlass" : 10,
-				"Vortex" : 10,
-				"Snow" : 10,
-				"Wrench" : 10
+				"Wheel" : 12.5,
+				"Ticket" : 12.5,
+				"Boot" : 12.5,
+				"Magnet" : 12.5,
+				"Smile" : 12.5,
+				"AntiHare" : 12.5,
+				"SandGlass" : 12.5,
+				"Vortex" : 12.5,
+				"Snow" : 12.5,
+				"Wrench" : 12.5
 			}
 		},
 	"wheelBonus" : {

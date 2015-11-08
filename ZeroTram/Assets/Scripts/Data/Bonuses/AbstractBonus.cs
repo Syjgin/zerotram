@@ -53,4 +53,9 @@ public abstract class AbstractBonus :IBonus
     public virtual void HandleTouchUp(Vector2 position)
     {     
     }
+
+    public int GetTTL()
+    {
+        return (int)TTL;
+    }
 }

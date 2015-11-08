@@ -16,13 +16,13 @@ public class PassengerSM : MovableCharacterSM
     protected float CounterAttackProbability = 50;
     protected float StickProbability = 0;
     protected float TicketProbability;
-    protected float BonusProbability = 0;
+    public float BonusProbability = 0;
     private bool _hasTicket;
     private float _maxStopCount;
     private bool _isMagnetTurnedOn;
     private float _magnetDistance;
 
-    private Dictionary<GameController.BonusTypes, float> _bonusProbabilities; 
+    public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
     private float _savedStickProbability;
 
@@ -245,6 +245,7 @@ public class PassengerSM : MovableCharacterSM
     {
         if (PlayerPrefs.HasKey(NewCharacterWindow.Prefix + GetClassName()))
             return;
+        PlayerPrefs.SetInt(NewCharacterWindow.Prefix + GetClassName(), 1);
         Window.SetCharacterToShow(GetClassName());
     }
 
@@ -409,14 +410,14 @@ public class PassengerSM : MovableCharacterSM
 
     protected void ParseBonusMap()
     {
-        _bonusProbabilities = new Dictionary<GameController.BonusTypes, float>();
+        BonusProbabilities = new Dictionary<GameController.BonusTypes, float>();
         JSONObject unparsedMap = ConfigReader.GetConfig().GetField(GetClassName()).GetField("BonusMap");
         foreach (var bonus in Enum.GetValues(typeof(GameController.BonusTypes)))
         {
             String representation = bonus.ToString();
             if (unparsedMap.HasField(representation))
             {
-                _bonusProbabilities.Add((GameController.BonusTypes)bonus, unparsedMap.GetField(representation).n);
+                BonusProbabilities.Add((GameController.BonusTypes)bonus, unparsedMap.GetField(representation).n);
             }
         }
     }
@@ -425,4 +426,5 @@ public class PassengerSM : MovableCharacterSM
     {
         return String.Empty;
     }
+
 }

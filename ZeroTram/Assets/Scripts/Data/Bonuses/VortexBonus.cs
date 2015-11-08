@@ -3,8 +3,6 @@ using System.Diagnostics;
 using Assets;
 using UnityEngine;
 
-using Debug = UnityEngine.Debug;
-
 public class VortexBonus : PointBonus
 {
     private float _dist;

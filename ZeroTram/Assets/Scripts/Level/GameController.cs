@@ -12,17 +12,17 @@ namespace Assets
     {
         public enum BonusTypes
         {
-            Wheel,
-            Ticket,
-            Boot,
-            Magnet,
-            Smile,
-            AntiHare,
-            SandGlass,
-            Vortex,
-            Snow,
-            Wrench,
-            Cogwheel
+            Wheel = 0,
+            Ticket = 1,
+            Boot = 2,
+            Magnet = 3,
+            Smile = 4,
+            AntiHare = 5,
+            SandGlass = 6,
+            Vortex = 7,
+            Snow = 8,
+            Wrench = 9,
+            Cogwheel = 10
         }
         private const int MAX_BONUS_COUNT = 3;
         private Dictionary<int, IBonus> _bonuses;
@@ -284,7 +284,7 @@ namespace Assets
         private void UpdateStats()
         {
             _passengers.RemoveAll(item => item == null);
-            float haresPercent = _totalHares / (float)_passengers.Count;
+            float haresPercent = _passengers.Count > 0 ? (_totalHares / (float)_passengers.Count) : 0;
             _haresPercent = Mathf.Min(Mathf.RoundToInt(haresPercent * 100), 100);
             if (_incomingPassengers > 0)
             {

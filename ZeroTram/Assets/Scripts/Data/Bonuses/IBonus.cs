@@ -17,4 +17,5 @@ public interface IBonus
     void RemoveEffect(PassengerSM passenger);
     List<MovableCharacterSM> HandleClick(Vector2 position, bool doubleClick);
     void HandleTouchUp(Vector2 position);
+    int GetTTL();
 }

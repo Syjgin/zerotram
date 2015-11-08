@@ -5,11 +5,16 @@ using Assets;
 
 public class BonusTimer : MonoBehaviour
 {
-    private List<IBonus> _activeBonuses;  
+    private List<IBonus> _activeBonuses;
+    private List<UnknownDrop> _droppedBonuses;
+    [SerializeField] private GameObject _unknownDropPrefab;
+    [SerializeField] private CurrentBonusTimer _currentBonusTimer;
 
 	void Awake () {
         if(_activeBonuses == null)
-            _activeBonuses = new List<IBonus>();	
+            _activeBonuses = new List<IBonus>();
+        if(_droppedBonuses == null)
+            _droppedBonuses = new List<UnknownDrop>();	
 	}
 
     public void ActivateBonusByNumber(int number)
@@ -22,6 +27,37 @@ public class BonusTimer : MonoBehaviour
         _activeBonuses.Add(activatedBonus);
     }
 
+    public void DropBonus(IBonus bonus, Vector3 coords)
+    {
+        if (_droppedBonuses == null)
+        {
+            _droppedBonuses = new List<UnknownDrop>();
+        }
+        GameObject instantiatedDrop = GameObject.Instantiate(_unknownDropPrefab, coords, Quaternion.identity) as GameObject;
+        if (instantiatedDrop != null)
+        {
+            UnknownDrop newDrop = instantiatedDrop.GetComponent<UnknownDrop>();
+            newDrop.InitWithBonus(bonus);
+            _droppedBonuses.Add(newDrop);
+        }
+    }
+
+    public void ActivateDrop(UnknownDrop drop)
+    {
+        if (!_droppedBonuses.Contains(drop))
+        {
+            return;
+        }
+        drop.Bonus.Activate();
+        _currentBonusTimer.Activate(drop.Bonus);
+        _activeBonuses.Add(drop.Bonus);
+        foreach (var droppedBonus in _droppedBonuses)
+        {
+            Destroy(droppedBonus.gameObject);    
+        }
+        _droppedBonuses.Clear();
+    }
+
     public bool IsBonusActiveByType(GameController.BonusTypes bonusType)
     {
         foreach (var activeBonus in _activeBonuses)
@@ -31,7 +67,7 @@ public class BonusTimer : MonoBehaviour
         }
         return false;
     }
-
+    
     public bool IsAnyBonusActive()
     {
         return _activeBonuses.Count > 0;

@@ -1,13 +1,18 @@
-﻿using UnityEngine;
+﻿using System;
+using Assets;
+using Assets.Scripts.Math;
+using UnityEngine;
 public class PassengerFlyingAwayState : MovableCharacterState
 {
     private Vector3 _flyTarget;
     private const int FlyLength = 30;
+    private PassengerSM _passenger;
 
     protected override void OnStart()
     {
         Vector3 pos = MovableCharacter.transform.position;
         _flyTarget = new Vector2(pos.x, pos.y + FlyLength);
+        DropBonus();
     }
 
     public override void OnUpdate()
@@ -24,10 +29,66 @@ public class PassengerFlyingAwayState : MovableCharacterState
 
     public PassengerFlyingAwayState(StateMachine parent) : base(parent)
     {
+        _passenger = (PassengerSM) parent;
     }
 
     public override bool IsTransitionAllowed()
     {
         return false;
+    }
+
+
+    public void DropBonus()
+    {
+        if (MonobehaviorHandler.GetMonobeharior()
+                .GetObject<BonusTimer>("bonusTimer")
+                .IsAnyBonusActive())
+            return;
+        if (!Randomizer.GetPercentageBasedBoolean((int)_passenger.BonusProbability))
+            return;
+        GameController.BonusTypes bonusType = Randomizer.CalculateBonus(_passenger.BonusProbabilities);
+        IBonus drop = null;
+        switch (bonusType)
+        {
+            case GameController.BonusTypes.Wheel:
+                drop = new WheelBonus();
+                break;
+            case GameController.BonusTypes.Ticket:
+                drop = new TicketBonus();
+                break;
+            case GameController.BonusTypes.Boot:
+                drop = new BootBonus();
+                break;
+            case GameController.BonusTypes.Magnet:
+                drop = new MagnetBonus();
+                break;
+            case GameController.BonusTypes.Smile:
+                drop = new SmileBonus();
+                break;
+            case GameController.BonusTypes.AntiHare:
+                drop = new AntiHareBonus();
+                break;
+            case GameController.BonusTypes.SandGlass:
+                drop = new SandGlassBonus();
+                break;
+            case GameController.BonusTypes.Vortex:
+                drop = new VortexBonus();
+                break;
+            case GameController.BonusTypes.Snow:
+                drop = new SnowBonus();
+                break;
+            case GameController.BonusTypes.Wrench:
+                drop = new WrenchBonus();
+                break;
+            case GameController.BonusTypes.Cogwheel:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        if (drop != null)
+        {
+            MonobehaviorHandler.GetMonobeharior()
+                .GetObject<BonusTimer>("bonusTimer").DropBonus(drop, _passenger.transform.position);
+        }
     }
 }

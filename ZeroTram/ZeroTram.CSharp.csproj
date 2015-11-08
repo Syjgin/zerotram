@@ -51,11 +51,17 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -83,10 +89,12 @@
     <Compile Include="Assets\Scripts\Data\Bonuses\SmileBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SnowBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\TicketBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\UnknownDrop.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\VortexBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WrenchBonus.cs" />
     <Compile Include="Assets\Scripts\Data\RecordsManager.cs" />
+    <Compile Include="Assets\Scripts\GUI\CurrentBonusTimer.cs" />
     <Compile Include="Assets\Scripts\GUI\ExitButton.cs" />
     <Compile Include="Assets\Scripts\GUI\FadeTimer.cs" />
     <Compile Include="Assets\Scripts\GUI\GUIManager.cs" />
