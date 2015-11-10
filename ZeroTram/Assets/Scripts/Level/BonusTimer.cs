@@ -33,6 +33,7 @@ public class BonusTimer : MonoBehaviour
         {
             _droppedBonuses = new List<UnknownDrop>();
         }
+        coords.z = -5;
         GameObject instantiatedDrop = GameObject.Instantiate(_unknownDropPrefab, coords, Quaternion.identity) as GameObject;
         if (instantiatedDrop != null)
         {

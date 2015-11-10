@@ -34,7 +34,7 @@ public class Spawner : MonoBehaviour
             if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
                 return;
             int randomIndex = Randomizer.GetInRange(0, unitPrefabs.Count);
-            GameObject randomNPC = unitPrefabs[randomIndex];
+            GameObject randomNPC = unitPrefabs[3];//randomIndex];
             Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y);
             GameObject instantiated =
                         (GameObject)Instantiate(randomNPC, spawnPosition, spawnPoint.transform.rotation);

@@ -390,6 +390,13 @@ public class PassengerSM : MovableCharacterSM
         CalculateIndicator();
         if(!hero.IsDragging())
             StopDrag();
+        if (AttackTarget != null)
+        {
+            if (AttackTarget.CanNotInteract())
+            {
+                AttackTarget = null;
+            }
+        }
     }
 
     public void ApplyWrenchBonus(bool add)

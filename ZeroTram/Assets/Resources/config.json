@@ -37,7 +37,7 @@
 	"bird": {
             "AttackProbability" : 70,
             "ChangeStatePeriod" : 1,
-			"DragChangeStatePeriod" : 1,
+			"DragChangeStatePeriod" : 0.5,
             "AttackDistance" : 1.5,
             "AttackReloadPeriod" : 1,
             "AttackMaxDistance" : 50,
@@ -63,7 +63,7 @@
 	"cat": {
             "AttackProbability" : 50,
             "ChangeStatePeriod" : 3,
-			"DragChangeStatePeriod" : 3,
+			"DragChangeStatePeriod" : 1,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 2,
             "AttackMaxDistance" : 5,
@@ -88,8 +88,8 @@
 		},
 	"gnome": {
             "AttackProbability" : 5,
-            "ChangeStatePeriod" : 20,
-			"DragChangeStatePeriod" : 20,
+            "ChangeStatePeriod" : 10,
+			"DragChangeStatePeriod" : 2,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 5,
             "AttackMaxDistance" : 3,
@@ -114,8 +114,8 @@
 		},
 	"granny": {
             "AttackProbability" : 85,
-            "ChangeStatePeriod" : 15,
-			"DragChangeStatePeriod" : 15,
+            "ChangeStatePeriod" : 7,
+			"DragChangeStatePeriod" : 2,
             "AttackDistance" : 1,
             "AttackReloadPeriod" : 3,
             "AttackMaxDistance" : 10,
