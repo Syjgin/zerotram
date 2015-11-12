@@ -22,7 +22,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 20,
             "StickProbability" : 25,
-			"BonusProbability" : 50,
+			"BonusProbability" : 40,
 			"BonusMap" : {
 				"Wheel" : 12.5,
 				"Ticket" : 12.5,
@@ -48,7 +48,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 30,
             "StickProbability" : 5,
-			"BonusProbability" : 50,
+			"BonusProbability" : 15,
 			"BonusMap" : {
 				"Wheel" : 12.5,
 				"Ticket" : 12.5,
@@ -74,7 +74,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 10,
             "StickProbability" : 5,
-			"BonusProbability" : 50,
+			"BonusProbability" : 20,
 			"BonusMap" : {
 				"Wheel" : 12.5,
 				"Ticket" : 12.5,
@@ -100,7 +100,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 60,
             "StickProbability" : 80,
-			"BonusProbability" : 50,
+			"BonusProbability" : 95,
 			"BonusMap" : {
 				"Wheel" : 12.5,
 				"Ticket" : 12.5,
@@ -126,7 +126,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 95,
             "StickProbability" : 60,
-			"BonusProbability" : 50,
+			"BonusProbability" : 30,
 			"BonusMap" : {
 				"Wheel" : 12.5,
 				"Ticket" : 12.5,
@@ -201,6 +201,9 @@
 	},
 	"wrenchBonus" : {
 		"TTL" : 30
+	},
+	"healBonus" : {
+		"coef" : 0.25
 	},
 	"descriptions" : {
 			"gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",

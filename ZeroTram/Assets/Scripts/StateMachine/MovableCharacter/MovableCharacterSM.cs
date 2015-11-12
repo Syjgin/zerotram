@@ -44,6 +44,10 @@ public class MovableCharacterSM : StateMachine
         Frozen = 8
     }
 
+    public float GetInitialLifes()
+    {
+        return InitialLifes;
+    }
     
     public Vector2 GetTarget()
     {
@@ -55,23 +59,10 @@ public class MovableCharacterSM : StateMachine
         CalculateOrientation(target);
         ActivateState((int)MovableCharacterStates.Move);
     }
-    
-    public virtual void AddDamage(MovableCharacterSM attacker)
+
+    public void AddDamageValue(float damage)
     {
-        AttackedStartTime = Time.time;
-        ActivateState((int)MovableCharacterStates.Attacked);
-        if (attacker.AttackStrength < 0)
-            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("heal");
-        if (attacker.AttackStrength < 0 && Hp >= InitialLifes)
-        {
-            Hp = InitialLifes;
-            return;
-        }
-        if (attacker.AttackStrength > 0)
-            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("lowkick");
-        float currentStrength = attacker.AttackStrength*Randomizer.GetNormalizedRandom();
-        Hp -= currentStrength;
-        AttackTarget = attacker;
+        Hp -= damage;
         float lifesPercent = Hp / (float)InitialLifes;
         float originalValue = _lifebar.bounds.min.x;
         _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);
@@ -97,6 +88,24 @@ public class MovableCharacterSM : StateMachine
             GameController.GetInstance().RegisterDeath(this);
             Destroy(this.gameObject);
         }
+    }
+
+    public virtual void AddDamage(MovableCharacterSM attacker)
+    {
+        AttackedStartTime = Time.time;
+        ActivateState((int)MovableCharacterStates.Attacked);
+        if (attacker.AttackStrength < 0)
+            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("heal");
+        if (attacker.AttackStrength < 0 && Hp >= InitialLifes)
+        {
+            Hp = InitialLifes;
+            return;
+        }
+        if (attacker.AttackStrength > 0)
+            MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("lowkick");
+        float currentStrength = attacker.AttackStrength*Randomizer.GetNormalizedRandom();
+        AttackTarget = attacker;
+        AddDamageValue(currentStrength);
     }
 
     public bool IsAttackReationFinished()
