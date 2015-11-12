@@ -82,6 +82,9 @@ public class PassengerFlyingAwayState : MovableCharacterState
                 break;
             case GameController.BonusTypes.Cogwheel:
                 break;
+            case GameController.BonusTypes.Heal:
+                drop = new HealBonus();
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }

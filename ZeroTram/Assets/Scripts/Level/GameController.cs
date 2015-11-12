@@ -22,7 +22,8 @@ namespace Assets
             Vortex = 7,
             Snow = 8,
             Wrench = 9,
-            Cogwheel = 10
+            Cogwheel = 10,
+            Heal
         }
         private const int MAX_BONUS_COUNT = 3;
         private Dictionary<int, IBonus> _bonuses;

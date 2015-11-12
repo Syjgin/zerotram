@@ -10,7 +10,7 @@ public class HealBonus : PassengerEffectBonus
     private float _coef;
     public override GameController.BonusTypes GetBonusType()
     {
-        return GameController.BonusTypes.Smile;
+        return GameController.BonusTypes.Heal;
     }
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
