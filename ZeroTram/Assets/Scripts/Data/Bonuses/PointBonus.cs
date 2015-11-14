@@ -10,7 +10,7 @@ public abstract class PointBonus : PassengerEffectBonus
     
     public override void AddEffect(PassengerSM passenger)
     {
-        if (IsFired)
+        if (IsFired && !passenger.ActiveBonuses.Contains(GetBonusType()))
         {
             passenger.ActiveBonuses.Add(GetBonusType());
             AddEffectAfterCheck(passenger);

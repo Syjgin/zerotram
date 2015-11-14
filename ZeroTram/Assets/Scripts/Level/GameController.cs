@@ -23,7 +23,7 @@ namespace Assets
             Snow = 8,
             Wrench = 9,
             Cogwheel = 10,
-            Heal
+            Heal = 11
         }
         private const int MAX_BONUS_COUNT = 3;
         private Dictionary<int, IBonus> _bonuses;
@@ -157,9 +157,9 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            /*VortexBonus bonus = new VortexBonus();
+            VortexBonus bonus = new VortexBonus();
             AddBonus(bonus);
-            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);*/
+            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
         }
 
         public int GetCurrentStationNumber()

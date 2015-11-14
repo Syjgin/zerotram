@@ -60,9 +60,11 @@ public class MovableCharacterSM : StateMachine
         ActivateState((int)MovableCharacterStates.Move);
     }
 
-    public void AddDamageValue(float damage)
+    public virtual void AddDamageValue(float damage)
     {
         Hp -= damage;
+        if (Hp > InitialLifes)
+            Hp = InitialLifes;
         float lifesPercent = Hp / (float)InitialLifes;
         float originalValue = _lifebar.bounds.min.x;
         _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);

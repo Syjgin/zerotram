@@ -139,10 +139,10 @@ public class ConductorSM : MovableCharacterSM
     {
         return ((Vector2) transform.position - (Vector2) _dragTarget.transform.position);
     }
-    
-    public override void AddDamage(MovableCharacterSM attacker)
+
+    public override void AddDamageValue(float damage)
     {
-        base.AddDamage(attacker);
+        base.AddDamageValue(damage);
         int lifesPercent = Mathf.RoundToInt(100 * (Hp / (float)InitialLifes));
         _lifes.text = lifesPercent + "%";
     }

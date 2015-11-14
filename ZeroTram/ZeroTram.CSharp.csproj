@@ -48,6 +48,7 @@
     <Reference Include="System.Net" />
     <Reference Include="System.XML" />
     <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
     <Reference Include="UnityScript.Lang" />
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
@@ -77,8 +78,10 @@
     <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\BootBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\HealBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\HealMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\IBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\MagnetBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\OneActionBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\PassengerEffectBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\PointBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SandGlassBonus.cs" />
