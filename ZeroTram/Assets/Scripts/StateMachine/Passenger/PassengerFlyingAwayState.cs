@@ -46,7 +46,7 @@ public class PassengerFlyingAwayState : MovableCharacterState
             return;
         if (!Randomizer.GetPercentageBasedBoolean((int)_passenger.BonusProbability))
             return;
-        GameController.BonusTypes bonusType = Randomizer.CalculateBonus(_passenger.BonusProbabilities);
+        GameController.BonusTypes bonusType = Randomizer.CalculateValue<GameController.BonusTypes>(_passenger.BonusProbabilities);
         IBonus drop = null;
         switch (bonusType)
         {

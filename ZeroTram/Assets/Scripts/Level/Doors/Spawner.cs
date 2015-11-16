@@ -33,7 +33,10 @@ public class Spawner : MonoBehaviour
         {
             if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
                 return;
-            int randomIndex = Randomizer.GetInRange(0, unitPrefabs.Count);
+            string passengerString = LevelManager.GetRandomCharacter();
+            int randomIndex = PassengerIndex(passengerString);
+            if(randomIndex < 0)
+                return;
             GameObject randomNPC = unitPrefabs[randomIndex];
             Vector3 spawnPosition = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y);
             GameObject instantiated =
@@ -49,5 +52,23 @@ public class Spawner : MonoBehaviour
             }
             ps.CalculateRandomTarget();
         } 
+    }
+
+    private int PassengerIndex(string stringRepresentation)
+    {
+        switch (stringRepresentation)
+        {
+            case "alien":
+                return 0;
+            case "bird":
+                return 1;
+			case "cat" :
+                return 2;
+			case "gnome" :
+                return 3;
+			case "granny" :
+                return 4;
+        }
+        return -1;
     }
 }

@@ -72,10 +72,10 @@ namespace Assets.Scripts.Math
             return values[randIndex];
         }
 
-        public static GameController.BonusTypes CalculateBonus(Dictionary<GameController.BonusTypes, float> bonusMap)
+        public static T CalculateValue<T>(Dictionary<T, float> map)
         {
-            List<GameController.BonusTypes> values = new List<GameController.BonusTypes>();
-            foreach (var mapEntry in bonusMap)
+            List<T> values = new List<T>();
+            foreach (var mapEntry in map)
             {
                 for (int i = 0; i < mapEntry.Value; i++)
                 {

@@ -111,6 +111,15 @@
 	"bonuses" : {
 			"DestroyPeriod" : 10
 	},
+	"levels" : {
+		"1_0" : {
+			"alien" : 20,
+			"bird" : 30,
+			"cat" : 30,
+			"gnome" : 10,
+			"granny" : 10
+		}
+	},
 	"tram" : {
 			"MaxPassengers" : 15,
 			"MaxKilledPercent" : 50,

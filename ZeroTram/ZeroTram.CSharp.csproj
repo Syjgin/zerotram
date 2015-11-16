@@ -119,6 +119,7 @@
     <Compile Include="Assets\Scripts\Level\Floor.cs" />
     <Compile Include="Assets\Scripts\Level\GameController.cs" />
     <Compile Include="Assets\Scripts\Level\GameStateNotificationListener.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Level\Parallax.cs" />
     <Compile Include="Assets\Scripts\Level\ScrollingScript.cs" />
     <Compile Include="Assets\Scripts\Math\Randomizer.cs" />
