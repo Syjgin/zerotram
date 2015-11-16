@@ -157,9 +157,9 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            VortexBonus bonus = new VortexBonus();
+            /*VortexBonus bonus = new VortexBonus();
             AddBonus(bonus);
-            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);
+            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);*/
         }
 
         public int GetCurrentStationNumber()
