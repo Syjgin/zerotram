@@ -24,14 +24,8 @@
             "StickProbability" : 25,
 			"BonusProbability" : 40,
 			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Wrench" : 12.5
+				"AntiHare" : 50,
+				"SandGlass" : 50
 			}
 		},
 	"bird": {
@@ -48,16 +42,10 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 30,
             "StickProbability" : 5,
-			"BonusProbability" : 15,
+			"BonusProbability" : 30,
 			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Wrench" : 12.5
+				"Boot" : 50,
+				"Magnet" : 50
 			}
 		},
 	"cat": {
@@ -76,14 +64,8 @@
             "StickProbability" : 5,
 			"BonusProbability" : 20,
 			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Wrench" : 12.5
+				"Wheel" : 50,
+				"Ticket" : 50
 			}
 		},
 	"gnome": {
@@ -102,14 +84,9 @@
             "StickProbability" : 80,
 			"BonusProbability" : 95,
 			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Wrench" : 12.5
+				"Smile" : 30,
+				"Wrench" : 30,
+				"Heal" : 40
 			}
 		},
 	"granny": {
@@ -128,16 +105,12 @@
             "StickProbability" : 60,
 			"BonusProbability" : 30,
 			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Wrench" : 12.5
+				"Heal" : 100
 			}
 		},
+	"bonuses" : {
+			"DestroyPeriod" : 10
+	},
 	"tram" : {
 			"MaxPassengers" : 15,
 			"MaxKilledPercent" : 50,
