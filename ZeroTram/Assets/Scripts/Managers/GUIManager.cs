@@ -30,7 +30,7 @@ public class GUIManager : MonoBehaviour {
         _loadingText.SetActive(true);
 	    _loadingButton.enabled = false;
         _startClip.Play();
-            LevelManager.SetCurrentLevel("1_0");
+            LevelManager.SetCurrentLevel(LevelManager.GetDebugLevelName());
     	Application.LoadLevelAsync("Main"); 
 	}
 

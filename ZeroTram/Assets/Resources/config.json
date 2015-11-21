@@ -112,12 +112,27 @@
 			"DestroyPeriod" : 10
 	},
 	"levels" : {
-		"1_0" : {
+		"level1" : {
 			"alien" : 20,
 			"bird" : 30,
 			"cat" : 30,
 			"gnome" : 10,
 			"granny" : 10
+		}, 
+		"level2" : {
+			"alien" : 10,
+			"bird" : 40,
+			"cat" : 40,
+			"gnome" : 5,
+			"granny" : 5
+		}
+	},
+	"map" : {
+		"world1" : {
+			"level1"
+		},
+		"world2" : {
+			"level2"
 		}
 	},
 	"tram" : {

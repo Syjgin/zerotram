@@ -12,15 +12,17 @@ public static class LevelManager
     public static void SetCurrentLevel(string levelName)
     {
         _currentLevelId = levelName;
-        if (_passengersMap == null)
-        {
-            _passengersMap = new Dictionary<string, float>();
-        }
-        ParseBonusMap();
+        ParsePassengersMap();
     }
 
-    private static void ParseBonusMap()
+    public static string GetDebugLevelName()
     {
+        return "level1";
+    }
+
+    private static void ParsePassengersMap()
+    {
+        _passengersMap = new Dictionary<string, float>();
         Dictionary<string,string> unparsedMap = ConfigReader.GetConfig().GetField("levels").GetField(_currentLevelId).ToDictionary();
         foreach (var item in unparsedMap)
         {
@@ -33,7 +35,7 @@ public static class LevelManager
     {
         if (_passengersMap == null)
         {
-            SetCurrentLevel("1_0");
+            SetCurrentLevel(GetDebugLevelName());
         }
         return Randomizer.CalculateValue<string>(_passengersMap);
     }
