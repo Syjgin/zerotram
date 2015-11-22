@@ -243,9 +243,10 @@ public class PassengerSM : MovableCharacterSM
 
     private void ShowCharacterInfo()
     {
-        if (PlayerPrefs.HasKey(NewCharacterWindow.Prefix + GetClassName()))
+        string key = NewCharacterWindow.Prefix + GetClassName();
+        if (PlayerPrefs.GetInt(key) == 1)
             return;
-        PlayerPrefs.SetInt(NewCharacterWindow.Prefix + GetClassName(), 1);
+        PlayerPrefs.SetInt(key, 1);
         Window.SetCharacterToShow(GetClassName());
     }
 

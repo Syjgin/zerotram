@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class MapItem : MonoBehaviour
 {
@@ -8,12 +9,12 @@ public class MapItem : MonoBehaviour
 
     void Start()
     {
-        enabled = MapManager.GetInstance().IsStationOpened(_levelId);
+        gameObject.SetActive(MapManager.GetInstance().IsStationOpened(_levelId));
     }
 
     void OnMouseDown()
     {
-        LevelManager.SetCurrentLevel(_levelId);
+        MapManager.GetInstance().SetCurrentStation(_levelId);
         Application.LoadLevelAsync("Main");
     }
 }

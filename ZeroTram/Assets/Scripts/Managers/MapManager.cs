@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Math;
 using UnityEngine;
 
 public class MapManager
@@ -21,8 +22,10 @@ public class MapManager
     private const string OpenedStationsKey = "OpenedStations";
     private const string CurrentWorldKey = "CurrentWorld";
     private string _currentWorldId;
-    private string _lastOpenedStationId;
     private readonly JSONObject _map;
+    private bool _isNewWorldAnimationNeedToBePlayed;
+    private bool _isNewStationAnimationNeedToBePlayed;
+    private StationInfo _currentStationInfo;
 
     private MapManager()
     {
@@ -37,6 +40,46 @@ public class MapManager
         {
             OpenNextStation();
         }
+    }
+
+    public void SetCurrentStation(string id)
+    {
+        _currentStationInfo = new StationInfo();
+        Dictionary<string, float>  passengersMap = new Dictionary<string, float>();
+        Dictionary<string, string> unparsedMap = ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("passengersMap").ToDictionary();
+        foreach (var item in unparsedMap)
+        {
+            float value = (float)Convert.ToDouble(item.Value);
+            passengersMap.Add(item.Key, value);
+        }
+        _currentStationInfo.PassengersMap = passengersMap;
+        _currentStationInfo.Name = ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("name").str;
+        _currentStationInfo.CheckPointsCount =
+            (int)ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("count").n;
+    }
+
+    public string GetCurrentStationName()
+    {
+        return _currentStationInfo.Name;
+    }
+
+    public int GetCurrentCheckPointsCount()
+    {
+        return _currentStationInfo.CheckPointsCount;
+    }
+
+    public string GetRandomCharacter()
+    {
+        if (_currentStationInfo == null)
+        {
+            SetCurrentStation(GetDebugLevelName());
+        }
+        return Randomizer.CalculateValue<string>(_currentStationInfo.PassengersMap);
+    }
+
+    public static string GetDebugLevelName()
+    {
+        return "level1";
     }
 
     private void SaveOpenedStations()
@@ -63,6 +106,7 @@ public class MapManager
                 if (!openedLevels.Contains(stringRepresentation))
                 {
                     openedLevels.Add(stringRepresentation);
+                    _isNewStationAnimationNeedToBePlayed = true;
                     allStationsWasOpened = false;
                     break;
                 }
@@ -78,6 +122,7 @@ public class MapManager
                         List<string> listWithFirstLevel = new List<string>();
                         listWithFirstLevel.Add(firstLevelOfNewWorld);
                         _openedStations.Add(key, listWithFirstLevel);
+                        _isNewWorldAnimationNeedToBePlayed = true;
                         break;
                     }
                 }
@@ -87,7 +132,11 @@ public class MapManager
         {
             List<string> listWithFirstLevel = new List<string>();
             listWithFirstLevel.Add(levelIds[0].str);
-            _openedStations.Add(_currentWorldId, listWithFirstLevel);
+            if (!_openedStations.ContainsKey(_currentWorldId))
+            {
+                _openedStations.Add(_currentWorldId, listWithFirstLevel);
+            }
+            _isNewStationAnimationNeedToBePlayed = true;
         }
         SaveOpenedStations();
     }
@@ -95,5 +144,26 @@ public class MapManager
     public bool IsStationOpened(string stationId)
     {
         return _openedStations[_currentWorldId].Contains(stationId);
+    }
+
+    public bool IsNewWorldAnimationNeedToBePlayed()
+    {
+        return _isNewWorldAnimationNeedToBePlayed;
+    }
+
+    public bool IsNewStationAnimationNeedToBePlayed()
+    {
+        return _isNewStationAnimationNeedToBePlayed;
+    }
+
+    public void SetAllAnimationsFinished()
+    {
+        _isNewStationAnimationNeedToBePlayed = false;
+        _isNewWorldAnimationNeedToBePlayed = false;
+    }
+
+    public string GetLastOpenedStationId()
+    {
+        return _openedStations[_currentWorldId].Last();
     }
 }

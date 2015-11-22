@@ -33,7 +33,7 @@ public class Spawner : MonoBehaviour
         {
             if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
                 return;
-            string passengerString = LevelManager.GetRandomCharacter();
+            string passengerString = MapManager.GetInstance().GetRandomCharacter();
             int randomIndex = PassengerIndex(passengerString);
             if(randomIndex < 0)
                 return;

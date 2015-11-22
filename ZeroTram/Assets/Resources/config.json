@@ -113,26 +113,46 @@
 	},
 	"levels" : {
 		"level1" : {
-			"alien" : 20,
-			"bird" : 30,
-			"cat" : 30,
-			"gnome" : 10,
-			"granny" : 10
+			"passengersMap" : {
+							"alien" : 20,
+							"bird" : 30,
+							"cat" : 30,
+							"gnome" : 10,
+							"granny" : 10
+						},
+			"name" : "Тихая печень",
+			"count" : 2
 		}, 
 		"level2" : {
-			"alien" : 10,
-			"bird" : 40,
-			"cat" : 40,
-			"gnome" : 5,
-			"granny" : 5
+			"passengersMap" : {
+							"alien" : 10,
+							"bird" : 40,
+							"cat" : 40,
+							"gnome" : 5,
+							"granny" : 5
+						},
+			"name" : "Котовасия",
+			"count" : 15
+		},
+		"level3" : {
+			"passengersMap" : {
+							"alien" : 10,
+							"bird" : 40,
+							"cat" : 40,
+							"gnome" : 5,
+							"granny" : 5
+						},
+			"name" : "BraveNewWorld",
+			"count" : 15
 		}
 	},
 	"map" : {
 		"world1" : {
-			"level1"
+			"level1",
+			"level2"
 		},
 		"world2" : {
-			"level2"
+			"level3"
 		}
 	},
 	"tram" : {

@@ -11,7 +11,7 @@ public class NewCharacterWindow : MonoBehaviour
     [SerializeField] private List<Sprite> _images;
     [SerializeField] private Image _image;
     [SerializeField] private GameObject _window;
-
+    
     public Dictionary<string, int> CharacterIndices = new Dictionary<string, int>()
     {
         {"gnome", 0},
@@ -46,7 +46,7 @@ public class NewCharacterWindow : MonoBehaviour
         Time.timeScale = 0;
         int imageIndex = -1;
         CharacterIndices.TryGetValue(_currentCharacter, out imageIndex);
-        if (imageIndex > 0)
+        if (imageIndex >= 0)
         {
             _image.sprite = _images[imageIndex];
             _image.SetNativeSize();

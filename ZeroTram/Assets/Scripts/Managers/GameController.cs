@@ -321,6 +321,10 @@ namespace Assets
         private void NextStationReached()
         {
             _currentStationNumber++;
+            if (_currentStationNumber == MapManager.GetInstance().GetCurrentCheckPointsCount())
+            {
+                MapManager.GetInstance().OpenNextStation();
+            }
             _currentSpawnCount += (int)_spawnIncrementCount;
             foreach (var passenger in _passengers)
             {
