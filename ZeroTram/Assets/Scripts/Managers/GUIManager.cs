@@ -15,6 +15,7 @@ public class GUIManager : MonoBehaviour {
     [SerializeField] private Button _loadingButton;
     [SerializeField] private AudioSource _startClip;
     [SerializeField] private Button _tut;
+    [SerializeField] private Button _map;
     void Start()
     {
         //PlayerPrefs.DeleteAll();
@@ -23,7 +24,8 @@ public class GUIManager : MonoBehaviour {
             _userName.text = RecordsManager.GetInstance().GetCurrentUserName();
         }
         _tut.onClick.AddListener(() => Application.LoadLevelAsync("tutorial"));
-    }
+        _map.onClick.AddListener(() => Application.LoadLevelAsync("Map"));
+        }
 
 	public void StartGame () {
         RecordsManager.GetInstance().SetCurrentUserName(_userName.text);

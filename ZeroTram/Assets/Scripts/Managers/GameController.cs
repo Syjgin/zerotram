@@ -74,6 +74,7 @@ namespace Assets
             public int TicketCount;
             public int StationNumber;
             public bool IsConductorDied;
+            public bool IsLevelFinished;
         }
         private static GameController _instance;
 
@@ -207,6 +208,22 @@ namespace Assets
             UpdateStats();
         }
 
+        private void Victory()
+        {
+            StateInformation info = new StateInformation();
+            info.Hares = _haresPercent;
+            info.Killed = _killedPercent;
+            info.StationNumber = _currentStationNumber;
+            info.TicketCount = _ticketCount;
+            info.IsConductorDied = false;
+            info.IsLevelFinished = true;
+            foreach (var gameStateNotificationListener in _listeners)
+            {
+                gameStateNotificationListener.UpdateInfo(info);
+                gameStateNotificationListener.GameOver();
+            }
+        }
+
         private void UpdateListeners(bool isCondutctorDied)
         {
             StateInformation info = new StateInformation();
@@ -269,7 +286,7 @@ namespace Assets
                 }
             }
         }
-        
+
         public void GameOver(bool isConductorDied)
         {
             MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag();
@@ -323,7 +340,8 @@ namespace Assets
             _currentStationNumber++;
             if (_currentStationNumber == MapManager.GetInstance().GetCurrentCheckPointsCount())
             {
-                MapManager.GetInstance().OpenNextStation();
+                MapManager.GetInstance().OpenNextLevel();
+                Victory();
             }
             _currentSpawnCount += (int)_spawnIncrementCount;
             foreach (var passenger in _passengers)

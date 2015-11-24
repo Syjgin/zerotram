@@ -38,24 +38,30 @@ public class MapManager
         }
         if (_openedStations.Count == 0)
         {
-            OpenNextStation();
+            OpenNextLevel();
         }
     }
 
     public void SetCurrentStation(string id)
     {
-        _currentStationInfo = new StationInfo();
-        Dictionary<string, float>  passengersMap = new Dictionary<string, float>();
-        Dictionary<string, string> unparsedMap = ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("passengersMap").ToDictionary();
+        _currentStationInfo = GetStationInfo(id);
+    }
+
+    public static StationInfo GetStationInfo(string stationId)
+    {
+        StationInfo info = new StationInfo();
+        Dictionary<string, float> passengersMap = new Dictionary<string, float>();
+        Dictionary<string, string> unparsedMap = ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("passengersMap").ToDictionary();
         foreach (var item in unparsedMap)
         {
             float value = (float)Convert.ToDouble(item.Value);
             passengersMap.Add(item.Key, value);
         }
-        _currentStationInfo.PassengersMap = passengersMap;
-        _currentStationInfo.Name = ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("name").str;
-        _currentStationInfo.CheckPointsCount =
-            (int)ConfigReader.GetConfig().GetField("levels").GetField(id).GetField("count").n;
+        info.PassengersMap = passengersMap;
+        info.Name = ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("name").str;
+        info.CheckPointsCount =
+            (int)ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("count").n;
+        return info;
     }
 
     public string GetCurrentStationName()
@@ -93,7 +99,7 @@ public class MapManager
         PlayerPrefs.SetString(CurrentWorldKey, id);
     }
     
-    public void OpenNextStation()
+    public void OpenNextLevel()
     {
         List<JSONObject> levelIds = _map.GetField(_currentWorldId).list;
         if (_openedStations.ContainsKey(_currentWorldId))
