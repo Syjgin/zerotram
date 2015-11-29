@@ -25,9 +25,7 @@ public class Spawner : MonoBehaviour
         if(GameController.GetInstance().IsGameFinished)
             return;
         int maxCount = GameController.GetInstance().GetCurrentSpawnCount();
-        int realCount = 1;
-        if(GameController.GetInstance().GetCurrentStationNumber() > 0)
-            realCount = Randomizer.GetInRange(1, maxCount);
+        int realCount = Randomizer.GetInRange(1, maxCount);
         
         for (int i = 0; i < realCount; i++)
         {
@@ -50,7 +48,7 @@ public class Spawner : MonoBehaviour
                 timer.SetPaused(true);
                 return;
             }
-            ps.CalculateRandomTarget();
+            ps.CalculateRandomTarget(true);
         } 
     }
 

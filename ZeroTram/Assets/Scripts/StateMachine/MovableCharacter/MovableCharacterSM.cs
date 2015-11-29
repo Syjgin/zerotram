@@ -143,7 +143,7 @@ public class MovableCharacterSM : StateMachine
         }
     }
 
-    public void MakeIdle()
+    public virtual void MakeIdle()
     {
         ActivateState((int)MovableCharacterSM.MovableCharacterStates.Idle);
     }

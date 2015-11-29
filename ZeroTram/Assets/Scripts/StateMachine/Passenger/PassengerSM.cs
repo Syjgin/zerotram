@@ -21,6 +21,9 @@ public class PassengerSM : MovableCharacterSM
     private float _maxStopCount;
     private bool _isMagnetTurnedOn;
     private float _magnetDistance;
+    private float _attackingDenyPeriod;
+
+    public bool IsAttackingAllowed;
 
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
@@ -90,6 +93,7 @@ public class PassengerSM : MovableCharacterSM
         TicketProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("TicketProbability").n;
         StickProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("StickProbability").n;
         BonusProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("BonusProbability").n;
+        _attackingDenyPeriod = ConfigReader.GetConfig().GetField("tram").GetField("AttackDenyPeriod").n;
         ParseBonusMap();
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
         CalculateStick();
@@ -199,7 +203,8 @@ public class PassengerSM : MovableCharacterSM
         if (Randomizer.GetPercentageBasedBoolean((int)AttackProbability))
         {
             AttackTarget = movable;
-            ActivateState((int)MovableCharacterStates.Attack);
+            if(IsAttackingAllowed)
+                ActivateState((int)MovableCharacterStates.Attack);
         }
         else
         {
@@ -207,9 +212,16 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
-    public void CalculateRandomTarget()
+
+    public override void MakeIdle()
     {
-        if(AttackTarget != null)
+        if(IsAttackingAllowed)
+            base.MakeIdle();
+    }
+
+    public void CalculateRandomTarget(bool force = false)
+    {
+        if(AttackTarget != null && !force)
             return;
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
         if (target != default(Vector2))
@@ -221,7 +233,7 @@ public class PassengerSM : MovableCharacterSM
         bool willCounterAttack = Randomizer.GetPercentageBasedBoolean((int)CounterAttackProbability);
         if (willCounterAttack)
         {
-            if (AttackTarget != null)
+            if (AttackTarget != null && IsAttackingAllowed)
                 ActivateState((int)MovableCharacterStates.Attack);
             else
                 MakeIdle();
@@ -397,6 +409,11 @@ public class PassengerSM : MovableCharacterSM
             {
                 AttackTarget = null;
             }
+        }
+        _attackingDenyPeriod -= Time.deltaTime;
+        if (_attackingDenyPeriod <= 0)
+        {
+            IsAttackingAllowed = true;
         }
     }
 

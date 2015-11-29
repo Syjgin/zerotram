@@ -121,7 +121,7 @@
 							"granny" : 10
 						},
 			"name" : "Станция 1",
-			"count" : 2
+			"count" : 20
 		}, 
 		"level2" : {
 			"passengersMap" : {
@@ -156,29 +156,17 @@
 		}
 	},
 	"tram" : {
+			"AttackDenyPeriod" : 2,
 			"MaxPassengers" : 15,
 			"MaxKilledPercent" : 50,
 			"MaxHarePercent" : 50,
-			"InitialSpawnCount" : 2,
-			"SpawnIncrementCount" : 1,
+			"InitialSpawnCount" : 1,
+			"SpawnIncrementCount" : 2,
 			"MoveDuration" : 15,
 			"StopDuration" : 4,
 			"MinDistance" : 1,
 			"MaxStopCount" : 10,
-			"StickPeriod" : 5,
-			"BonusProbability" : 50,
-			"BonusMap" : {
-				"Wheel" : 12.5,
-				"Ticket" : 12.5,
-				"Boot" : 12.5,
-				"Magnet" : 12.5,
-				"Smile" : 12.5,
-				"AntiHare" : 12.5,
-				"SandGlass" : 12.5,
-				"Vortex" : 12.5,
-				"Snow" : 12.5,
-				"Wrench" : 12.5
-			}
+			"StickPeriod" : 5
 		},
 	"wheelBonus" : {
 		"TTL" : 30,
