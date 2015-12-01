@@ -10,7 +10,7 @@ public class HealMegaBonus : OneActionBonus
         return GameController.BonusTypes.Heal;
     }
     
-    protected override void AddEffectToConductor(ConductorSM conductor)
+    public override void AddEffectToConductor(ConductorSM conductor)
     {
         conductor.AddDamageValue(-conductor.GetInitialLifes());
     }

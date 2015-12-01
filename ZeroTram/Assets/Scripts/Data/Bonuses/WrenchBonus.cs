@@ -25,6 +25,7 @@ public class WrenchBonus : PassengerEffectBonus
     public WrenchBonus()
     {
         TTL = ConfigReader.GetConfig().GetField("wrenchBonus").GetField("TTL").n;
+        IsPassengersAffected = true;
     }
 
 

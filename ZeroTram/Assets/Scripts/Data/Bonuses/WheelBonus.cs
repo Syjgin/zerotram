@@ -29,5 +29,6 @@ public class WheelBonus : PassengerEffectBonus
         TTL = ConfigReader.GetConfig().GetField("wheelBonus").GetField("TTL").n;
         _incrementCoef = ConfigReader.GetConfig().GetField("wheelBonus").GetField("incrementCoef").n;
         _decrementCoef = 1/_incrementCoef;
+        IsPassengersAffected = true;
     }
 }

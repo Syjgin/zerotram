@@ -284,6 +284,13 @@ namespace Assets
                 {
                     GameOver(false);
                 }
+                else
+                {
+                    if (_passengers.Count == 0)
+                    {
+                        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").StopNow();
+                    }
+                }
             }
         }
 

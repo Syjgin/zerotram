@@ -6,16 +6,32 @@ using Assets;
 
 public abstract class PassengerEffectBonus : AbstractBonus
 {
+    protected bool IsConductorAffected;
+    protected bool IsPassengersAffected;
+
     public override void Activate()
     {
         base.Activate();
-        GameController.GetInstance().BonusEffectToPassengers(this, true);
+        if (IsPassengersAffected)
+        {
+            GameController.GetInstance().BonusEffectToPassengers(this, true);
+        }
+        if (IsConductorAffected)
+        {
+            ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+            AddEffectToConductor(conductor);
+        }
     }
 
     public override void Deactivate()
     {
         base.Deactivate();
         GameController.GetInstance().BonusEffectToPassengers(this, false);
+        if (IsConductorAffected)
+        {
+            ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+            RemoveEffectFromConductor(conductor);
+        }
     }
 
     private bool IsEffectAdditionPossible(PassengerSM passenger)
@@ -41,6 +57,16 @@ public abstract class PassengerEffectBonus : AbstractBonus
     {
         if (IsEffectAdditionPossible(passenger))
             AddEffectAfterCheck(passenger);
+    }
+
+    public virtual void AddEffectToConductor(ConductorSM conductor)
+    {
+
+    }
+
+    public virtual void RemoveEffectFromConductor(ConductorSM conductor)
+    {
+
     }
 
     public override void RemoveEffect(PassengerSM passenger)

@@ -19,6 +19,11 @@ public class HealBonus : PassengerEffectBonus
         passenger.AddDamageValue(-healValue);
     }
 
+    public override void AddEffectToConductor(ConductorSM conductor)
+    {
+        conductor.AddDamageValue(-conductor.GetInitialLifes());
+    }
+
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
     }
@@ -26,6 +31,8 @@ public class HealBonus : PassengerEffectBonus
     public HealBonus()
     {
         TTL = 0;
+        IsConductorAffected = true;
+        IsPassengersAffected = true;
         _coef = ConfigReader.GetConfig().GetField("healBonus").GetField("coef").n;
     }
 

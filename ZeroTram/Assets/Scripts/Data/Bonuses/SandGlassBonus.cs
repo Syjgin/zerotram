@@ -29,6 +29,7 @@ public class SandGlassBonus : PassengerEffectBonus
         TTL = ConfigReader.GetConfig().GetField("sandglassBonus").GetField("TTL").n;
         _decrementCoef = ConfigReader.GetConfig().GetField("sandglassBonus").GetField("decrementCoef").n;
         _incrementCoef = 1/_decrementCoef;
+        IsPassengersAffected = true;
     }
 
 

@@ -6,9 +6,6 @@ using UnityEngine;
 public abstract class OneActionBonus : PointBonus
 {
     protected float Distance;
-
-    protected bool IsConductorAffected;
-    protected bool IsPassengersAffected;
     
     public override void HandleTouchUp(Vector2 point)
     {
@@ -38,9 +35,8 @@ public abstract class OneActionBonus : PointBonus
         Deactivate();
     }
 
-    protected virtual void AddEffectToConductor(ConductorSM conductor)
+    public override void Activate()
     {
-        
     }
 
     protected virtual void AddEffectToPassenger(PassengerSM passenger)

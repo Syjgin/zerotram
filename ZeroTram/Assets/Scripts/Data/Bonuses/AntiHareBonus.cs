@@ -29,6 +29,7 @@ public class AntiHareBonus : PassengerEffectBonus
         TTL = ConfigReader.GetConfig().GetField("antiHareBonus").GetField("TTL").n;
         _coef = ConfigReader.GetConfig().GetField("antiHareBonus").GetField("incrementCoef").n;
         _decrementCoef = 1/_coef;
+        IsPassengersAffected = true;
     }
 
 

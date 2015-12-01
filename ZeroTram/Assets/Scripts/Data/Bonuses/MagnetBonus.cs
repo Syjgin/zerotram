@@ -27,6 +27,7 @@ public class MagnetBonus : PassengerEffectBonus
     {
         TTL = ConfigReader.GetConfig().GetField("magnetBonus").GetField("TTL").n;
         _dist = ConfigReader.GetConfig().GetField("magnetBonus").GetField("dist").n;
+        IsPassengersAffected = true;
     }
 
 

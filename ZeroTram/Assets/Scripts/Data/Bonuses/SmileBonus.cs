@@ -29,6 +29,7 @@ public class SmileBonus : PassengerEffectBonus
         TTL = ConfigReader.GetConfig().GetField("smileBonus").GetField("TTL").n;
         _coef = ConfigReader.GetConfig().GetField("smileBonus").GetField("decrementCoef").n;
         _incrementCoef = 1/_coef;
+        IsPassengersAffected = true;
     }
 
 
