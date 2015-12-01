@@ -118,11 +118,12 @@ public class DoorsTimer : MonoBehaviour {
 
     public void StopNow()
     {
-        if (!IsDoorsOpen)
+        if (_isDoorsOpen)
         {
-            int bonusCount = (int)(_moveDuration - _currentMoveDuration);
-            _currentMoveDuration = _moveDuration;
+            _isDoorsOpen = false;
         }
+        int bonusCount = (int)(_moveDuration - _currentMoveDuration);
+        _currentMoveDuration = _moveDuration;
     }
 
     void FixedUpdate () 
