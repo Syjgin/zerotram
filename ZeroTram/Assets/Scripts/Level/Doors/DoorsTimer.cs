@@ -121,6 +121,7 @@ public class DoorsTimer : MonoBehaviour {
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;
+            UpdateDoors();
         }
         int bonusCount = (int)(_moveDuration - _currentMoveDuration);
         _currentMoveDuration = _moveDuration;
