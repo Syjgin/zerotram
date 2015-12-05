@@ -83,6 +83,17 @@ public class MapManager
         return Randomizer.CalculateValue<string>(_currentStationInfo.PassengersMap);
     }
 
+    public string GetRandomCharacterWithExcludedIndex(string excluded)
+    {
+        if (_currentStationInfo == null)
+        {
+            SetCurrentStation(GetDebugLevelName());
+        }
+        Dictionary<string, float> excludedMap = _currentStationInfo.PassengersMap;
+        excludedMap.Remove(excluded);
+        return Randomizer.CalculateValue<string>(excludedMap);
+    }
+
     public static string GetDebugLevelName()
     {
         return "level1";

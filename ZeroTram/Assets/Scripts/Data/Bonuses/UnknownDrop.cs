@@ -4,6 +4,7 @@ using System.Collections;
 public class UnknownDrop : MonoBehaviour
 {
     [SerializeField] private Sprite _pieSprite;
+    [SerializeField] private Sprite _clewSprite;
     private SpriteRenderer _spriteRenderer;
 
     public IBonus Bonus;
@@ -32,6 +33,9 @@ public class UnknownDrop : MonoBehaviour
         if (bonus is HealBonus)
         {
             _spriteRenderer.sprite = _pieSprite;
+        } else if (bonus is ClewBonus)
+        {
+            _spriteRenderer.sprite = _clewSprite;
         }
     }
 

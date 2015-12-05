@@ -32,7 +32,7 @@ public class StickNote : MonoBehaviour
         if (_currentStickPeriod == 0)
         {
             GameController.GetInstance().KillStickPassenger();
-            MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(false);
+            MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         }
     }
 }

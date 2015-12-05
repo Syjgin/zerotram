@@ -77,7 +77,7 @@ public class PassengerSM : MovableCharacterSM
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
     }
 
-    public virtual void Init()
+    public virtual void Init(bool register)
     {
         AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
@@ -100,7 +100,8 @@ public class PassengerSM : MovableCharacterSM
         _maxStopCount = ConfigReader.GetConfig().GetField("tram").GetField("MaxStopCount").n;
         int stopCount = Randomizer.GetInRange(1, (int)_maxStopCount);
         _tramStopCount = stopCount;
-        GameController.GetInstance().RegisterPassenger(this);
+        if(register)
+            GameController.GetInstance().RegisterPassenger(this);
         Window = NewCharacterWindowHandler.GetWindow();
     }
 
@@ -114,6 +115,12 @@ public class PassengerSM : MovableCharacterSM
     public bool HasTicket()
     {
         return _hasTicket;
+    }
+
+    public void SetTicketAndVisibility(bool hasTicket, bool isVisible)
+    {
+        _hasTicket = hasTicket;
+        _isVisibleToHero = isVisible;
     }
 
     public void TurnOnMagnet(float dist)
@@ -250,7 +257,7 @@ public class PassengerSM : MovableCharacterSM
         MakeIdle();
         if (!IsGoingAway)
             CalculateRandomTarget();
-        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(false);
+        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
     }
 
     private void ShowCharacterInfo()
@@ -447,7 +454,7 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
-    protected virtual string GetClassName()
+    public virtual string GetClassName()
     {
         return String.Empty;
     }

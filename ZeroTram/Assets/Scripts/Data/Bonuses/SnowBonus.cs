@@ -16,7 +16,7 @@ public class SnowBonus : PointBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").SetPaused(false);
+        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         passenger.ActiveBonuses.Add(GetBonusType());
         float currentDist = ((Vector2)passenger.transform.position - StartPoint).sqrMagnitude;
         if (currentDist < _dist)

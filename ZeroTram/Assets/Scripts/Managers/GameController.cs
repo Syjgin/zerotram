@@ -23,10 +23,15 @@ namespace Assets
             Snow = 8,
             Wrench = 9,
             Cogwheel = 10,
-            Heal = 11
+            Heal = 11,
+            Clew = 12
         }
         private const int MAX_BONUS_COUNT = 3;
         private Dictionary<int, IBonus> _bonuses;
+
+        private bool _isPassengersListChanged;
+        private List<PassengerSM> _passengersToAdd;
+        private List<PassengerSM> _passengersToDelete; 
 
         public void BonusEffectToPassengers(IBonus bonus, bool additition)
         {
@@ -36,6 +41,21 @@ namespace Assets
                     bonus.AddEffect(passengerSm);
                 else
                     bonus.RemoveEffect(passengerSm);
+            }
+            if (_isPassengersListChanged)
+            {
+                _isPassengersListChanged = false;
+                foreach (var passengerSm in _passengersToDelete)
+                {
+                    _passengers.Remove(passengerSm);
+                    MonoBehaviour.Destroy(passengerSm.gameObject);
+                }
+                foreach (var passengerSm in _passengersToAdd)
+                {
+                    _passengers.Add(passengerSm);
+                }
+                _passengersToAdd.Clear();
+                _passengersToDelete.Clear();
             }
         }
         
@@ -197,6 +217,17 @@ namespace Assets
             UpdateStats();
         }
 
+        public void ReplacePassenger(PassengerSM newPassenger, PassengerSM oldPassenger)
+        {
+            if(_passengersToAdd == null)
+                _passengersToAdd = new List<PassengerSM>();
+            if(_passengersToDelete == null)
+                _passengersToDelete = new List<PassengerSM>();
+            _passengersToAdd.Add(newPassenger);
+            _passengersToDelete.Add(oldPassenger);
+            _isPassengersListChanged = true;
+        }
+
         public void UpdatePassenger(PassengerSM ps)
         {
             if (ps.HasTicket())
@@ -288,7 +319,7 @@ namespace Assets
                 {
                     if (_passengers.Count == 0)
                     {
-                        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("Spawner").StopNow();
+                        MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").StopNow();
                     }
                 }
             }

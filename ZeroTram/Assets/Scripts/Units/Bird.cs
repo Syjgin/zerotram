@@ -8,7 +8,7 @@ namespace Assets
 {
     public class Bird : PassengerSM
     {
-        protected override string GetClassName()
+        public override string GetClassName()
         {
             return "bird";
         }

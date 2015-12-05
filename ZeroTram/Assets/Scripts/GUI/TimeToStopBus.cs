@@ -16,7 +16,7 @@ public class TimeToStopBus : MonoBehaviour
 
 	void Start ()
 	{
-	    _timer = GameObject.Find("Spawner").GetComponent<DoorsTimer>();
+	    _timer = GameObject.Find("DoorsTimer").GetComponent<DoorsTimer>();
 	}
 
 	void Update ()
