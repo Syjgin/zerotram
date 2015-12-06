@@ -105,7 +105,8 @@
             "StickProbability" : 60,
 			"BonusProbability" : 30,
 			"BonusMap" : {
-				"Heal" : 100
+				"Heal" : 50,
+				"Clew" : 50
 			}
 		},
 	"bonuses" : {
