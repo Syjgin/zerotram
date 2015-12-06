@@ -22,6 +22,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isMagnetTurnedOn;
     private float _magnetDistance;
     private float _attackingDenyPeriod;
+    private bool _isMagnetActivated;
 
     public bool IsAttackingAllowed;
 
@@ -125,6 +126,8 @@ public class PassengerSM : MovableCharacterSM
 
     public void TurnOnMagnet(float dist)
     {
+        if(_hasTicket && _isVisibleToHero)
+            return;
         _isMagnetTurnedOn = true;
         _magnetDistance = dist;
     }
@@ -361,11 +364,20 @@ public class PassengerSM : MovableCharacterSM
 
     public void CalculateMagnet()
     {
+        if (_isMagnetActivated)
+        {
+            if (_hasTicket && _isVisibleToHero)
+            {
+                _isMagnetActivated = false;
+                _isMagnetTurnedOn = false;
+            }
+        }
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         Vector2 heroPosition = hero.transform.position;
         float heroDist = ((Vector2)transform.position - heroPosition).sqrMagnitude;
-        if (heroDist < _magnetDistance)
+        if (heroDist < _magnetDistance || _isMagnetActivated)
         {
+            _isMagnetActivated = true;
             if (heroDist < 0.1f)
                 return;
             if (!GetTarget().Equals(heroPosition))

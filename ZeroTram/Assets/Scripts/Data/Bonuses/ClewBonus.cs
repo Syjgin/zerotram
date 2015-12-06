@@ -7,13 +7,18 @@ using Debug = UnityEngine.Debug;
 
 public class ClewBonus : PassengerEffectBonus
 {
-    private Spawner _spawner;
+    private static Spawner _spawner;
     public override GameController.BonusTypes GetBonusType()
     {
-        return GameController.BonusTypes.Heal;
+        return GameController.BonusTypes.Clew;
     }
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
+    {
+        ReplacePassenger(passenger);
+    }
+
+    public static void ReplacePassenger(PassengerSM passenger)
     {
         Vector3 passengerPosition = passenger.transform.position;
         bool hasTicket = passenger.HasTicket();

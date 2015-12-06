@@ -34,9 +34,10 @@ public abstract class OneActionBonus : PointBonus
         }
         Deactivate();
     }
-
+    
     public override void Activate()
     {
+        _isActive = true;
     }
 
     protected virtual void AddEffectToPassenger(PassengerSM passenger)

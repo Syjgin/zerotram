@@ -178,7 +178,7 @@ namespace Assets
             _isGameFinished = false;
             
             //for debug
-            /*VortexBonus bonus = new VortexBonus();
+            /*MagnetBonus bonus = new MagnetBonus();
             AddBonus(bonus);
             MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);*/
         }

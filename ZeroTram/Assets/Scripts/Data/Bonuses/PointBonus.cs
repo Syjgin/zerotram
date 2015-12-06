@@ -35,7 +35,7 @@ public abstract class PointBonus : PassengerEffectBonus
         if(!IsFired)
             return;
         base.DecrementTimer(delta);
-        if(IsActive() && IsFired)
+        if(_isActive && IsFired)
             GameController.GetInstance().BonusEffectToPassengers(this, true);
     }
 }
