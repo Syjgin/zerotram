@@ -4,9 +4,7 @@ using Assets;
 using UnityEngine;
 
 public abstract class OneActionBonus : PointBonus
-{
-    protected float Distance;
-    
+{   
     public override void HandleTouchUp(Vector2 point)
     {
         if (IsFired)
@@ -15,7 +13,7 @@ public abstract class OneActionBonus : PointBonus
         StartPoint = point;
         if (IsPassengersAffected)
         {
-            List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, Distance);
+            List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, Dist);
             foreach (var passengerSm in passengersNear)
             {
                 AddEffectToPassenger(passengerSm);
@@ -27,7 +25,7 @@ public abstract class OneActionBonus : PointBonus
             float dist =
                 ((Vector2)hero.transform.position -
                  point).sqrMagnitude;
-            if (dist <= Distance)
+            if (dist <= Dist)
             {
                 AddEffectToConductor(hero);
             }

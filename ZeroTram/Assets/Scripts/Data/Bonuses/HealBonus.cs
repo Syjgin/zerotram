@@ -7,7 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class HealBonus : PassengerEffectBonus
 {
-    private float _coef;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Heal;
@@ -15,7 +14,7 @@ public class HealBonus : PassengerEffectBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        float healValue = passenger.GetInitialLifes() * _coef;
+        float healValue = passenger.GetInitialLifes() * IncrementCoef;
         passenger.AddDamageValue(-healValue);
     }
 
@@ -33,7 +32,7 @@ public class HealBonus : PassengerEffectBonus
         TTL = 0;
         IsConductorAffected = true;
         IsPassengersAffected = true;
-        _coef = ConfigReader.GetConfig().GetField("healBonus").GetField("coef").n;
+        InitCoef("healBonus");
     }
 
 

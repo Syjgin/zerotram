@@ -110,7 +110,83 @@
 			}
 		},
 	"bonuses" : {
-			"DestroyPeriod" : 10
+		"DestroyPeriod" : 10,
+		"wheelBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 1.25
+		},
+		"wheelMegaBonus" : {
+			"TTL" : 60,
+			"incrementCoef" : 2
+		},
+		"ticketBonus" : {
+			"TTL" : 30,
+			"dist" : 3
+		},
+		"ticketMegaBonus" : {
+			"TTL" : 60,
+			"dist" : 4
+		},
+		"bootBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 1.5
+		},
+		"bootMegaBonus" : {
+			"TTL" : 60,
+			"incrementCoef" : 2
+		},
+		"magnetBonus" : {
+			"TTL" : 30,
+			"dist" : 3
+		},
+		"magnetMegaBonus" : {
+			"TTL" : 60,
+			"dist" : 4.5
+		},
+		"smileBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 1.5
+		},
+		"smileMegaBonus" : {
+			"TTL" : 60,
+			"incrementCoef" : 2
+		},
+		"antiHareBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 1.5
+		},
+		"antiHareMegaBonus" : {
+			"TTL" : 60,
+			"incrementCoef" : 2
+		},
+		"sandglassBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 1.5
+		},
+		"sandglassMegaBonus" : {
+			"TTL" : 30,
+			"incrementCoef" : 2
+		},
+		"vortexBonus" : {
+			"TTL" : 30,
+			"dist" : 6
+		},
+		"snowBonus" : {
+			"TTL" : 30,
+			"dist" : 1
+		},
+		"wrenchBonus" : {
+			"TTL" : 30
+		},
+		"healBonus" : {
+			"incrementCoef" : 0.25
+		},
+		"healMegaBonus" : {
+			"dist" : 2
+		},
+		"clewMegaBonus" : {
+			"dist" : 3
+		}
 	},
 	"levels" : {
 		"level1" : {
@@ -169,54 +245,6 @@
 			"MaxStopCount" : 10,
 			"StickPeriod" : 5
 		},
-	"wheelBonus" : {
-		"TTL" : 30,
-		"incrementCoef" : 2
-	},
-	"ticketBonus" : {
-		"TTL" : 30,
-		"dist" : 3
-	},
-	"bootBonus" : {
-		"TTL" : 30,
-		"incrementCoef" : 2
-	},
-	"magnetBonus" : {
-		"TTL" : 30,
-		"dist" : 4
-	},
-	"smileBonus" : {
-		"TTL" : 30,
-		"decrementCoef" : 0.5
-	},
-	"antiHareBonus" : {
-		"TTL" : 30,
-		"incrementCoef" : 2
-	},
-	"sandglassBonus" : {
-		"TTL" : 30,
-		"decrementCoef" : 0.5
-	},
-	"vortexBonus" : {
-		"TTL" : 30,
-		"dist" : 6
-	},
-	"snowBonus" : {
-		"TTL" : 30,
-		"dist" : 1
-	},
-	"wrenchBonus" : {
-		"TTL" : 30
-	},
-	"healBonus" : {
-		"coef" : 0.25
-	},
-	"healMegaBonus" : {
-		"dist" : 2
-	},
-	"clewMegaBonus" : {
-		"dist" : 3
-	},
 	"descriptions" : {
 			"gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",
 			"granny" : "Бабушки с тележками - они повсюду. Что они возят - большая загадка. Но даже одна бабушка - ночной кошмар для любого кондуктора. Нет, проезд они оплачивают исправно и от кондуктора по вагону не бегают. Однако постоянно приходится помогать им залезть в вагон и сойти на остановке. К тому же бабули очень целеустремленные и любят вспоминать войну, поэтому тележка часто превращается в их руках в оружие массового поражения. Будьте аккуратны с ними.",

@@ -6,9 +6,6 @@ using Debug = UnityEngine.Debug;
 
 public class BootBonus : AbstractBonus
 {
-    private float _incrementCoef;
-    private float _decrementCoef;
-
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Boot;
@@ -17,19 +14,18 @@ public class BootBonus : AbstractBonus
     public override void Activate()
     {
         base.Activate();
-        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").ChangeWayoutSquare(_incrementCoef);
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").ChangeWayoutSquare(IncrementCoef);
     }
 
     public override void Deactivate()
     {
         base.Deactivate();
-        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").ChangeWayoutSquare(_decrementCoef);
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").ChangeWayoutSquare(DecrementCoef);
     }
 
-    public BootBonus()
+    public BootBonus(string bonusName = "bootBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("bootBonus").GetField("TTL").n;
-        _incrementCoef = ConfigReader.GetConfig().GetField("bootBonus").GetField("incrementCoef").n;
-        _decrementCoef = 1/_incrementCoef;
+        InitTTL(bonusName);
+        InitCoef(bonusName);
     }
 }

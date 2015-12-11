@@ -23,7 +23,7 @@ public class HealMegaBonus : OneActionBonus
     public HealMegaBonus()
     {
         TTL = 0;
-        Distance = ConfigReader.GetConfig().GetField("healMegaBonus").GetField("dist").n;
+        InitDist("healMegaBonus");
         IsConductorAffected = true;
         IsPassengersAffected = true;
     }

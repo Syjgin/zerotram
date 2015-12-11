@@ -7,7 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class TicketBonus : AbstractBonus
 {
-    private float _dist;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Ticket;
@@ -18,7 +17,7 @@ public class TicketBonus : AbstractBonus
         List<MovableCharacterSM> affectedPassengers = new List<MovableCharacterSM>();
         if (doubleClick)
             return affectedPassengers;
-        List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, _dist);
+        List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, Dist);
         foreach (var passengerSm in passengersNear)
         {
             if (!passengerSm.IsVisibleToHero())
@@ -30,10 +29,10 @@ public class TicketBonus : AbstractBonus
         return affectedPassengers;
     }
 
-    public TicketBonus()
+    public TicketBonus(string bonusName = "ticketBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("ticketBonus").GetField("TTL").n;
-        _dist = ConfigReader.GetConfig().GetField("ticketBonus").GetField("dist").n;
+        InitTTL(bonusName);
+        InitDist(bonusName);
     }
 
 

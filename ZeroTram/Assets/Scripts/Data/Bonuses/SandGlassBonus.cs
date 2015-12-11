@@ -7,8 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class SandGlassBonus : PassengerEffectBonus
 {
-    private float _incrementCoef;
-    private float _decrementCoef;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.SandGlass;
@@ -16,19 +14,18 @@ public class SandGlassBonus : PassengerEffectBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.Velocity *= _decrementCoef;
+        passenger.Velocity *= DecrementCoef;
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.Velocity *= _incrementCoef;
+        passenger.Velocity *= IncrementCoef;
     }
     
-    public SandGlassBonus()
+    public SandGlassBonus(string bonusName = "sandglassBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("sandglassBonus").GetField("TTL").n;
-        _decrementCoef = ConfigReader.GetConfig().GetField("sandglassBonus").GetField("decrementCoef").n;
-        _incrementCoef = 1/_decrementCoef;
+        InitTTL(bonusName);
+        InitCoef(bonusName);
         IsPassengersAffected = true;
     }
 

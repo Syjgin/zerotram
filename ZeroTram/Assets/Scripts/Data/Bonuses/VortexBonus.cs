@@ -12,13 +12,13 @@ public class VortexBonus : OneActionBonus
 
     protected override void AddEffectToPassenger(PassengerSM passenger)
     {
-        passenger.AddVortexEffect(StartPoint, Distance);
+        passenger.AddVortexEffect(StartPoint, Dist);
     }
 
-    public VortexBonus()
+    public VortexBonus(string bonusName = "vortexBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("vortexBonus").GetField("TTL").n;
-        Distance = ConfigReader.GetConfig().GetField("vortexBonus").GetField("dist").n;
+        InitTTL(bonusName);
+        InitDist(bonusName);
         IsPassengersAffected = true;
     }
 }

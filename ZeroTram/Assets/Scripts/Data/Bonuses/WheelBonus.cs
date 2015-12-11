@@ -6,9 +6,6 @@ using Debug = UnityEngine.Debug;
 
 public class WheelBonus : PassengerEffectBonus
 {
-    private float _incrementCoef;
-    private float _decrementCoef;
-
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Wheel;
@@ -16,19 +13,18 @@ public class WheelBonus : PassengerEffectBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.DragChangeStatePeriod *= _incrementCoef;
+        passenger.DragChangeStatePeriod *= IncrementCoef;
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.DragChangeStatePeriod *= _decrementCoef;
+        passenger.DragChangeStatePeriod *= DecrementCoef;
     }
 
-    public WheelBonus()
+    public WheelBonus(string bonusName = "wheelBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("wheelBonus").GetField("TTL").n;
-        _incrementCoef = ConfigReader.GetConfig().GetField("wheelBonus").GetField("incrementCoef").n;
-        _decrementCoef = 1/_incrementCoef;
+        InitTTL(bonusName);
+        InitCoef(bonusName);
         IsPassengersAffected = true;
     }
 }

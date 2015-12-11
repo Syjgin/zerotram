@@ -7,8 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class AntiHareBonus : PassengerEffectBonus
 {
-    private float _coef;
-    private float _decrementCoef;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.AntiHare;
@@ -16,19 +14,18 @@ public class AntiHareBonus : PassengerEffectBonus
 
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.RecalculateTicketProbability(_coef, true);
+        passenger.RecalculateTicketProbability(IncrementCoef, true);
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.RecalculateTicketProbability(_decrementCoef, true);
+        passenger.RecalculateTicketProbability(DecrementCoef, true);
     }
 
-    public AntiHareBonus()
+    public AntiHareBonus(string bonusName= "antiHareBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("antiHareBonus").GetField("TTL").n;
-        _coef = ConfigReader.GetConfig().GetField("antiHareBonus").GetField("incrementCoef").n;
-        _decrementCoef = 1/_coef;
+        InitTTL(bonusName);
+        InitCoef(bonusName);
         IsPassengersAffected = true;
     }
 

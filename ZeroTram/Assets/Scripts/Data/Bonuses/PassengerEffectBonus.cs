@@ -8,7 +8,7 @@ public abstract class PassengerEffectBonus : AbstractBonus
 {
     protected bool IsConductorAffected;
     protected bool IsPassengersAffected;
-
+    
     public override void Activate()
     {
         base.Activate();

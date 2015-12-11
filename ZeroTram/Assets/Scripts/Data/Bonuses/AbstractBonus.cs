@@ -6,6 +6,12 @@ public abstract class AbstractBonus :IBonus
 {
     protected float TTL;
     protected bool _isActive;
+
+    protected float Dist;
+    protected float DecrementCoef;
+    protected float IncrementCoef;
+
+
     public bool IsActive()
     {
         return _isActive;
@@ -57,5 +63,21 @@ public abstract class AbstractBonus :IBonus
     public int GetTTL()
     {
         return (int)TTL;
+    }
+
+    protected void InitTTL(string bonusName)
+    {
+        TTL = ConfigReader.GetConfig().GetField("bonuses").GetField(bonusName).GetField("TTL").n;
+    }
+
+    protected void InitCoef(string bonusName)
+    {
+        IncrementCoef = ConfigReader.GetConfig().GetField("bonuses").GetField(bonusName).GetField("incrementCoef").n;
+        DecrementCoef = 1 / IncrementCoef;
+    }
+
+    protected void InitDist(string bonusName)
+    {
+        Dist = ConfigReader.GetConfig().GetField("bonuses").GetField(bonusName).GetField("dist").n;
     }
 }

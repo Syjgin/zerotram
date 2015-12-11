@@ -18,7 +18,7 @@ public class ClewMegaBonus : OneActionBonus
     public ClewMegaBonus()
     {
         TTL = 0;
-        Distance = ConfigReader.GetConfig().GetField("clewMegaBonus").GetField("dist").n;
+        InitDist("clewMegaBonus");
         IsPassengersAffected = true;
     }
 }

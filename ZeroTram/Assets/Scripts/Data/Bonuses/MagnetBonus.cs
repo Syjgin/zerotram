@@ -7,7 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class MagnetBonus : PassengerEffectBonus
 {
-    private float _dist;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Magnet;
@@ -15,7 +14,7 @@ public class MagnetBonus : PassengerEffectBonus
 
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.TurnOnMagnet(_dist);
+        passenger.TurnOnMagnet(Dist);
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
@@ -23,10 +22,10 @@ public class MagnetBonus : PassengerEffectBonus
         passenger.TurnOffMagnet();
     }
 
-    public MagnetBonus()
+    public MagnetBonus(string bonusName = "magnetBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("magnetBonus").GetField("TTL").n;
-        _dist = ConfigReader.GetConfig().GetField("magnetBonus").GetField("dist").n;
+        InitTTL(bonusName);
+        InitDist(bonusName);
         IsPassengersAffected = true;
     }
 

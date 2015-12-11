@@ -12,12 +12,15 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Web v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>WebPlayer:6</UnityBuildTarget>
     <UnityVersion>5.2.3f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,6 +45,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.Net" />
     <Reference Include="System.XML" />
     <Reference Include="System.Core" />
     <Reference Include="Boo.Lang" />
@@ -72,23 +76,30 @@
     <Compile Include="Assets\Scripts\Config\ConfigReader.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AbstractBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\BootBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\BootMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\ClewBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\ClewMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\HealBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\HealMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\IBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\MagnetBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\MagnetMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\OneActionBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\PassengerEffectBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\PointBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SandGlassBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\SandGlassMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SmileBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\SmileMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\SnowBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\TicketBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\TicketMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\UnknownDrop.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\VortexBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
+    <Compile Include="Assets\Scripts\Data\Bonuses\WheelMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WrenchBonus.cs" />
     <Compile Include="Assets\Scripts\Data\PersistentDataStorage.cs" />
     <Compile Include="Assets\Scripts\Data\StationInfo.cs" />

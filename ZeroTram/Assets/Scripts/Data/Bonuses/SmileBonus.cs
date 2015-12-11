@@ -7,8 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class SmileBonus : PassengerEffectBonus
 {
-    private float _coef;
-    private float _incrementCoef;
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Smile;
@@ -16,19 +14,18 @@ public class SmileBonus : PassengerEffectBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.AttackProbability *= _coef;
+        passenger.AttackProbability *= DecrementCoef;
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.AttackProbability *= _incrementCoef;
+        passenger.AttackProbability *= IncrementCoef;
     }
     
-    public SmileBonus()
+    public SmileBonus(string bonusName = "smileBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("smileBonus").GetField("TTL").n;
-        _coef = ConfigReader.GetConfig().GetField("smileBonus").GetField("decrementCoef").n;
-        _incrementCoef = 1/_coef;
+        InitTTL(bonusName);
+        InitCoef(bonusName);
         IsPassengersAffected = true;
     }
 

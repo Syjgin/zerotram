@@ -7,8 +7,6 @@ using Debug = UnityEngine.Debug;
 
 public class SnowBonus : PointBonus
 {
-    private float _dist;
-
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Snow;
@@ -19,7 +17,7 @@ public class SnowBonus : PointBonus
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         passenger.ActiveBonuses.Add(GetBonusType());
         float currentDist = ((Vector2)passenger.transform.position - StartPoint).sqrMagnitude;
-        if (currentDist < _dist)
+        if (currentDist < Dist)
         {
             passenger.Freeze();
         }
@@ -30,9 +28,9 @@ public class SnowBonus : PointBonus
         passenger.UnFreeze();
     }
     
-    public SnowBonus()
+    public SnowBonus(string bonusName = "snowBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("snowBonus").GetField("TTL").n;
-        _dist = ConfigReader.GetConfig().GetField("snowBonus").GetField("dist").n;
+        InitTTL(bonusName);
+        InitDist(bonusName);
     }
 }

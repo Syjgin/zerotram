@@ -22,9 +22,9 @@ public class WrenchBonus : PassengerEffectBonus
         passenger.ApplyWrenchBonus(false);
     }
     
-    public WrenchBonus()
+    public WrenchBonus(string bonusName = "wrenchBonus")
     {
-        TTL = ConfigReader.GetConfig().GetField("wrenchBonus").GetField("TTL").n;
+        InitTTL(bonusName);
         IsPassengersAffected = true;
     }
 
