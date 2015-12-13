@@ -12,7 +12,7 @@ public class VortexBonus : OneActionBonus
 
     protected override void AddEffectToPassenger(PassengerSM passenger)
     {
-        passenger.AddVortexEffect(StartPoint, Dist);
+        passenger.AddVortexEffect(Position, Dist);
     }
 
     public VortexBonus(string bonusName = "vortexBonus")

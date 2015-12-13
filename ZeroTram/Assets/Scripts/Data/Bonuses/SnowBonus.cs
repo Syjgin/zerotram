@@ -3,10 +3,16 @@ using System.Diagnostics;
 using Assets;
 using UnityEngine;
 
-using Debug = UnityEngine.Debug;
-
-public class SnowBonus : PointBonus
+public class SnowBonus : PassengerEffectBonus
 {
+    public class FreezeData
+    {
+        public Vector2 StartPoint;
+        public float Distance;
+    }
+
+    private FreezeData _data;
+
     public override GameController.BonusTypes GetBonusType()
     {
         return GameController.BonusTypes.Snow;
@@ -16,11 +22,13 @@ public class SnowBonus : PointBonus
     {
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         passenger.ActiveBonuses.Add(GetBonusType());
-        float currentDist = ((Vector2)passenger.transform.position - StartPoint).sqrMagnitude;
-        if (currentDist < Dist)
+        if (_data == null)
         {
-            passenger.Freeze();
+            _data = new FreezeData();
+            _data.Distance = Dist;
+            _data.StartPoint = Position;
         }
+        passenger.ActivateFreezeBonus(_data);
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
@@ -32,5 +40,6 @@ public class SnowBonus : PointBonus
     {
         InitTTL(bonusName);
         InitDist(bonusName);
+        IsPassengersAffected = true;
     }
 }

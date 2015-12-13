@@ -118,7 +118,6 @@ public class Floor : MonoBehaviour
     public void OnMouseUp()
     {
         _hero.StopDrag();
-        _bonusTimer.HandleTouchUp(GetCurrentMousePosition());
     }
 
     public void NormalizePosition(ref Vector3 position)
@@ -134,14 +133,15 @@ public class Floor : MonoBehaviour
         position.y += HeroOffset;
     }
 
-    public Vector2 GetCurrentMousePosition()
+    public Vector2 GetCurrentMousePosition(bool withOffset = true)
     {
         Vector2 target = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         if (target.y > _collider.bounds.max.y)
             target.y = _collider.bounds.max.y;
         if (target.y < _collider.bounds.min.y)
             target.y = _collider.bounds.min.y;
-        target.y += HeroOffset;
+        if(withOffset)
+            target.y += HeroOffset;
         return target;
     }
 

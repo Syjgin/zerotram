@@ -168,12 +168,12 @@
 			"incrementCoef" : 2
 		},
 		"vortexBonus" : {
-			"TTL" : 30,
-			"dist" : 6
+			"TTL" : 0,
+			"dist" : 10
 		},
 		"snowBonus" : {
 			"TTL" : 30,
-			"dist" : 1
+			"dist" : 3
 		},
 		"wrenchBonus" : {
 			"TTL" : 30

@@ -26,8 +26,6 @@ namespace Assets
             Heal = 11,
             Clew = 12
         }
-        private const int MAX_BONUS_COUNT = 3;
-        private Dictionary<int, IBonus> _bonuses;
 
         private bool _isPassengersListChanged;
         private List<PassengerSM> _passengersToAdd;
@@ -139,31 +137,8 @@ namespace Assets
             _minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
             _stickPeriod = (int)ConfigReader.GetConfig().GetField("tram").GetField("StickPeriod").n;
             _passengers = new List<PassengerSM>();
-            _bonuses = new Dictionary<int, IBonus>();
         }
-
-        public bool IsBonusCanBeCreated()
-        {
-            return _bonuses.Count < MAX_BONUS_COUNT;
-        }
-
-        public void AddBonus(IBonus bonus)
-        {
-            int index = _bonuses.Count;
-            _bonuses.Add(index, bonus);
-        }
-
-        public IBonus ActivateBonusByNumber(int number)
-        {
-            IBonus bonusToActivate = null;
-            if(_bonuses.TryGetValue(number, out bonusToActivate))
-            {
-                bonusToActivate.Activate();
-                _bonuses.Remove(number);
-            }
-            return bonusToActivate;
-        }
-
+        
         public void StartNewGame()
         {
             _passengers.Clear();
@@ -176,11 +151,6 @@ namespace Assets
             _killedPercent = 0;
             _haresPercent = 0;
             _isGameFinished = false;
-            
-            //for debug
-            /*MagnetBonus bonus = new MagnetBonus();
-            AddBonus(bonus);
-            MonobehaviorHandler.GetMonobeharior().GetObject<BonusTimer>("bonusTimer").ActivateBonusByNumber(0);*/
         }
 
         public int GetCurrentStationNumber()

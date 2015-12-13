@@ -6,6 +6,12 @@ public abstract class AbstractBonus :IBonus
 {
     protected float TTL;
     protected bool _isActive;
+    protected Vector2 Position;
+
+    public void SetPosition(Vector2 pos)
+    {
+        Position = pos;
+    }
 
     protected float Dist;
     protected float DecrementCoef;
@@ -55,11 +61,7 @@ public abstract class AbstractBonus :IBonus
     {
         return new List<MovableCharacterSM>();
     }
-
-    public virtual void HandleTouchUp(Vector2 position)
-    {     
-    }
-
+    
     public int GetTTL()
     {
         return (int)TTL;
@@ -80,4 +82,6 @@ public abstract class AbstractBonus :IBonus
     {
         Dist = ConfigReader.GetConfig().GetField("bonuses").GetField(bonusName).GetField("dist").n;
     }
+
+
 }

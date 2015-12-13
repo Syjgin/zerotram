@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class SandGalssMegaBonus : SandGlassBonus
+public class SandGlassMegaBonus : SandGlassBonus
 {
-    public SandGalssMegaBonus(): base("sandglassMegaBonus")
+    public SandGlassMegaBonus(): base("sandglassMegaBonus")
     {
         
     }

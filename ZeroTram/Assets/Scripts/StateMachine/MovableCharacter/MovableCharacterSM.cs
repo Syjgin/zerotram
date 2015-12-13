@@ -28,6 +28,8 @@ public class MovableCharacterSM : StateMachine
     public float TimeSincePreviousClickMade;
     private bool _isFreezeInProgress;
     private bool _isFreezeTemporalyDisabled;
+    private bool _isFreezeBonusActive;
+    private SnowBonus.FreezeData _freezeData;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -157,6 +159,14 @@ public class MovableCharacterSM : StateMachine
     {
         base.FixedUpdate();
         TimeSincePreviousClickMade += Time.fixedDeltaTime;
+        if (!_isFreezeTemporalyDisabled && _isFreezeBonusActive)
+        {
+            float currentDist = ((Vector2)transform.position - _freezeData.StartPoint).sqrMagnitude;
+            if (currentDist < _freezeData.Distance)
+            {
+                Freeze();
+            }
+        }
     }
 
     public virtual void HandleClick()
@@ -173,10 +183,17 @@ public class MovableCharacterSM : StateMachine
         ActivateState((int)MovableCharacterStates.Frozen);
     }
 
+    public void ActivateFreezeBonus(SnowBonus.FreezeData data)
+    {
+        _isFreezeBonusActive = true;
+        _freezeData = data;
+    }
+
     public void UnFreeze()
     {
         _isFreezeInProgress = false;
         _isFreezeTemporalyDisabled = false;
+        _isFreezeBonusActive = false;
         Animator.enabled = true;
         MakeIdle();
     }

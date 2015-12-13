@@ -21,9 +21,6 @@ public class PassengerCollisionDetector : CollisionDetector
     {
         if (Time.timeScale == 0)
             return;
-        MonobehaviorHandler.GetMonobeharior()
-                .GetObject<BonusTimer>("bonusTimer")
-                .HandleTouchUp(_passenger.transform.position);
         _passenger.StopDrag();
     }
 

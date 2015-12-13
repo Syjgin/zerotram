@@ -16,9 +16,6 @@ public class ConductorCollisionDetector : CollisionDetector
     {
         if (Time.timeScale == 0)
             return;
-        MonobehaviorHandler.GetMonobeharior()
-                .GetObject<BonusTimer>("bonusTimer")
-                .HandleTouchUp(_conductor.transform.position);
         _conductor.StopDrag();
     }
 }

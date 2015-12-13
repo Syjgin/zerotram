@@ -3,17 +3,14 @@ using System.Diagnostics;
 using Assets;
 using UnityEngine;
 
-public abstract class OneActionBonus : PointBonus
-{   
-    public override void HandleTouchUp(Vector2 point)
+public abstract class OneActionBonus : PassengerEffectBonus
+{
+    public override void Activate()
     {
-        if (IsFired)
-            return;
-        IsFired = true;
-        StartPoint = point;
+        _isActive = true;
         if (IsPassengersAffected)
         {
-            List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(point, Dist);
+            List<PassengerSM> passengersNear = GameController.GetInstance().AllPassengersInDist(Position, Dist);
             foreach (var passengerSm in passengersNear)
             {
                 AddEffectToPassenger(passengerSm);
@@ -24,18 +21,13 @@ public abstract class OneActionBonus : PointBonus
             ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
             float dist =
                 ((Vector2)hero.transform.position -
-                 point).sqrMagnitude;
+                 Position).sqrMagnitude;
             if (dist <= Dist)
             {
                 AddEffectToConductor(hero);
             }
         }
         Deactivate();
-    }
-    
-    public override void Activate()
-    {
-        _isActive = true;
     }
 
     protected virtual void AddEffectToPassenger(PassengerSM passenger)

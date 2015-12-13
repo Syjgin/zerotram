@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Assets;
+using Assets.Scripts.Math;
 
 public class BonusTimer : MonoBehaviour
 {
@@ -9,23 +11,78 @@ public class BonusTimer : MonoBehaviour
     private List<UnknownDrop> _droppedBonuses;
     [SerializeField] private GameObject _unknownDropPrefab;
     [SerializeField] private CurrentBonusTimer _currentBonusTimer;
+    [SerializeField] private List<MegaBonusButton> _megaBonusButtons;
+    [SerializeField] private Floor _floor;
 
 	void Awake () {
         if(_activeBonuses == null)
             _activeBonuses = new List<IBonus>();
         if(_droppedBonuses == null)
             _droppedBonuses = new List<UnknownDrop>();	
-	}
-
-    public void ActivateBonusByNumber(int number)
-    {
-        if (_activeBonuses == null)
+        List<GameController.BonusTypes> megaBonusTypes = new List<GameController.BonusTypes>()
         {
-            _activeBonuses = new List<IBonus>();
+            GameController.BonusTypes.Wheel,
+            GameController.BonusTypes.Ticket,
+            GameController.BonusTypes.Boot,
+            GameController.BonusTypes.Magnet,
+            GameController.BonusTypes.Smile,
+            GameController.BonusTypes.AntiHare,
+            GameController.BonusTypes.SandGlass,
+            GameController.BonusTypes.Vortex,
+            GameController.BonusTypes.Snow,
+            GameController.BonusTypes.Heal,
+            GameController.BonusTypes.Clew
+        };
+	    for (int i = 0; i < _megaBonusButtons.Count; i++)
+	    {
+	        int currentBonus = Randomizer.GetInRange(0, megaBonusTypes.Count);
+	        GameController.BonusTypes bonusType = megaBonusTypes[currentBonus];
+	        IBonus megaBonus = null;
+            switch (bonusType)
+	        {
+	            case GameController.BonusTypes.Wheel:
+                    megaBonus = new WheelMegaBonus();
+	                break;
+	            case GameController.BonusTypes.Ticket:
+                    megaBonus = new TicketMegaBonus();
+	                break;
+	            case GameController.BonusTypes.Boot:
+                    megaBonus = new BootMegaBonus();
+                    break;
+	            case GameController.BonusTypes.Magnet:
+                    megaBonus = new MagnetMegaBonus();
+                    break;
+	            case GameController.BonusTypes.Smile:
+                    megaBonus = new SmileMegaBonus();
+                    break;
+	            case GameController.BonusTypes.AntiHare:
+                    megaBonus = new AntiHareMegaBonus();
+                    break;
+	            case GameController.BonusTypes.SandGlass:
+                    megaBonus = new SandGlassMegaBonus();
+                    break;
+	            case GameController.BonusTypes.Vortex:
+                    megaBonus = new VortexBonus();
+                    break;
+	            case GameController.BonusTypes.Snow:
+                    megaBonus = new SnowBonus();
+                    break;
+	            case GameController.BonusTypes.Wrench:
+	                break;
+	            case GameController.BonusTypes.Cogwheel:
+	                break;
+	            case GameController.BonusTypes.Heal:
+                    megaBonus = new HealMegaBonus();
+                    break;
+	            case GameController.BonusTypes.Clew:
+                    megaBonus = new ClewMegaBonus();
+                    break;
+	            default:
+	                throw new ArgumentOutOfRangeException();
+	        }
+            _megaBonusButtons[i].SetMegaBonus(megaBonus);
         }
-        IBonus activatedBonus = GameController.GetInstance().ActivateBonusByNumber(number);
-        _activeBonuses.Add(activatedBonus);
-    }
+	}
 
     public void DropBonus(IBonus bonus, Vector3 coords)
     {
@@ -49,14 +106,20 @@ public class BonusTimer : MonoBehaviour
         {
             return;
         }
-        drop.Bonus.Activate();
-        _currentBonusTimer.Activate(drop.Bonus);
-        _activeBonuses.Add(drop.Bonus);
+        ActivateBonus(drop.Bonus);
         foreach (var droppedBonus in _droppedBonuses)
         {
             Destroy(droppedBonus.gameObject);    
         }
         _droppedBonuses.Clear();
+    }
+
+    public void ActivateBonus(IBonus bonus)
+    {
+        bonus.SetPosition(_floor.GetCurrentMousePosition());
+        bonus.Activate();
+        _currentBonusTimer.Activate(bonus);
+        _activeBonuses.Add(bonus);
     }
 
     public bool IsBonusActiveByType(GameController.BonusTypes bonusType)
@@ -88,15 +151,7 @@ public class BonusTimer : MonoBehaviour
         }
         return affectedCharacters;
     }
-
-    public void HandleTouchUp(Vector2 pos)
-    {
-        foreach (var activeBonus in _activeBonuses)
-        {
-            activeBonus.HandleTouchUp(pos);
-        }
-    }
-
+    
     public void AddBonusEffectToSpawnedPassenger(PassengerSM passenger)
     {
         foreach (var activeBonus in _activeBonuses)
