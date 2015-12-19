@@ -15,15 +15,19 @@ public class Floor : MonoBehaviour
     [SerializeField] private BoxCollider2D _centralWayout;
     [SerializeField] private DoorsTimer _timer;
     [SerializeField] private BonusTimer _bonusTimer;
+    [SerializeField] private GameObject _snowDropGameObject;
 
     private const float ColliderOffset = 1.4f;
     private const float HeroOffset = 0.6f;
+
+    private List<GameObject> _spawnedDrops; 
 
     private BoxCollider2D _collider;
 	// Use this for initialization
 	void Awake ()
 	{
 	    _collider = GetComponent<BoxCollider2D>();
+        _spawnedDrops = new List<GameObject>();
 	}
 
     void Update()
@@ -174,5 +178,40 @@ public class Floor : MonoBehaviour
     public void ChangeWayoutSquare(float coef)
     {
         _centralWayout.size *= coef;
+    }
+
+    public void SnowDrop(SnowBonus.FreezeData freezeData, bool isVisible)
+    {
+        if (isVisible)
+        {
+            for (int deg = 0; deg < 360; deg += 20)
+            {
+                float radians = deg * Mathf.Deg2Rad;
+                float xPos = freezeData.StartPoint.x + freezeData.Distance * Mathf.Cos(radians);
+                float yPos = freezeData.StartPoint.y + freezeData.Distance * Mathf.Sin(radians);
+
+                if (yPos > _collider.bounds.max.y)
+                    yPos = _collider.bounds.max.y;
+                if (yPos < _collider.bounds.min.y)
+                    yPos = _collider.bounds.min.y;
+
+                if (xPos > _collider.bounds.max.x)
+                    xPos = _collider.bounds.max.x;
+                if (xPos < _collider.bounds.min.x)
+                    xPos = _collider.bounds.min.x;
+
+                GameObject drop = Instantiate(_snowDropGameObject);
+                drop.transform.position = new Vector3(xPos, yPos, 0);
+                _spawnedDrops.Add(drop);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _spawnedDrops.Count; i++)
+            {
+                Destroy(_spawnedDrops[i]);
+            }
+            _spawnedDrops.Clear();
+        }
     }
 }

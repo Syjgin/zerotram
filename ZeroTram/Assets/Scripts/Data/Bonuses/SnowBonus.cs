@@ -12,6 +12,8 @@ public class SnowBonus : PassengerEffectBonus
     }
 
     private FreezeData _data;
+    private Floor _floor;
+    private bool _isSnowDeactivated;
 
     public override GameController.BonusTypes GetBonusType()
     {
@@ -27,6 +29,8 @@ public class SnowBonus : PassengerEffectBonus
             _data = new FreezeData();
             _data.Distance = Dist;
             _data.StartPoint = Position;
+            _floor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor");
+            _floor.SnowDrop(_data, true);
         }
         passenger.ActivateFreezeBonus(_data);
     }
@@ -34,6 +38,11 @@ public class SnowBonus : PassengerEffectBonus
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
         passenger.UnFreeze();
+        if (!_isSnowDeactivated)
+        {
+            _isSnowDeactivated = true;
+            _floor.SnowDrop(_data, false);
+        }
     }
     
     public SnowBonus(string bonusName = "snowBonus")
