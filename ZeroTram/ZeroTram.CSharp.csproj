@@ -12,15 +12,12 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <TargetFrameworkProfile>Unity Web v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>WebPlayer:6</UnityBuildTarget>
     <UnityVersion>5.2.3f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,7 +42,6 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Net" />
     <Reference Include="System.XML" />
     <Reference Include="System.Core" />
     <Reference Include="Boo.Lang" />
@@ -74,7 +70,6 @@
     <Compile Include="Assets\JSON\JSONTemplates.cs" />
     <Compile Include="Assets\JSON\VectorTemplates.cs" />
     <Compile Include="Assets\Scripts\Config\ConfigReader.cs" />
-    <Compile Include="Assets\Scripts\Data\BenchCombinationManager.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AbstractBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\AntiHareMegaBonus.cs" />
@@ -115,6 +110,7 @@
     <Compile Include="Assets\Scripts\GUI\NewCharacterWindowHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\PauseHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\RecordsVisualizer.cs" />
+    <Compile Include="Assets\Scripts\GUI\SelectBonusWindow.cs" />
     <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
     <Compile Include="Assets\Scripts\GUI\StickNote.cs" />
     <Compile Include="Assets\Scripts\GUI\SuccessfullPassengers.cs" />
@@ -123,6 +119,8 @@
     <Compile Include="Assets\Scripts\GUI\TitlesScroller.cs" />
     <Compile Include="Assets\Scripts\GUI\TutorialScroller.cs" />
     <Compile Include="Assets\Scripts\Level\AudioPlayer.cs" />
+    <Compile Include="Assets\Scripts\Level\Bench.cs" />
+    <Compile Include="Assets\Scripts\Level\BenchCombinationManager.cs" />
     <Compile Include="Assets\Scripts\Level\BonusTimer.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsAnimationController.cs" />
     <Compile Include="Assets\Scripts\Level\Doors\DoorsTimer.cs" />

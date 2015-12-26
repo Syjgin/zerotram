@@ -19,70 +19,55 @@ public class BonusTimer : MonoBehaviour
             _activeBonuses = new List<IBonus>();
         if(_droppedBonuses == null)
             _droppedBonuses = new List<UnknownDrop>();	
-        List<GameController.BonusTypes> megaBonusTypes = new List<GameController.BonusTypes>()
-        {
-            GameController.BonusTypes.Wheel,
-            GameController.BonusTypes.Ticket,
-            GameController.BonusTypes.Boot,
-            GameController.BonusTypes.Magnet,
-            GameController.BonusTypes.Smile,
-            GameController.BonusTypes.AntiHare,
-            GameController.BonusTypes.SandGlass,
-            GameController.BonusTypes.Vortex,
-            GameController.BonusTypes.Snow,
-            GameController.BonusTypes.Heal,
-            GameController.BonusTypes.Clew
-        };
-	    for (int i = 0; i < _megaBonusButtons.Count; i++)
-	    {
-	        int currentBonus = Randomizer.GetInRange(0, megaBonusTypes.Count);
-	        GameController.BonusTypes bonusType = megaBonusTypes[currentBonus];
-	        IBonus megaBonus = null;
-            switch (bonusType)
-	        {
-	            case GameController.BonusTypes.Wheel:
-                    megaBonus = new WheelMegaBonus();
-	                break;
-	            case GameController.BonusTypes.Ticket:
-                    megaBonus = new TicketMegaBonus();
-	                break;
-	            case GameController.BonusTypes.Boot:
-                    megaBonus = new BootMegaBonus();
-                    break;
-	            case GameController.BonusTypes.Magnet:
-                    megaBonus = new MagnetMegaBonus();
-                    break;
-	            case GameController.BonusTypes.Smile:
-                    megaBonus = new SmileMegaBonus();
-                    break;
-	            case GameController.BonusTypes.AntiHare:
-                    megaBonus = new AntiHareMegaBonus();
-                    break;
-	            case GameController.BonusTypes.SandGlass:
-                    megaBonus = new SandGlassMegaBonus();
-                    break;
-	            case GameController.BonusTypes.Vortex:
-                    megaBonus = new VortexBonus();
-                    break;
-	            case GameController.BonusTypes.Snow:
-                    megaBonus = new SnowBonus();
-                    break;
-	            case GameController.BonusTypes.Wrench:
-	                break;
-	            case GameController.BonusTypes.Cogwheel:
-	                break;
-	            case GameController.BonusTypes.Heal:
-                    megaBonus = new HealMegaBonus();
-                    break;
-	            case GameController.BonusTypes.Clew:
-                    megaBonus = new ClewMegaBonus();
-                    break;
-	            default:
-	                throw new ArgumentOutOfRangeException();
-	        }
-            _megaBonusButtons[i].SetMegaBonus(megaBonus);
-        }
 	}
+
+    public void SetMegaBonus(GameController.BonusTypes bonusType)
+    {
+        IBonus megaBonus = null;
+        switch (bonusType)
+        {
+            case GameController.BonusTypes.Wheel:
+                megaBonus = new WheelMegaBonus();
+                break;
+            case GameController.BonusTypes.Ticket:
+                megaBonus = new TicketMegaBonus();
+                break;
+            case GameController.BonusTypes.Boot:
+                megaBonus = new BootMegaBonus();
+                break;
+            case GameController.BonusTypes.Magnet:
+                megaBonus = new MagnetMegaBonus();
+                break;
+            case GameController.BonusTypes.Smile:
+                megaBonus = new SmileMegaBonus();
+                break;
+            case GameController.BonusTypes.AntiHare:
+                megaBonus = new AntiHareMegaBonus();
+                break;
+            case GameController.BonusTypes.SandGlass:
+                megaBonus = new SandGlassMegaBonus();
+                break;
+            case GameController.BonusTypes.Vortex:
+                megaBonus = new VortexBonus();
+                break;
+            case GameController.BonusTypes.Snow:
+                megaBonus = new SnowBonus();
+                break;
+            case GameController.BonusTypes.Wrench:
+                break;
+            case GameController.BonusTypes.Cogwheel:
+                break;
+            case GameController.BonusTypes.Heal:
+                megaBonus = new HealMegaBonus();
+                break;
+            case GameController.BonusTypes.Clew:
+                megaBonus = new ClewMegaBonus();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        _megaBonusButtons[0].SetMegaBonus(megaBonus);
+    }
 
     public void DropBonus(IBonus bonus, Vector3 coords)
     {
