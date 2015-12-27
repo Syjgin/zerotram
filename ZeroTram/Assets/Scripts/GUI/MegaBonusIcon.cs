@@ -5,7 +5,8 @@ public class MegaBonusIcon : MonoBehaviour
 {
     private IBonus _megaBonus;
     [SerializeField] private SpriteRenderer _renderer;
-    [SerializeField] private BonusTimer _timer;
+    private BonusTimer _timer;
+    [SerializeField] private GameObject _boomPrefab;
     private Floor _floor;
 
 
@@ -32,6 +33,7 @@ public class MegaBonusIcon : MonoBehaviour
         if (!Input.GetMouseButton(0))
         {
             _timer.ActivateBonus(_megaBonus);
+            Instantiate(_boomPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }
