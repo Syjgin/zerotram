@@ -158,6 +158,7 @@
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerIdleState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerMoveState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerSM.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerSitState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerStickState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\State.cs" />
     <Compile Include="Assets\Scripts\StateMachine\StateMachine.cs" />

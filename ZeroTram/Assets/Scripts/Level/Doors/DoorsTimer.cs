@@ -1,4 +1,5 @@
-﻿using Assets;
+﻿using System;
+using Assets;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class DoorsTimer : MonoBehaviour {
     [SerializeField] private DoorsAnimationController[] _doorsAnimators;
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private Parallax _parallax;
+    [SerializeField] private BenchCombinationManager _benchCombinationManager;
 
     private PassengerSM _currentStickPassenger;
     private DoorsAnimationController _currentStickDoor;
@@ -63,6 +65,8 @@ public class DoorsTimer : MonoBehaviour {
         
         if (_isDoorsOpen)
         {
+            int reward = _benchCombinationManager.GetCombinationReward();
+            Debug.Log(String.Format("reward: {0}", reward));
             _player.SetDoorsOpen(true);
             _parallax.SetEnabled(false);
             foreach (var doorsAnimationController in _doorsAnimators)
@@ -169,6 +173,7 @@ public class DoorsTimer : MonoBehaviour {
 	            _currentMoveDuration = 0;
                 GameController.GetInstance().CheckBeforeDoorsOpen();
                 UpdateDoors();
+
 	        }
 	    }
 

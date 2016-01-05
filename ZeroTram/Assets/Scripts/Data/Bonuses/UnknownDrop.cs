@@ -5,7 +5,7 @@ public class UnknownDrop : MonoBehaviour
 {
     [SerializeField] private Sprite _pieSprite;
     [SerializeField] private Sprite _clewSprite;
-    private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     public IBonus Bonus;
     private float _destroyPeriod;
@@ -15,7 +15,6 @@ public class UnknownDrop : MonoBehaviour
 	{
 	    _currentPeriod = 0;
 	    _destroyPeriod = ConfigReader.GetConfig().GetField("bonuses").GetField("DestroyPeriod").n;
-	    _spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 	
 	void FixedUpdate ()

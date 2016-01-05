@@ -86,7 +86,7 @@ public class PassengerFlyingAwayState : MovableCharacterState
                 drop = new HealBonus();
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                return;
         }
         if (drop != null)
         {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using Assets.Scripts.Level;
 using UnityEngine;
 
@@ -340,7 +338,10 @@ namespace Assets
             _killedPassengers = 0;
             _incomingPassengers = _passengers.Count;
             if (CheckStats())
+            {
+
                 NextStationReached();
+            }
         }
 
         private void NextStationReached()

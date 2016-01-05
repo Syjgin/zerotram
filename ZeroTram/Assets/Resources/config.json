@@ -191,7 +191,7 @@
 	"levels" : {
 		"level1" : {
 			"passengersMap" : {
-							"alien" : 20,
+	"alien" : 20,
 							"bird" : 30,
 							"cat" : 30,
 							"gnome" : 10,
@@ -239,28 +239,29 @@
 			"MaxHarePercent" : 50,
 			"InitialSpawnCount" : 1,
 			"SpawnIncrementCount" : 2,
-			"MoveDuration" : 15,
-			"StopDuration" : 4,
+			"MoveDuration" : 20,
+			"StopDuration" : 10,
 			"MinDistance" : 1,
 			"MaxStopCount" : 10,
 			"StickPeriod" : 5,
-			"SitPossibility": 0.25,
-			"StandPossibility": 0.5
+			"SitPossibility": 25,
+			"StandPossibility": 50,
+			"StopStandCheckPeriod" : 30,
+			"SitRecheckPeriod" : 1,
+			"SitAggressionIncrement" : 2
 		},
-	"shapes" : {
-			"NoCombination" : 0,
-			"Triangle" : 20,
-			"Line" : 20,
-			"GShape" : 30,
-			"TwoLines" : 30,
-			"Bracket" : 50,
-			"TShape" : 40,
-			"TwoColorLines" : 40,
-			"LineWithTwoPoints" : 60,
-			"Dao" : 80,
-			"TripleLines" : 80,
-			"TwoLinesTwoPoints" : 80,
-			"FullHouse" : 100
+	"combinations" : {
+		"NoCombination" : 0,
+        "TwoEquals" : 10,
+        "ThreeEquals" : 20,
+        "TwoAndTwo" : 30,
+        "ThreeTweens" : 40,
+        "ThreeAndTwo" : 50,
+        "TwoThrees" : 60,
+        "FourEquals" : 70,
+        "FourAndTwo" : 80,
+        "FiveEquals" : 90,
+        "SixEquals" : 100
 	},
 	"descriptions" : {
 			"gnome" : "Гномы - очень рассчетливый народ. За одну поездку они стараются провезти с собой побольше багажа, будь то руда, драгоценные камни или всякие детальки. Да и пусть возят, что хотят, лишь бы покупали билеты. Зато застрявший в проходе гномий баул - самое обычное явление.",

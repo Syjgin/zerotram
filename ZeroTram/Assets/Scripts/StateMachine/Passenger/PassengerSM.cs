@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets;
 using Assets.Scripts.Math;
+using UnityEditor;
 using UnityEngine.Networking.Match;
 
 public class PassengerSM : MovableCharacterSM
@@ -25,6 +26,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isMagnetActivated;
 
     public bool IsAttackingAllowed;
+    private Bench _currentBench;
 
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
@@ -56,6 +58,7 @@ public class PassengerSM : MovableCharacterSM
         PassengerFlyingAwayState flyingAwayState = new PassengerFlyingAwayState(this);
         PassengerDraggedState draggedState = new PassengerDraggedState(this);
         FrozenState frozenState = new FrozenState(this);
+        PassengerSitState sitState = new PassengerSitState(this);
         Dictionary<int, State> stateMap = new Dictionary<int, State>
         {
             {(int) MovableCharacterStates.Idle, idleState},
@@ -66,6 +69,7 @@ public class PassengerSM : MovableCharacterSM
             {(int) MovableCharacterStates.FlyingAway, flyingAwayState},
             {(int) MovableCharacterStates.Dragged, draggedState},
             {(int) MovableCharacterStates.Frozen, frozenState},
+            {(int) MovableCharacterStates.Sit, sitState},
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
@@ -197,6 +201,33 @@ public class PassengerSM : MovableCharacterSM
                 IsStick() || activeStateCode == (int) MovableCharacterStates.Dragged);
     }
 
+    //will be replaced with current skin config
+
+    public int GetStandPossibility()
+    {
+        return (int)ConfigReader.GetConfig().GetField("tram").GetField("StandPossibility").n;
+    }
+
+    public float GetStopStandPeriod()
+    {
+        return ConfigReader.GetConfig().GetField("tram").GetField("StopStandCheckPeriod").n; 
+    }
+
+    public void HandleStandUp()
+    {
+        if (_currentBench != null)
+        {
+            _currentBench.CurrentPassenger = null;
+            _currentBench = null;
+            CalculateRandomTarget();
+        }
+    }
+
+    public bool IsOnTheBench()
+    {
+        return GetActiveState() == (int)MovableCharacterStates.Sit;
+    }
+
     public void HandleTriggerEnter(Collider2D other)
     {
         if (CanNotInteract())
@@ -208,9 +239,27 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
+    public void HandleSitdown(Bench bench)
+    {
+        _currentBench = bench;
+        AttackTarget = null;
+        transform.position = new Vector3(bench.transform.position.x, bench.transform.position.y, transform.position.z);
+        ActivateState((int) MovableCharacterStates.Sit);
+    }
+
     public void TryAttackMovable(MovableCharacterSM movable)
     {
-        if (Randomizer.GetPercentageBasedBoolean((int)AttackProbability))
+        float currentAttackProbability = AttackProbability;
+        if (movable is PassengerSM)
+        {
+            PassengerSM passenger = (PassengerSM) movable;
+            if (passenger.IsOnTheBench())
+            {
+                currentAttackProbability *=
+                     ConfigReader.GetConfig().GetField("tram").GetField("SitAggressionIncrement").n;
+            }
+        }
+        if (Randomizer.GetPercentageBasedBoolean((int)currentAttackProbability))
         {
             AttackTarget = movable;
             if(IsAttackingAllowed)

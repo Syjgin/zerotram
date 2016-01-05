@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class StateMachine : MonoBehaviour
 {
     protected Dictionary<int, State> StateMap; 
-    private State _activeState;
+    [SerializeField] private State _activeState;
     private const int INCORRECT_STATE = Int16.MinValue;
     protected void InitWithStates(Dictionary<int, State> stateMap, int initialState)
     {
@@ -20,6 +20,7 @@ public class StateMachine : MonoBehaviour
         {
             if (!_activeState.IsTransitionAllowed())
                 return;
+            _activeState.SetEnabled(false);
         }
         if(GetActiveState().Equals(stateValue))
             return;
@@ -29,10 +30,6 @@ public class StateMachine : MonoBehaviour
             {
                 state.Value.SetEnabled(true);
                 _activeState = state.Value;
-            }
-            else
-            {
-                state.Value.SetEnabled(false);
             }
         }
     }

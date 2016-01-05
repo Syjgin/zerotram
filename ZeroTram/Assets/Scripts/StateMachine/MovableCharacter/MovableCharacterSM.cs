@@ -43,7 +43,8 @@ public class MovableCharacterSM : StateMachine
         Stick = 5,
         FlyingAway = 6,
         Dragged = 7,
-        Frozen = 8
+        Frozen = 8,
+        Sit = 9
     }
 
     public float GetInitialLifes()
