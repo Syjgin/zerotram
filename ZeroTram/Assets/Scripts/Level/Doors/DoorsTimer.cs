@@ -66,7 +66,7 @@ public class DoorsTimer : MonoBehaviour {
         if (_isDoorsOpen)
         {
             int reward = _benchCombinationManager.GetCombinationReward();
-            Debug.Log(String.Format("reward: {0}", reward));
+            Debug.Log(string.Format("reward: {0}", reward));
             _player.SetDoorsOpen(true);
             _parallax.SetEnabled(false);
             foreach (var doorsAnimationController in _doorsAnimators)

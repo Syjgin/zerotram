@@ -14,7 +14,7 @@ namespace Assets
         private const string UsernameString = "Username";
         private const string DefaultUsername = "Безымянный кондуктор";
         private const char Delimiter = ',';
-        private String _currentUserName;
+        private string _currentUserName;
 
         public static RecordsManager GetInstance()
         {
@@ -25,15 +25,15 @@ namespace Assets
             return _instance;
         }
 
-        private Dictionary<String, int> _records; 
+        private Dictionary<string, int> _records; 
 
         private RecordsManager()
         {
             _records = new Dictionary<string, int>();
-            String recordKeys = PlayerPrefs.GetString(KeysString);
-            if (!String.IsNullOrEmpty(recordKeys))
+            string recordKeys = PlayerPrefs.GetString(KeysString);
+            if (!string.IsNullOrEmpty(recordKeys))
             {
-                String[] keys = recordKeys.Split(Delimiter);
+                string[] keys = recordKeys.Split(Delimiter);
                 foreach (var key in keys)
                 {
                     int recordValue = PlayerPrefs.GetInt(key);
@@ -48,14 +48,14 @@ namespace Assets
             return _currentUserName != DefaultUsername;
         }
 
-        public String GetCurrentUserName()
+        public string GetCurrentUserName()
         {
             return _currentUserName;
         }
 
-        public void SetCurrentUserName(String currentUserName)
+        public void SetCurrentUserName(string currentUserName)
         {
-            if (String.IsNullOrEmpty(currentUserName))
+            if (string.IsNullOrEmpty(currentUserName))
             {
                 _currentUserName = DefaultUsername;
                 return;
@@ -83,7 +83,7 @@ namespace Assets
                 _records.Remove(_currentUserName);
             _records.Add(_currentUserName, record);
             PlayerPrefs.SetInt(_currentUserName, record);
-            String keys = String.Empty;
+            string keys = string.Empty;
             int index = 0;
             foreach (var rec in _records)
             {
@@ -97,11 +97,11 @@ namespace Assets
             PlayerPrefs.SetString(KeysString, keys);
         }
 
-        public Dictionary<String, int> GetSortedRecords()
+        public Dictionary<string, int> GetSortedRecords()
         {
-            Dictionary<String, int> result = new Dictionary<string, int>();
+            Dictionary<string, int> result = new Dictionary<string, int>();
             int minValue = int.MaxValue;
-            String minKey = String.Empty;
+            string minKey = string.Empty;
             foreach (var record in _records)
             {
                 if (record.Value < minValue)
@@ -115,7 +115,7 @@ namespace Assets
             {
                 bool isResultFound = false;
                 int loopMax = 0;
-                String loopMaxKey = String.Empty;
+                string loopMaxKey = string.Empty;
                 foreach (var record in _records)
                 {
                     if (record.Value < currentMax)

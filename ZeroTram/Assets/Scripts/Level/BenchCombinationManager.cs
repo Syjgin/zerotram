@@ -37,17 +37,17 @@ public class BenchCombinationManager : MonoBehaviour
 
     public Combination CalculateCurrent()
     {
-        List<String> currentNames = new List<string>();
+        List<string> currentNames = new List<string>();
         foreach (var bench in _benches)
         {
             currentNames.Add(bench.CurrentPassengerClassName());
         }
 
-        Dictionary<String, int> equalsDist = new Dictionary<string, int>();
-        Dictionary<String, int> temp = new Dictionary<string, int>();
+        Dictionary<string, int> equalsDist = new Dictionary<string, int>();
+        Dictionary<string, int> temp = new Dictionary<string, int>();
         for (int i = 0; i < currentNames.Count; i++)
         {
-            if (currentNames[i] == String.Empty)
+            if (currentNames[i] == string.Empty)
             {
                 continue;
             }

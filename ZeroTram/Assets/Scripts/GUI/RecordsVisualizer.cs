@@ -12,7 +12,7 @@ public class RecordsVisualizer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	    Dictionary<String, int> records = RecordsManager.GetInstance().GetSortedRecords();
+	    Dictionary<string, int> records = RecordsManager.GetInstance().GetSortedRecords();
 	    int index = 0;
 	    if (RecordsManager.GetInstance().GetRecordCount() == 0)
 	    {

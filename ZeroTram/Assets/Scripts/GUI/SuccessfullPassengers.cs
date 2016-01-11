@@ -9,7 +9,7 @@ namespace Assets
     public class SuccessfullPassengers : MonoBehaviour, GameStateNotificationListener
 {
     private Text _text;
-    private const String Prefix = "доехавших: ";
+    private const string Prefix = "доехавших: ";
 
     void Start()
     {

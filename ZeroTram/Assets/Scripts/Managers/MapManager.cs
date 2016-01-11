@@ -115,7 +115,7 @@ public class MapManager
         List<JSONObject> levelIds = _map.GetField(_currentWorldId).list;
         if (_openedStations.ContainsKey(_currentWorldId))
         {
-            List<String> openedLevels = _openedStations[_currentWorldId];
+            List<string> openedLevels = _openedStations[_currentWorldId];
             bool allStationsWasOpened = true;
             foreach (var levelId in levelIds)
             {

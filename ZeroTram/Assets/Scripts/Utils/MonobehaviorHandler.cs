@@ -14,7 +14,7 @@ public class MonobehaviorHandler
         return _instance;
     }
 
-    private Dictionary<String, MonoBehaviour> _behaviorDict;
+    private Dictionary<string, MonoBehaviour> _behaviorDict;
 
     private MonobehaviorHandler()
     {

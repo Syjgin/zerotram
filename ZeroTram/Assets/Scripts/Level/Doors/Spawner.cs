@@ -22,7 +22,7 @@ public class Spawner : MonoBehaviour
         GameController.GetInstance().StartNewGame();
     }
 
-    public PassengerSM SpawnAlternativePassenger(Vector3 position, String previousClass)
+    public PassengerSM SpawnAlternativePassenger(Vector3 position, string previousClass)
     {
         string newPassengerClass = MapManager.GetInstance().GetRandomCharacterWithExcludedIndex(previousClass);
         return InstantiateNPC(newPassengerClass, position, false);

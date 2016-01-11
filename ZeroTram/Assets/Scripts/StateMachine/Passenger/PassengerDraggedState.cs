@@ -21,7 +21,7 @@ public class PassengerDraggedState : MovableCharacterState
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
-            if (Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability))
+            if (Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability) && !_passenger.IsNearBench)
             {
                 ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
                 conductor.StopDrag();

@@ -28,10 +28,10 @@ public class Bench : MonoBehaviour
         }
     }
 
-    public String CurrentPassengerClassName()
+    public string CurrentPassengerClassName()
     {
         if (CurrentPassenger == null)
-            return String.Empty;
+            return string.Empty;
         return CurrentPassenger.GetClassName();
     }
 
@@ -40,28 +40,57 @@ public class Bench : MonoBehaviour
         return (int)ConfigReader.GetConfig().GetField("tram").GetField("SitPossibility").n;
     }
 
+    void OnTriggerExit2D(Collider2D other)
+    {
+        PassengerSM passenger = other.GetComponentInParent<PassengerSM>();
+        if (passenger != null)
+        {
+            passenger.IsNearBench = false;
+        }
+    }
+
     void OnTriggerStay2D(Collider2D other)
     {
         if (!_isCheckPossible)
             return;
         _isCheckPossible = false;
         _timeAfterPassengerCheck = 0;
-        PassengerSM passenger = other.GetComponentInParent<PassengerSM>();
-        if (passenger != null)
+        PassengerCollisionDetector passengerCD = other.GetComponent<PassengerCollisionDetector>();
+        if (passengerCD != null)
         {
-            if(passenger.IsOnTheBench())
-                return;
-            if(CurrentPassenger != null)
-                return;
-            if (Randomizer.GetPercentageBasedBoolean(GetSitPossibility()))
+            PassengerSM passenger = (PassengerSM)passengerCD.Character;
+            TryHaveSetPassenger(passenger);
+            return;
+        }
+        ConductorCollisionDetector conductorCD = other.GetComponentInParent<ConductorCollisionDetector>();
+        if (conductorCD != null)
+        {
+            ConductorSM conductor = (ConductorSM) conductorCD.Character;
+            if (conductor.IsDragging())
             {
-                CurrentPassenger = passenger;
-                if (passenger.GetActiveState() == (int) MovableCharacterSM.MovableCharacterStates.Dragged && passenger.HasTicket())
-                {
-                    passenger.StopDrag();
-                }
-                passenger.HandleSitdown(this);
+                PassengerSM draggedPassenger = conductor.GetDragTarget();
+                TryHaveSetPassenger(draggedPassenger);
             }
+        }
+    }
+
+    private void TryHaveSetPassenger(PassengerSM passenger)
+    {
+        passenger.IsNearBench = true;
+        if (passenger.IsOnTheBench())
+        {
+            CurrentPassenger = passenger;
+            return;
+        }
+        if (Randomizer.GetPercentageBasedBoolean(GetSitPossibility()))
+        {
+            CurrentPassenger = passenger;
+            if (passenger.GetActiveState() == (int) MovableCharacterSM.MovableCharacterStates.Dragged &&
+                passenger.HasTicket())
+            {
+                passenger.StopDrag();
+            }
+            passenger.HandleSitdown(this);
         }
     }
 }

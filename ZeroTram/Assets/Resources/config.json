@@ -20,12 +20,13 @@
             "Velocity" : 4,
             "AttackStrength" : -40,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 20,
+            "TicketProbability" : 30,
             "StickProbability" : 25,
-			"BonusProbability" : 40,
+			"BonusProbability" : 45,
 			"BonusMap" : {
-				"AntiHare" : 50,
-				"SandGlass" : 50
+				"AntiHare" : 45,
+				"SandGlass" : 45,
+				"Heal" : 10
 			}
 		},
 	"bird": {
@@ -40,12 +41,13 @@
             "Velocity" : 8,
             "AttackStrength" : 16,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 30,
+            "TicketProbability" : 40,
             "StickProbability" : 5,
-			"BonusProbability" : 30,
+			"BonusProbability" : 20,
 			"BonusMap" : {
-				"Boot" : 50,
-				"Magnet" : 50
+				"Boot" : 45,
+				"Magnet" : 45,
+				"Heal" : 10
 			}
 		},
 	"cat": {
@@ -60,12 +62,13 @@
             "Velocity" : 10,
             "AttackStrength" : 40,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 10,
+            "TicketProbability" : 20,
             "StickProbability" : 5,
-			"BonusProbability" : 20,
+			"BonusProbability" : 25,
 			"BonusMap" : {
-				"Wheel" : 50,
-				"Ticket" : 50
+				"Wheel" : 45,
+				"Ticket" : 45,
+				"Heal" : 10
 			}
 		},
 	"gnome": {
@@ -82,7 +85,7 @@
             "AttackReactionPeriod" : 0.5,
             "TicketProbability" : 60,
             "StickProbability" : 80,
-			"BonusProbability" : 95,
+			"BonusProbability" : 80,
 			"BonusMap" : {
 				"Smile" : 30,
 				"Wrench" : 30,
@@ -101,12 +104,13 @@
             "Velocity" : 0.3,
             "AttackStrength" : 60,
             "AttackReactionPeriod" : 0.5,
-            "TicketProbability" : 95,
+            "TicketProbability" : 80,
             "StickProbability" : 60,
 			"BonusProbability" : 30,
 			"BonusMap" : {
-				"Heal" : 50,
-				"Clew" : 50
+				"Heal" : 45,
+				"Clew" : 45,
+				"Heal" : 10
 			}
 		},
 	"bonuses" : {
@@ -245,8 +249,8 @@
 			"MaxStopCount" : 10,
 			"StickPeriod" : 5,
 			"SitPossibility": 25,
-			"StandPossibility": 50,
-			"StopStandCheckPeriod" : 30,
+			"StandPossibility": 75,
+			"StopStandCheckPeriod" : 8,
 			"SitRecheckPeriod" : 1,
 			"SitAggressionIncrement" : 2
 		},

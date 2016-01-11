@@ -31,7 +31,7 @@ public class SelectBonusWindow : MonoBehaviour
                 instRect.transform.localPosition = new Vector3(0, -index*ItemHeight);
 	            Image image = instantiated.GetComponentInChildren<Image>();
 	            image.sprite = currentSprite;
-	            String description = GetBonusDescription(currentType);
+                string description = GetBonusDescription(currentType);
 	            Text textField = instantiated.GetComponentInChildren<Text>();
 	            textField.text = description;
 	            Button but = instantiated.GetComponentInChildren<Button>();
@@ -49,7 +49,7 @@ public class SelectBonusWindow : MonoBehaviour
         _scrollContent.sizeDelta = new Vector2(_scrollContent.sizeDelta.x, ItemHeight*index);
 	}
 
-    private String GetBonusDescription(GameController.BonusTypes bonusType)
+    private string GetBonusDescription(GameController.BonusTypes bonusType)
     {
         return ConfigReader.GetConfig().GetField("descriptions").GetField(bonusType.ToString()).str;
     }

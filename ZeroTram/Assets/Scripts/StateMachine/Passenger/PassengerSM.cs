@@ -9,6 +9,8 @@ using UnityEngine.Networking.Match;
 
 public class PassengerSM : MovableCharacterSM
 {
+    public bool IsNearBench;
+
     private int _tramStopCount;
     private int _currentTramStopCount;
     public float AttackProbability = 50;
@@ -507,7 +509,7 @@ public class PassengerSM : MovableCharacterSM
         JSONObject unparsedMap = ConfigReader.GetConfig().GetField(GetClassName()).GetField("BonusMap");
         foreach (var bonus in Enum.GetValues(typeof(GameController.BonusTypes)))
         {
-            String representation = bonus.ToString();
+            string representation = bonus.ToString();
             if (unparsedMap.HasField(representation))
             {
                 BonusProbabilities.Add((GameController.BonusTypes)bonus, unparsedMap.GetField(representation).n);
@@ -517,7 +519,7 @@ public class PassengerSM : MovableCharacterSM
 
     public virtual string GetClassName()
     {
-        return String.Empty;
+        return string.Empty;
     }
 
 }

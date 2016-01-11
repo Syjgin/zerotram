@@ -7,20 +7,20 @@ using UnityEngine;
 public static class PersistentDataStorage
 {
     private const char Separator = ';';
-    public static void SaveStringDictionary(String key, Dictionary<string, List<string>> dict)
+    public static void SaveStringDictionary(string key, Dictionary<string, List<string>> dict)
     {
         if(dict.Count == 0)
             return;
-        PlayerPrefs.SetString(key, String.Join(Separator.ToString(), dict.Keys.ToArray()));
+        PlayerPrefs.SetString(key, string.Join(Separator.ToString(), dict.Keys.ToArray()));
         foreach (var pair in dict)
         {
             if(pair.Key == string.Empty || pair.Value.Count == 0)
                 return;
-            PlayerPrefs.SetString(pair.Key, String.Join(Separator.ToString(), pair.Value.ToArray()));
+            PlayerPrefs.SetString(pair.Key, string.Join(Separator.ToString(), pair.Value.ToArray()));
         }
     }
 
-    public static Dictionary<string, List<string>> GetStringDictionary(String key)
+    public static Dictionary<string, List<string>> GetStringDictionary(string key)
     {
         Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
         string[] keys = PlayerPrefs.GetString(key).Split(Separator);

@@ -15,7 +15,7 @@ public class FadeTimer : MonoBehaviour
     [SerializeField] private AudioSource _source;
     [SerializeField] private Button _clicker;
 
-    private Dictionary<int, String>  phrasesByFrames = new Dictionary<int, string>();
+    private Dictionary<int, string>  phrasesByFrames = new Dictionary<int, string>();
 
     private int _currentFrame;
     private const int ChangeFramePeriod = 7;

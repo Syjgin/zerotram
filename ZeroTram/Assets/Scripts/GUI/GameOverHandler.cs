@@ -15,10 +15,10 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _captionText;
     [SerializeField] private GameObject _stickCaption;
 
-    private const String DeathReason = "Кондуктор погиб";
-    private const String HareReason = "Слишком много зайцев";
-    private const String KilledPassengersReason = "Слишком много погибших";
-    private const String VictoryReason = "Вы достигли следующей станции!";
+    private const string DeathReason = "Кондуктор погиб";
+    private const string HareReason = "Слишком много зайцев";
+    private const string KilledPassengersReason = "Слишком много погибших";
+    private const string VictoryReason = "Вы достигли следующей станции!";
 
     private const int ZeroCount = 6;
 
@@ -90,7 +90,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         }
         
         int leadingZeroCount = ZeroCount - _stateInfo.TicketCount.ToString().Length;
-        String countText = String.Empty;
+        string countText = string.Empty;
         for (int i = 0; i < leadingZeroCount; i++)
         {
             countText += "0";
