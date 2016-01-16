@@ -20,6 +20,8 @@ public class Floor : MonoBehaviour
     private const float ColliderOffset = 1.4f;
     private const float HeroOffset = 0.6f;
 
+    private float _normalizedMax;
+
     private List<GameObject> _spawnedDrops; 
 
     private BoxCollider2D _collider;
@@ -28,6 +30,7 @@ public class Floor : MonoBehaviour
 	{
 	    _collider = GetComponent<BoxCollider2D>();
         _spawnedDrops = new List<GameObject>();
+	    _normalizedMax = _collider.bounds.max.y - _collider.bounds.min.y;
 	}
 
     void Update()
@@ -178,6 +181,14 @@ public class Floor : MonoBehaviour
     public void ChangeWayoutSquare(float coef)
     {
         _centralWayout.size *= coef;
+    }
+
+    public float CalculateLocalScaleForMovable(MovableCharacterSM character)
+    {
+        float posY = character.transform.position.y;
+        posY -= _collider.bounds.min.y;
+        float scalePercent = 0.8f + 0.2f*(1 - posY/_normalizedMax);
+        return scalePercent;
     }
 
     public void SnowDrop(SnowBonus.FreezeData freezeData, bool isVisible)

@@ -7,6 +7,11 @@ public class PassengerSitState : MovableCharacterState
 
     public override void OnUpdate()
     {
+        if (_passenger.IsGoingAway)
+        {
+            _passenger.HandleStandUp();
+            return;
+        }
         if (_timeLeft > _passenger.GetStopStandPeriod())
         {
             _timeLeft = 0;

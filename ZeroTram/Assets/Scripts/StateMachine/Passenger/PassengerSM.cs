@@ -485,6 +485,7 @@ public class PassengerSM : MovableCharacterSM
         {
             IsAttackingAllowed = true;
         }
+        
     }
 
     public void ApplyWrenchBonus(bool add)

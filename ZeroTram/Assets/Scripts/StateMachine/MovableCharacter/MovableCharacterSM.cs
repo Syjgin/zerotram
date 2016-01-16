@@ -30,6 +30,7 @@ public class MovableCharacterSM : StateMachine
     private bool _isFreezeTemporalyDisabled;
     private bool _isFreezeBonusActive;
     private SnowBonus.FreezeData _freezeData;
+    private float _currentScale = -1;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -138,11 +139,11 @@ public class MovableCharacterSM : StateMachine
     {
         if (target.x > transform.position.x)
         {
-            CharacterBody.transform.localScale = new Vector3(-1, 1, 1);
+            CharacterBody.transform.localScale = new Vector3(-_currentScale, _currentScale, 1);
         }
         else
         {
-            CharacterBody.transform.localScale = new Vector3(1, 1, 1);
+            CharacterBody.transform.localScale = new Vector3(_currentScale, _currentScale, 1);
         }
     }
 
@@ -167,6 +168,18 @@ public class MovableCharacterSM : StateMachine
             {
                 Freeze();
             }
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        float newScale = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").CalculateLocalScaleForMovable(this);
+        if (Math.Abs(newScale - _currentScale) > 0.01f)
+        {
+            _currentScale = newScale;
+            bool inversed = (CharacterBody.transform.localScale.x < 0);
+            CharacterBody.transform.localScale = new Vector3(inversed ? -newScale : newScale, newScale, 1);
         }
     }
 
