@@ -10,7 +10,7 @@ public class TimeToStopBus : MonoBehaviour
 {
 	
 	[SerializeField] private DoorsTimer _timer;
-    [SerializeField] private TextMesh _text;
+    [SerializeField] private Text _text;
 
     private const int FullZeroCount = 4;
 

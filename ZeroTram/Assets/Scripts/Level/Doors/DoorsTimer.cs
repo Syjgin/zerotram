@@ -2,6 +2,8 @@
 using Assets;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts.Math;
 using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour {
@@ -14,11 +16,13 @@ public class DoorsTimer : MonoBehaviour {
 
     private bool _isDoorsOpen;
     private bool _isPaused;
-
-    [SerializeField] private Animator[] _wheels;
-    [SerializeField] private DoorsAnimationController[] _doorsAnimators;
+    
+    [SerializeField] private DoorsAnimationController _firstDoor;
+    [SerializeField] private DoorsAnimationController _secondDoor;
+    [SerializeField] private DoorsAnimationController _thirdDoor;
+    [SerializeField] private DoorsAnimationController _forthDoor;
     [SerializeField] private GameObject _stickNote;
-    [SerializeField] private Parallax _parallax;
+    [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
 
     private PassengerSM _currentStickPassenger;
@@ -28,6 +32,8 @@ public class DoorsTimer : MonoBehaviour {
     
     private const float StickSoundDelay = 1;
     private float _currentStickSoundRemainingTime;
+
+    private bool _isLeftDoorsOpened;
 
     void Awake()
     {
@@ -53,35 +59,56 @@ public class DoorsTimer : MonoBehaviour {
         UpdateDoors();
     }
 
-    void UpdateDoors()
+    void MoveObjects(bool isMoving)
     {
-        foreach (var animator in _wheels)
+        foreach (var tramMovableObject in _tramMovableObjects)
         {
-            if(_isDoorsOpen)
-                animator.Play("idle");
-            else 
-                animator.Play("wheel");
+            Animator animator = tramMovableObject.GetComponent<Animator>();
+            if (isMoving)
+            {
+                animator.Play("move");
+            }
+            else
+            {
+                animator.Stop();
+            }
         }
-        
+    }
+
+    void UpdateDoors()
+    {        
         if (_isDoorsOpen)
         {
             int reward = _benchCombinationManager.GetCombinationReward();
             Debug.Log(string.Format("reward: {0}", reward));
             _player.SetDoorsOpen(true);
-            _parallax.SetEnabled(false);
-            foreach (var doorsAnimationController in _doorsAnimators)
+            MoveObjects(false);
+            _isLeftDoorsOpened = Randomizer.GetPercentageBasedBoolean(50);
+            if (_isLeftDoorsOpened)
             {
-                doorsAnimationController.Open(true);
+                _firstDoor.Open(true);
+                _thirdDoor.Open(true);
+            }
+            else
+            {
+                _secondDoor.Open(true);
+                _forthDoor.Open(true);
             }
             GameController.GetInstance().SetDoorsOpen(true);
         }
         else
         {
             _player.SetDoorsOpen(false);
-            _parallax.SetEnabled(true);
-            foreach (var doorsAnimationController in _doorsAnimators)
+            MoveObjects(true);
+            if (_isLeftDoorsOpened)
             {
-                doorsAnimationController.Close();
+                _firstDoor.Close();
+                _thirdDoor.Close();
+            }
+            else
+            {
+                _secondDoor.Close();
+                _forthDoor.Close();
             }
             GameController.GetInstance().SetDoorsOpen(false);
         }

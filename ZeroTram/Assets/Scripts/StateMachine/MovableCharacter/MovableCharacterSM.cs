@@ -30,7 +30,7 @@ public class MovableCharacterSM : StateMachine
     private bool _isFreezeTemporalyDisabled;
     private bool _isFreezeBonusActive;
     private SnowBonus.FreezeData _freezeData;
-    private float _currentScale = -1;
+    private float _currentScale;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -137,6 +137,10 @@ public class MovableCharacterSM : StateMachine
 
     public void CalculateOrientation(Vector2 target)
     {
+        if (_currentScale == 0)
+        {
+            _currentScale = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").CalculateLocalScaleForMovable(this);
+        }
         if (target.x > transform.position.x)
         {
             CharacterBody.transform.localScale = new Vector3(-_currentScale, _currentScale, 1);

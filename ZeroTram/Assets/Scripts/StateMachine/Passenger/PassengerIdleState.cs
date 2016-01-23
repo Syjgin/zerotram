@@ -52,7 +52,7 @@ public class PassengerIdleState : IdleState
             {
                 if (dist > _passenger.AttackDistance)
                 {
-                    Vector3 result =
+                    Vector2 result =
                         _passenger.AttackTarget.BoxCollider2D.bounds.ClosestPoint(_passenger.transform.position);
                     _passenger.SetTarget(result);
                 }

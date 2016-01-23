@@ -116,7 +116,9 @@ public class PassengerSM : MovableCharacterSM
     {
         if (AttackTarget == null)
             return float.MaxValue;
-        return ((Vector2)transform.position - (Vector2)AttackTarget.transform.position).sqrMagnitude;
+        Vector2 position2D = transform.position;
+        Vector2 attackTargetPosition2D = AttackTarget.BoxCollider2D.bounds.ClosestPoint(transform.position);
+        return (position2D - attackTargetPosition2D).sqrMagnitude;
     }
     
     public bool HasTicket()
