@@ -452,7 +452,7 @@ public class PassengerSM : MovableCharacterSM
         float yOffset = finalDist * Mathf.Sin(radians);
         Vector3 oldPos = transform.position;
         Vector3 newPos = new Vector3(oldPos.x + xOffset, oldPos.y + yOffset, oldPos.z);
-        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").NormalizePosition(ref newPos);
+        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").NormalizePosition(ref newPos, true);
         StopStick();
         MakeIdle();
         transform.position = newPos;
