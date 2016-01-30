@@ -30,7 +30,9 @@ public class PassengerDraggedState : MovableCharacterState
             }
         }
         MovableCharacter.Animator.Play("attacked");
-        Vector2 targetPos = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
+        Vector3 targetPos = new Vector3();
+        if (!MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition(ref targetPos))
+            return;
         MovableCharacter.transform.position = new Vector3(targetPos.x, targetPos.y, -1);
     }
 

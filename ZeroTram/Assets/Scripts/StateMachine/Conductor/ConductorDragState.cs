@@ -21,12 +21,9 @@ public class ConductorDragState : MovableCharacterState
             _conductor.StopDrag();
             return;
         }
-        Vector2 targetPos = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
-        if (!MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsCorrectPosition(targetPos))
-        {
-            _conductor.StopDrag();
+        Vector3 targetPos = new Vector3();
+        if(!MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition(ref targetPos))
             return;
-        }
         Vector2 dragOffset = _conductor.GetDragOffset();
         if (dragOffset.sqrMagnitude > 0.1f)
         {
@@ -39,7 +36,7 @@ public class ConductorDragState : MovableCharacterState
         else
         {
             MovableCharacter.Animator.Play("drag");
-            Vector3 newPos = targetPos + _conductor.GetDragOffset();
+            Vector3 newPos = (Vector2)targetPos + _conductor.GetDragOffset();
             MovableCharacter.CalculateOrientation(newPos);
             MovableCharacter.transform.position = newPos;
         }

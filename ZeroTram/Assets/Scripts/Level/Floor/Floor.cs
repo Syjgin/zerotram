@@ -130,20 +130,16 @@ public class Floor : MonoBehaviour
         _hero.StopDrag();
     }
 
-    public void NormalizePosition(ref Vector3 position, bool withOffset)
+    public bool NormalizePosition(ref Vector3 position, bool withOffset)
     {
-        if(!_polygonCollider2D.OverlapPoint(position))
+        if (withOffset)
+            position.y += HeroOffset;
+        if (!_polygonCollider2D.OverlapPoint(position))
         {
             position = _polygonCollider2D.bounds.ClosestPoint(position);
+            return false;
         }
-        if(withOffset)
-            position.y += HeroOffset;
-    }
-
-    public bool IsCorrectPosition(Vector3 pos)
-    {
-        pos.y -= HeroOffset;
-        return _polygonCollider2D.OverlapPoint(pos);
+        return true;
     }
 
     public Vector2 GetCurrentMousePosition(bool withOffset = true)
@@ -151,6 +147,12 @@ public class Floor : MonoBehaviour
         Vector3 target = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         NormalizePosition(ref target, withOffset);
         return target;
+    }
+
+    public bool GetCurrentMousePosition(ref Vector3 position, bool withOffset = true)
+    {
+        position = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        return NormalizePosition(ref position, withOffset);
     }
 
     public bool IsPassengerNearDoors(PassengerSM ps)
