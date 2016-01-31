@@ -18,15 +18,18 @@ public class PassengerDraggedState : MovableCharacterState
 
     public override void OnUpdate()
     {
+        if (MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(_passenger) && !_passenger.HasTicket())
+        {
+            StopDragByConductor(false);
+            return;
+        }
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
-            if (Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability) && !_passenger.IsNearBench)
+            if ((Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability) && !_passenger.IsNearBench) || !_passenger.HasTicket())
             {
-                ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
-                conductor.StopDrag();
-                MovableCharacter.AttackTarget = conductor;
-                MovableCharacter.ActivateState((int)MovableCharacterSM.MovableCharacterStates.Attack);
+                StopDragByConductor(true);
+                return;
             }
         }
         MovableCharacter.Animator.Play("attacked");
@@ -34,6 +37,12 @@ public class PassengerDraggedState : MovableCharacterState
         if (!MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition(ref targetPos))
             return;
         MovableCharacter.transform.position = new Vector3(targetPos.x, targetPos.y, -1);
+    }
+
+    private void StopDragByConductor(bool attack)
+    {
+        ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        conductor.StopDrag(attack);
     }
 
     public PassengerDraggedState(StateMachine parent) : base(parent)

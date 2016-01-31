@@ -88,7 +88,7 @@ public class Bench : MonoBehaviour
             if (passenger.GetActiveState() == (int) MovableCharacterSM.MovableCharacterStates.Dragged &&
                 passenger.HasTicket())
             {
-                passenger.StopDrag();
+                passenger.StopDrag(false);
             }
             passenger.HandleSitdown(this);
         }

@@ -18,7 +18,7 @@ public class ConductorDragState : MovableCharacterState
     {
         if (_conductor.GetDragTarget() == null || !Input.GetMouseButton(0))
         {
-            _conductor.StopDrag();
+            _conductor.StopDrag(false);
             return;
         }
         Vector3 targetPos = new Vector3();

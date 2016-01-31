@@ -402,19 +402,33 @@ public class PassengerSM : MovableCharacterSM
             Indicator.sprite = _hare;
     }
 
-    public void StopDrag()
+    public void StopDrag(bool attack)
     {
         if(GetActiveState() != (int)MovableCharacterStates.Dragged)
             return;
         MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseUp();
         ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
-        MakeIdle();
         if (conductor.CanKick(this))
         {
-            CalculateRandomTarget();
+            if (!HasTicket())
+            {
+                CalculateRandomTarget();
+            }
+        }
+        else
+        {
+            if (attack)
+            {
+                AttackTarget = conductor;
+                ActivateState((int) MovableCharacterStates.Attack);
+            }
+            else
+            {
+                MakeIdle();
+            }
         }
     }
-
+    
     public void CalculateMagnet()
     {
         if (_isMagnetActivated)
@@ -474,7 +488,7 @@ public class PassengerSM : MovableCharacterSM
         }
         CalculateIndicator();
         if(!hero.IsDragging())
-            StopDrag();
+            StopDrag(false);
         if (AttackTarget != null)
         {
             if (AttackTarget.CanNotInteract())

@@ -16,6 +16,6 @@ public class ConductorCollisionDetector : CollisionDetector
     {
         if (Time.timeScale == 0)
             return;
-        _conductor.StopDrag();
+        _conductor.StopDrag(false);
     }
 }

@@ -64,7 +64,7 @@ public class ConductorSM : MovableCharacterSM
     public void StartDrag(PassengerSM obj)
     {
         if(_dragTarget != null)
-            _dragTarget.StopDrag();
+            _dragTarget.StopDrag(false);
         if (obj.IsStick())
         {
             obj.StopStick();
@@ -102,14 +102,14 @@ public class ConductorSM : MovableCharacterSM
         _dragTarget = null;
     }
 
-    public void StopDrag()
+    public void StopDrag(bool attack)
     {
         if (GetActiveState().Equals((int)MovableCharacterStates.Drag))
         {
             MakeIdle();
             if (_dragTarget != null)
             {
-                _dragTarget.StopDrag();
+                _dragTarget.StopDrag(attack);
             }
             _dragTarget = null;
         }

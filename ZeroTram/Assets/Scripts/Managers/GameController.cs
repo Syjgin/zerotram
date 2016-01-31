@@ -295,7 +295,7 @@ namespace Assets
 
         public void GameOver(bool isConductorDied)
         {
-            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag();
+            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero().StopDrag(false);
             _isGameFinished = true;
             Time.timeScale = 0;
             UpdateListeners(isConductorDied);

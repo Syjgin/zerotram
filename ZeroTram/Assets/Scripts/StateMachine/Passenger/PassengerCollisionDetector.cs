@@ -21,7 +21,7 @@ public class PassengerCollisionDetector : CollisionDetector
     {
         if (Time.timeScale == 0)
             return;
-        _passenger.StopDrag();
+        _passenger.StopDrag(false);
     }
 
     protected override void OnMouseDown()

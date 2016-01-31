@@ -127,7 +127,7 @@ public class Floor : MonoBehaviour
 
     public void OnMouseUp()
     {
-        _hero.StopDrag();
+        _hero.StopDrag(false);
     }
 
     public bool NormalizePosition(ref Vector3 position, bool withOffset)
