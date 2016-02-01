@@ -70,7 +70,7 @@ public class DoorsTimer : MonoBehaviour {
             }
             else
             {
-                animator.Stop();
+                animator.Play("stop");
             }
         }
     }
