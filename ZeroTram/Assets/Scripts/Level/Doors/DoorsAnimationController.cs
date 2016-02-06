@@ -5,6 +5,7 @@ public class DoorsAnimationController : MonoBehaviour
 {
     private Animator _animator;
     private Spawner _unitSpawner;
+    private bool _isOpened;
 
 	void Awake ()
 	{
@@ -22,15 +23,23 @@ public class DoorsAnimationController : MonoBehaviour
         _animator.Play("doors_open");
         if(spawn)
             _unitSpawner.Spawn(gameObject);
+        _isOpened = true;
     }
 
     public void Close()
     {
         _animator.Play("doors_close");
+        _isOpened = false;
     }
 
     public void Glitch()
     {
         _animator.Play("doors_glitch");
+        _isOpened = false;
+    }
+
+    public bool IsOpened()
+    {
+        return _isOpened;
     }
 }

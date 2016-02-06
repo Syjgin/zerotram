@@ -195,14 +195,15 @@
 	"levels" : {
 		"level1" : {
 			"passengersMap" : {
-	"alien" : 20,
+							"alien" : 20,
 							"bird" : 30,
 							"cat" : 30,
 							"gnome" : 10,
 							"granny" : 10
 						},
 			"name" : "Станция 1",
-			"count" : 20
+			"count" : 20,
+			"doorsOpenMode" : "tween"
 		}, 
 		"level2" : {
 			"passengersMap" : {
@@ -213,7 +214,8 @@
 							"granny" : 5
 						},
 			"name" : "Станция 2",
-			"count" : 15
+			"count" : 15,
+			"doorsOpenMode" : "single"
 		},
 		"level3" : {
 			"passengersMap" : {
@@ -224,7 +226,8 @@
 							"granny" : 5
 						},
 			"name" : "BraveNewWorld",
-			"count" : 15
+			"count" : 15,
+			"doorsOpenMode" : "all"
 		}
 	},
 	"map" : {

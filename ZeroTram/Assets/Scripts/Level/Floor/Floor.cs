@@ -38,23 +38,22 @@ public class Floor : MonoBehaviour
         }
         else
         {
-            _hero.IsInWayoutZone = (IsHeroNearDoors() && _timer.IsDoorsOpen);
+            bool anyDoorIsReachable = false;
+            for (int i = 0; i < _doors.Count; i++)
+            {
+                if (IsHeroNearWayout(_doors[i], false) && _timer.IsDoorOpenedByNumber(i))
+                {
+                    anyDoorIsReachable = true;
+                    break;
+                }
+            }
+            _hero.IsInWayoutZone = anyDoorIsReachable;
         }
     }
 
     private bool IsHeroNearCentralWayout()
     {
         return IsHeroNearWayout(_centralWayout, true);
-    }
-
-    private bool IsHeroNearDoors()
-    {
-        foreach (var door in _doors)
-        {
-            if (IsHeroNearWayout(door, false))
-                return true;
-        }
-        return false;
     }
 
     private bool IsHeroNearWayout(Collider2D wayout, bool central)

@@ -40,11 +40,20 @@ public class MapManager
         {
             OpenNextLevel();
         }
+        if (_currentStationInfo == null)
+        {
+            SetCurrentStation(GetDebugLevelName());
+        }
     }
 
     public void SetCurrentStation(string id)
     {
         _currentStationInfo = GetStationInfo(id);
+    }
+
+    public StationInfo GetCurrentStationInfo()
+    {
+        return _currentStationInfo;
     }
 
     public static StationInfo GetStationInfo(string stationId)
@@ -61,9 +70,13 @@ public class MapManager
         info.Name = ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("name").str;
         info.CheckPointsCount =
             (int)ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("count").n;
+        DoorsTimer.DoorsOpenMode openMode =
+            (DoorsTimer.DoorsOpenMode)
+                Enum.Parse(typeof(DoorsTimer.DoorsOpenMode), ConfigReader.GetConfig().GetField("levels").GetField(stationId).GetField("doorsOpenMode").str);
+        info.DoorsOpenMode = openMode;
         return info;
     }
-
+    
     public string GetCurrentStationName()
     {
         return _currentStationInfo.Name;
@@ -76,10 +89,6 @@ public class MapManager
 
     public string GetRandomCharacter()
     {
-        if (_currentStationInfo == null)
-        {
-            SetCurrentStation(GetDebugLevelName());
-        }
         return Randomizer.CalculateValue<string>(_currentStationInfo.PassengersMap);
     }
 

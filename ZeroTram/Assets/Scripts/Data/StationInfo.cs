@@ -8,4 +8,5 @@ public class StationInfo
     public string Name;
     public int CheckPointsCount;
     public Dictionary<string, float> PassengersMap;
+    public DoorsTimer.DoorsOpenMode DoorsOpenMode;
 }
