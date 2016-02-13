@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -132,7 +126,9 @@
     <Compile Include="Assets\Scripts\Level\Floor\Floor.cs" />
     <Compile Include="Assets\Scripts\Level\Floor\FloorCollisionDetector.cs" />
     <Compile Include="Assets\Scripts\Level\GameStateNotificationListener.cs" />
+    <Compile Include="Assets\Scripts\Level\NewParallax.cs" />
     <Compile Include="Assets\Scripts\Level\Parallax.cs" />
+    <Compile Include="Assets\Scripts\Level\RandomObject.cs" />
     <Compile Include="Assets\Scripts\Level\ScrollingScript.cs" />
     <Compile Include="Assets\Scripts\Managers\GUIManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameController.cs" />

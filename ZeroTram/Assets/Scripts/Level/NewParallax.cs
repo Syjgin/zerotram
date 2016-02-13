@@ -8,15 +8,17 @@ public class NewParallax : MonoBehaviour {
     /// <summary>
     /// Moving direction
     /// </summary>
-    public Vector2 direction = new Vector2(0.2f, -0.6f);
-    public Vector2 scale = new Vector2(0.2f, 0.2f);
-    private float mod;
-    private int x = 1;
+    public Vector2 Direction = new Vector2(0.2f, -0.6f);
+    public Vector2 Scale = new Vector2(0.2f, 0.2f);
+    private float _mod;
+    private int _x = 1;
+    private const float Modifier = 2.5f;
+    private const float HorizontalMovementCoef = 2f;
     // Use this for initialization
     void Start () {
         if (transform.position.x < 0)
-            x = -1;
-        mod = 2.5f / Mathf.Abs(transform.position.x) * x;
+            _x = -1;
+        _mod = Modifier / Mathf.Abs(transform.position.x);
     }
 	
 	// Update is called once per frame
@@ -24,8 +26,8 @@ public class NewParallax : MonoBehaviour {
         if (!GameController.GetInstance().IsDoorsOpen())
         {
             // Movement
-            Vector3 movement = new Vector3(speed.x * direction.x * mod, speed.y * direction.y * mod, 0);
-            Vector3 scaling = new Vector3(scale.x * mod, scale.y * mod, 0);
+            Vector3 movement = new Vector3(speed.x * Direction.x * _mod * _x * HorizontalMovementCoef, speed.y * Direction.y * _mod, 0);
+            Vector3 scaling = new Vector3(Scale.x * _mod, Scale.y * _mod, 0);
 
             movement *= Time.deltaTime;
             scaling *= Time.deltaTime;

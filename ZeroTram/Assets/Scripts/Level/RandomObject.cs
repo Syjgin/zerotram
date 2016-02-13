@@ -1,28 +1,28 @@
 ﻿using UnityEngine;
 using Assets;
 using System.Collections;
+using Assets.Scripts.Math;
 
 public class RandomObject : MonoBehaviour {
     public GameObject[] go;
-    private float time = 0f;
-    // Use this for initialization
-    void Start () {
-    }
-	
-	// Update is called once per frame
-	void Update ()
+    private float _time;
+    private const int MaxY = 36;
+    private const float YCoord = 3.5f;
+    private const float XCoord = 2.5f;
+
+    void Update ()
     {
         if (!GameController.GetInstance().IsDoorsOpen())
         {
-            time -= Time.deltaTime;
-            if (time < 0)
+            _time -= Time.deltaTime;
+            if (_time < 0)
             {
-                int x = Random.Range(0, go.Length);
-                int y = Random.Range(0, 36);
-                Instantiate(go[x], new Vector3(2.5f + (0.1f * y), 3.5f), transform.rotation);
+                int x = Randomizer.GetInRange(0, go.Length);
+                int y = Randomizer.GetInRange(0, MaxY);
+                Instantiate(go[x], new Vector3(XCoord + (0.1f * y), YCoord), transform.rotation);
                 y = Random.Range(0, 36);
-                Instantiate(go[x], new Vector3(-2.5f - (0.1f * y), 3.5f), transform.rotation);
-                time = 1f;
+                Instantiate(go[x], new Vector3(-XCoord - (0.1f * y), YCoord), transform.rotation);
+                _time = 0.2f;
             }
         }
 	}
