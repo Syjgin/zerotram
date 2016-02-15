@@ -13,7 +13,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
 	void Start ()
 	{
 	    _text = GetComponent<Text>();
-        _text.text = "0%" + "/" + GameController.GetInstance().MaxKilledPercent;
+        _text.text = "-";
 	    _shouldUpdate = true;
         GameController.GetInstance().AddListener(this);
 	}
@@ -26,7 +26,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
     public void UpdateInfo(GameController.StateInformation information)
     {
         if(_shouldUpdate)
-            _text.text = information.Killed + "/" + GameController.GetInstance().MaxKilledPercent + "%";
+            _text.text = information.RemainKilled < 0 ? "-" : information.RemainKilled.ToString();
     }
 
     public void GameOver()
