@@ -1,11 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Assets;
 using Assets.Scripts.Math;
-using UnityEditor;
-using UnityEngine.Networking.Match;
 
 public class PassengerSM : MovableCharacterSM
 {
