@@ -52,7 +52,7 @@ public class DoorsTimer : MonoBehaviour
     {
         if (_isDoorsOpen)
             return (int) (_stopDuration - _currentStopDuration);
-        return (int) (_moveDuration - _currentMoveDuration);
+        return (int) (_moveDuration * GameController.GetInstance().GetCurrentSpawnCount() - _currentMoveDuration);
     }
 
     void Start()
@@ -247,7 +247,7 @@ public class DoorsTimer : MonoBehaviour
 	    }
 	    else
 	    {
-	        _currentMoveDuration += Time.fixedDeltaTime;
+            _currentMoveDuration += Time.fixedDeltaTime;
 	        if (_currentMoveDuration > _moveDuration)
 	        {
 	            _isDoorsOpen = true;
