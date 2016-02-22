@@ -16,6 +16,7 @@ public class DoorsTimer : MonoBehaviour
     };
 
     private float _moveDuration;
+    private float _currentStationTotalMoveDuration;
     private float _stopDuration;
 
     private float _currentMoveDuration;
@@ -48,11 +49,16 @@ public class DoorsTimer : MonoBehaviour
         _doorOpened = new bool[DoorsCount];
     }
 
+    private void UpdateMoveDuration()
+    {
+        _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+    }
+
     public int GetCurrentRemainingTime()
     {
         if (_isDoorsOpen)
             return (int) (_stopDuration - _currentStopDuration);
-        return (int) (_moveDuration * GameController.GetInstance().GetCurrentSpawnCount() - _currentMoveDuration);
+        return (int) (_currentStationTotalMoveDuration - _currentMoveDuration);
     }
 
     void Start()
@@ -124,6 +130,7 @@ public class DoorsTimer : MonoBehaviour
         {
             _player.SetDoorsOpen(false);
             MoveObjects(true);
+            UpdateMoveDuration();
             foreach (var doorsAnimationController in _doors)
             {
                 if(doorsAnimationController.IsOpened())
@@ -203,13 +210,13 @@ public class DoorsTimer : MonoBehaviour
 
     public void StopNow()
     {
+        int bonusCount = (int)(_currentStationTotalMoveDuration - _currentMoveDuration);
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;
             UpdateDoors();
         }
-        int bonusCount = (int)(_moveDuration - _currentMoveDuration);
-        _currentMoveDuration = _moveDuration;
+        _currentMoveDuration = _currentStationTotalMoveDuration;
     }
 
     void FixedUpdate () 
@@ -248,7 +255,7 @@ public class DoorsTimer : MonoBehaviour
 	    else
 	    {
             _currentMoveDuration += Time.fixedDeltaTime;
-	        if (_currentMoveDuration > _moveDuration)
+	        if (_currentMoveDuration > _currentStationTotalMoveDuration)
 	        {
 	            _isDoorsOpen = true;
 	            _currentMoveDuration = 0;
