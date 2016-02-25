@@ -9,6 +9,7 @@ public class RandomObject : MonoBehaviour {
     private const int MaxY = 36;
     private const float YCoord = 3.5f;
     private const float XCoord = 2.5f;
+    private const float ZCoord = 10;
 
     void Update ()
     {
@@ -19,9 +20,9 @@ public class RandomObject : MonoBehaviour {
             {
                 int x = Randomizer.GetInRange(0, go.Length);
                 int y = Randomizer.GetInRange(0, MaxY);
-                Instantiate(go[x], new Vector3(XCoord + (0.1f * y), YCoord), transform.rotation);
+                Instantiate(go[x], new Vector3(XCoord + (0.1f * y), YCoord, ZCoord), transform.rotation);
                 y = Random.Range(0, 36);
-                Instantiate(go[x], new Vector3(-XCoord - (0.1f * y), YCoord), transform.rotation);
+                Instantiate(go[x], new Vector3(-XCoord - (0.1f * y), YCoord, ZCoord), transform.rotation);
                 _time = 0.2f;
             }
         }
