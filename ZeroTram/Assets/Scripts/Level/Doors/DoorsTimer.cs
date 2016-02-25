@@ -26,6 +26,7 @@ public class DoorsTimer : MonoBehaviour
     private bool _isPaused;
     
     [SerializeField] private DoorsAnimationController[] _doors;
+    [SerializeField] private Spawner _spawner;
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
@@ -85,6 +86,21 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public int GetOpenedDoorsCount()
+    {
+        switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+        {
+            case DoorsOpenMode.single:
+                return 1;
+            case DoorsOpenMode.tween:
+                return DoorsCount/2;
+            case DoorsOpenMode.all:
+                return DoorsCount;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     void UpdateDoors()
     {        
         if (_isDoorsOpen)
@@ -93,6 +109,7 @@ public class DoorsTimer : MonoBehaviour
             Debug.Log(string.Format("reward: {0}", reward));
             _player.SetDoorsOpen(true);
             MoveObjects(false);
+            _spawner.PrepareToSpawn();
             switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
             {
                 case DoorsOpenMode.single:
