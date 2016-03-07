@@ -79,13 +79,9 @@ namespace Assets
             get { return _maxHaresPercent; }
         }
         private float _maxKilledPercent;
-        public float MaxKilledPercent
-        {
-            get { return _maxKilledPercent; }
-        }
         public class StateInformation
         {
-            public int Killed;
+            public int RemainKilled;
             public int Hares;
             public int TicketCount;
             public int StationNumber;
@@ -95,6 +91,7 @@ namespace Assets
         private static GameController _instance;
 
         private int _incomingPassengers;
+        private int _totalPassengers;
         private int _killedPassengers;
         private int _totalHares;
         private int _ticketCount;
@@ -102,7 +99,7 @@ namespace Assets
         private List<PassengerSM> _passengers;
         private List<GameStateNotificationListener> _listeners;
 
-        private int _killedPercent;
+        private int _maxKilledPassengers;
         private int _haresPercent;
 
         private float _initialSpawnCount;
@@ -142,11 +139,12 @@ namespace Assets
             _passengers.Clear();
             _totalHares = 0;
             _incomingPassengers = 0;
+            _totalPassengers = 0;
             _currentSpawnCount = (int)_initialSpawnCount;
             _currentStationNumber = 0;
             _ticketCount = 0;
             _killedPassengers = 0;
-            _killedPercent = 0;
+            _maxKilledPassengers = 0;
             _haresPercent = 0;
             _isGameFinished = false;
         }
@@ -179,7 +177,10 @@ namespace Assets
         public void RegisterPassenger(PassengerSM ps)
         {
             if (ps.HasTicket())
+            {
                 _incomingPassengers++;
+                _totalPassengers++;
+            }
             _totalHares++;
             _passengers.Add(ps);
             UpdateStats();
@@ -211,7 +212,7 @@ namespace Assets
         {
             StateInformation info = new StateInformation();
             info.Hares = _haresPercent;
-            info.Killed = _killedPercent;
+            info.RemainKilled = _maxKilledPassengers;
             info.StationNumber = _currentStationNumber;
             info.TicketCount = _ticketCount;
             info.IsConductorDied = false;
@@ -227,7 +228,7 @@ namespace Assets
         {
             StateInformation info = new StateInformation();
             info.Hares = _haresPercent;
-            info.Killed = _killedPercent;
+            info.RemainKilled = _maxKilledPassengers;
             info.StationNumber = _currentStationNumber;
             info.TicketCount = _ticketCount;
             info.IsConductorDied = isCondutctorDied;
@@ -279,7 +280,7 @@ namespace Assets
                     _passengers.Remove(ps);
                 }
                 UpdateStats();
-                if (_killedPercent > _maxKilledPercent)
+                if (_maxKilledPassengers < 0)
                 {
                     GameOver(false);
                 }
@@ -310,20 +311,13 @@ namespace Assets
             _passengers.RemoveAll(item => item == null);
             float haresPercent = _passengers.Count > 0 ? (_totalHares / (float)_passengers.Count) : 0;
             _haresPercent = Mathf.Min(Mathf.RoundToInt(haresPercent * 100), 100);
-            if (_incomingPassengers > 0)
-            {
-                float killedPercent = _killedPassengers/(float) _incomingPassengers;
-                _killedPercent = Mathf.Min(Mathf.RoundToInt(killedPercent*100), 100);
-            }
-            else
-            {
-                _killedPercent = 0;
-            }
+            _maxKilledPassengers = Mathf.RoundToInt(_totalPassengers*(_maxKilledPercent/100)) - _killedPassengers;
             UpdateListeners(false);
         }
 
         private bool CheckStats()
         {
+            _incomingPassengers = _passengers.Count;
             UpdateStats();
             if (_haresPercent > MaxHaresPercent)
             {
@@ -335,11 +329,8 @@ namespace Assets
 
         public void CheckBeforeDoorsOpen()
         {
-            _killedPassengers = 0;
-            _incomingPassengers = _passengers.Count;
             if (CheckStats())
             {
-
                 NextStationReached();
             }
         }

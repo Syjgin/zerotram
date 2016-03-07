@@ -83,7 +83,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         {
             if (_stateInfo.Hares > GameController.GetInstance().MaxHaresPercent)
                 _reasonText.text = HareReason;
-            if (_stateInfo.Killed > GameController.GetInstance().MaxKilledPercent)
+            if (_stateInfo.RemainKilled < 0)
                 _reasonText.text = KilledPassengersReason;
             if (_stateInfo.IsConductorDied)
                 _reasonText.text = DeathReason;

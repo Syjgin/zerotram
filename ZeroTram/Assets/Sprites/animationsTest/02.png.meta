@@ -30,7 +30,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -55,12 +55,17 @@ TextureImporter:
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
-  buildTargetSettings: []
+  buildTargetSettings:
+  - buildTarget: Android
+    maxTextureSize: 512
+    textureFormat: -3
+    compressionQuality: 50
+    allowsAlphaSplitting: 0
   spriteSheet:
     sprites:
     - name: 02_0
@@ -71,8 +76,17 @@ TextureImporter:
         width: 209
         height: 197
       alignment: 9
-      pivot: {x: .568447649, y: .121128529}
+      pivot: {x: 0.56844765, y: 0.12112853}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 3.1944427, y: 173.13768}
+        - {x: -62.805557, y: 119.13768}
+        - {x: -118.80556, y: 31.13768}
+        - {x: -118.80556, y: 13.13768}
+        - {x: -91.80556, y: -23.86232}
+        - {x: 88.19444, y: -23.86232}
+        - {x: 90.19444, y: -21.86232}
+        - {x: 90.19444, y: 173.13768}
     - name: 02_1
       rect:
         serializedVersion: 2
@@ -81,8 +95,18 @@ TextureImporter:
         width: 117
         height: 173
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0.5, y: 86.5}
+        - {x: -40.5, y: 79.5}
+        - {x: -58.5, y: 47.5}
+        - {x: -58.5, y: -66.5}
+        - {x: -54.5, y: -86.5}
+        - {x: 51.5, y: -86.5}
+        - {x: 58.5, y: -64.5}
+        - {x: 58.5, y: 28.5}
+        - {x: 41.5, y: 86.5}
     - name: 02_2
       rect:
         serializedVersion: 2
@@ -91,8 +115,16 @@ TextureImporter:
         width: 108
         height: 139
       alignment: 9
-      pivot: {x: .0450326428, y: .0972787291}
+      pivot: {x: 0.045032643, y: 0.09727873}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 53.136475, y: 125.47826}
+        - {x: -4.8635254, y: 43.478256}
+        - {x: -4.8635254, y: -13.521744}
+        - {x: 49.136475, y: -13.521744}
+        - {x: 96.136475, y: 32.478256}
+        - {x: 103.136475, y: 68.47826}
+        - {x: 103.136475, y: 125.47826}
     - name: 02_3
       rect:
         serializedVersion: 2
@@ -101,8 +133,18 @@ TextureImporter:
         width: 56
         height: 103
       alignment: 9
-      pivot: {x: .355611533, y: .0169082191}
+      pivot: {x: 0.35561153, y: 0.01690822}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6.0857544, y: 101.25845}
+        - {x: -19.914246, y: 78.25845}
+        - {x: -19.914246, y: 3.2584534}
+        - {x: -18.914246, y: -1.7415466}
+        - {x: 21.085754, y: -1.7415466}
+        - {x: 34.085754, y: 6.2584534}
+        - {x: 36.085754, y: 20.258453}
+        - {x: 36.085754, y: 73.25845}
+        - {x: 12.085754, y: 101.25845}
     - name: 02_4
       rect:
         serializedVersion: 2
@@ -111,8 +153,15 @@ TextureImporter:
         width: 90
         height: 115
       alignment: 9
-      pivot: {x: .437802136, y: .986767709}
+      pivot: {x: 0.43780214, y: 0.9867677}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -39.40219, y: 1.5217133}
+        - {x: -39.40219, y: -113.47829}
+        - {x: -3.4021912, y: -113.47829}
+        - {x: 50.59781, y: -89.47829}
+        - {x: 50.59781, y: -33.478287}
+        - {x: 34.59781, y: 1.5217133}
     - name: 02_5
       rect:
         serializedVersion: 2
@@ -121,8 +170,16 @@ TextureImporter:
         width: 56
         height: 43
       alignment: 9
-      pivot: {x: .899844587, y: .818222761}
+      pivot: {x: 0.8998446, y: 0.81822276}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -22.391296, y: 7.8164215}
+        - {x: -50.391296, y: -11.1835785}
+        - {x: -50.391296, y: -35.18358}
+        - {x: -21.391296, y: -35.18358}
+        - {x: -3.3912964, y: -30.183578}
+        - {x: 5.6087036, y: -23.183578}
+        - {x: 5.6087036, y: 7.8164215}
     - name: 02_6
       rect:
         serializedVersion: 2
@@ -131,8 +188,16 @@ TextureImporter:
         width: 101
         height: 90
       alignment: 9
-      pivot: {x: .968025446, y: .686594248}
+      pivot: {x: 0.96802545, y: 0.68659425}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -83.77057, y: 28.206512}
+        - {x: -97.77057, y: -3.7934875}
+        - {x: -97.77057, y: -42.793488}
+        - {x: -48.77057, y: -61.793488}
+        - {x: -1.7705688, y: -61.793488}
+        - {x: 3.2294312, y: -38.793488}
+        - {x: 3.2294312, y: 28.206512}
     - name: 02_7
       rect:
         serializedVersion: 2
@@ -141,8 +206,15 @@ TextureImporter:
         width: 80
         height: 47
       alignment: 9
-      pivot: {x: .0412891395, y: .341196746}
+      pivot: {x: 0.04128914, y: 0.34119675}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2.303131, y: 30.963753}
+        - {x: -3.303131, y: 27.963753}
+        - {x: -3.303131, y: -16.036247}
+        - {x: 36.69687, y: -16.036247}
+        - {x: 76.69687, y: -4.0362473}
+        - {x: 76.69687, y: 30.963753}
     - name: 02_8
       rect:
         serializedVersion: 2
@@ -151,8 +223,17 @@ TextureImporter:
         width: 48
         height: 39
       alignment: 9
-      pivot: {x: .862822115, y: .196983725}
+      pivot: {x: 0.8628221, y: 0.19698372}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -41.415462, y: 31.317635}
+        - {x: -41.415462, y: 2.3176346}
+        - {x: -31.415462, y: -5.6823654}
+        - {x: -24.415462, y: -7.6823654}
+        - {x: 5.5845375, y: -7.6823654}
+        - {x: 6.5845375, y: -4.6823654}
+        - {x: 6.5845375, y: 20.317635}
+        - {x: -3.4154625, y: 31.317635}
     - name: 02_9
       rect:
         serializedVersion: 2
@@ -161,8 +242,9 @@ TextureImporter:
         width: 49
         height: 29
       alignment: 9
-      pivot: {x: .550774097, y: .886057377}
+      pivot: {x: 0.5507741, y: 0.8860574}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
     - name: 02_10
       rect:
         serializedVersion: 2
@@ -171,8 +253,9 @@ TextureImporter:
         width: 24
         height: 40
       alignment: 9
-      pivot: {x: .75915879, y: .142361358}
+      pivot: {x: 0.7591588, y: 0.14236136}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
     - name: 02_11
       rect:
         serializedVersion: 2
@@ -181,8 +264,9 @@ TextureImporter:
         width: 23
         height: 39
       alignment: 9
-      pivot: {x: .5, y: .930602074}
+      pivot: {x: 0.5, y: 0.9306021}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
     - name: 02_12
       rect:
         serializedVersion: 2
@@ -191,8 +275,10 @@ TextureImporter:
         width: 28
         height: 28
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    outline: []
   spritePackingTag: 
   userData: 
   assetBundleName: 

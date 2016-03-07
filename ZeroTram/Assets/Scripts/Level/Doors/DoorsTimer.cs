@@ -16,6 +16,7 @@ public class DoorsTimer : MonoBehaviour
     };
 
     private float _moveDuration;
+    private float _currentStationTotalMoveDuration;
     private float _stopDuration;
 
     private float _currentMoveDuration;
@@ -25,6 +26,7 @@ public class DoorsTimer : MonoBehaviour
     private bool _isPaused;
     
     [SerializeField] private DoorsAnimationController[] _doors;
+    [SerializeField] private Spawner _spawner;
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
@@ -48,11 +50,16 @@ public class DoorsTimer : MonoBehaviour
         _doorOpened = new bool[DoorsCount];
     }
 
+    private void UpdateMoveDuration()
+    {
+        _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+    }
+
     public int GetCurrentRemainingTime()
     {
         if (_isDoorsOpen)
             return (int) (_stopDuration - _currentStopDuration);
-        return (int) (_moveDuration - _currentMoveDuration);
+        return (int) (_currentStationTotalMoveDuration - _currentMoveDuration);
     }
 
     void Start()
@@ -79,6 +86,21 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public int GetOpenedDoorsCount()
+    {
+        switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+        {
+            case DoorsOpenMode.single:
+                return 1;
+            case DoorsOpenMode.tween:
+                return DoorsCount/2;
+            case DoorsOpenMode.all:
+                return DoorsCount;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     void UpdateDoors()
     {        
         if (_isDoorsOpen)
@@ -87,6 +109,7 @@ public class DoorsTimer : MonoBehaviour
             Debug.Log(string.Format("reward: {0}", reward));
             _player.SetDoorsOpen(true);
             MoveObjects(false);
+            _spawner.PrepareToSpawn();
             switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
             {
                 case DoorsOpenMode.single:
@@ -124,6 +147,7 @@ public class DoorsTimer : MonoBehaviour
         {
             _player.SetDoorsOpen(false);
             MoveObjects(true);
+            UpdateMoveDuration();
             foreach (var doorsAnimationController in _doors)
             {
                 if(doorsAnimationController.IsOpened())
@@ -203,13 +227,13 @@ public class DoorsTimer : MonoBehaviour
 
     public void StopNow()
     {
+        int bonusCount = (int)(_currentStationTotalMoveDuration - _currentMoveDuration);
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;
             UpdateDoors();
         }
-        int bonusCount = (int)(_moveDuration - _currentMoveDuration);
-        _currentMoveDuration = _moveDuration;
+        _currentMoveDuration = _currentStationTotalMoveDuration;
     }
 
     void FixedUpdate () 
@@ -247,8 +271,8 @@ public class DoorsTimer : MonoBehaviour
 	    }
 	    else
 	    {
-	        _currentMoveDuration += Time.fixedDeltaTime;
-	        if (_currentMoveDuration > _moveDuration)
+            _currentMoveDuration += Time.fixedDeltaTime;
+	        if (_currentMoveDuration > _currentStationTotalMoveDuration)
 	        {
 	            _isDoorsOpen = true;
 	            _currentMoveDuration = 0;

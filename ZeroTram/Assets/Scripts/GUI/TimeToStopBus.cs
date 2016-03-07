@@ -30,8 +30,9 @@ public class TimeToStopBus : MonoBehaviour
 	    }
 	    result += remainTime;
 	    result = result.Insert(2, ":");
-	    _text.text = result;
-	}
+            _text.text = result;
+
+    }
 
 }
 

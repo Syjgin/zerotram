@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using Assets.Scripts.Math;
-using UnityEditor;
 
 public class Bench : MonoBehaviour
 {

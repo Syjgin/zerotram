@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private BonusTimer _bonusTimer;
     [SerializeField] private DoorsTimer _doorsTimer;
     private float _maxPassengers;
+    private int _currentSessionSpawnCount;
 
     public static float StickYOffset = 0.8f;
 
@@ -19,6 +20,7 @@ public class Spawner : MonoBehaviour
         //PlayerPrefs.DeleteAll();
 
         _maxPassengers = ConfigReader.GetConfig().GetField("tram").GetField("MaxPassengers").n;
+        _currentSessionSpawnCount = 0;
         GameController.GetInstance().StartNewGame();
     }
 
@@ -41,19 +43,26 @@ public class Spawner : MonoBehaviour
         return ps;
     }
 
+    public void PrepareToSpawn()
+    {
+        _currentSessionSpawnCount = 0;
+    }
+
     public void Spawn(GameObject spawnPoint)
     {
         if(GameController.GetInstance().IsGameFinished)
             return;
         int maxCount = GameController.GetInstance().GetCurrentSpawnCount();
-        int realCount = Randomizer.GetInRange(1, maxCount);
+        int doorsCount = _doorsTimer.GetOpenedDoorsCount();
+        int realCount = Randomizer.GetInRange(1, maxCount/doorsCount);
         
         for (int i = 0; i < realCount; i++)
         {
-            if(GameController.GetInstance().GetPassengersCount() > _maxPassengers)
+            if(GameController.GetInstance().GetPassengersCount() > _maxPassengers || _currentSessionSpawnCount >= maxCount)
                 return;
             string passengerString = MapManager.GetInstance().GetRandomCharacter();
             PassengerSM ps = InstantiateNPC(passengerString, spawnPoint.transform.position, true);
+            _currentSessionSpawnCount++;
             if(ps == null)
                 return;
             _bonusTimer.AddBonusEffectToSpawnedPassenger(ps);
