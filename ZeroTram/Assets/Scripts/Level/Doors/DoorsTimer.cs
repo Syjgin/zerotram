@@ -119,7 +119,7 @@ public class DoorsTimer : MonoBehaviour
                         if (_doorOpened[i])
                         {
                             _doors[i].Open(true);
-                        }    
+                        }
                     }
                     break;
                 case DoorsOpenMode.tween:
