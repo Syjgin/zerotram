@@ -7,7 +7,7 @@ public class RandomObject : MonoBehaviour {
     public GameObject[] go;
     private float _time;
     private const int MaxY = 36;
-    private const float YCoord = 3.5f;
+    private const float YCoord = 4f;
     private const float XCoord = 2.5f;
     private const float ZCoord = 10;
 
