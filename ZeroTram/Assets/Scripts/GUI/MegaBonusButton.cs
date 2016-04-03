@@ -29,10 +29,7 @@ public class MegaBonusButton : MonoBehaviour
 
     public void SetVisible(bool isVisible)
     {
-        if (isVisible)
-        {
-            _background.gameObject.SetActive(isVisible);
-            _megaBonusButton.gameObject.SetActive(isVisible);
-        }
+        _background.gameObject.SetActive(isVisible);
+        _megaBonusButton.gameObject.SetActive(isVisible);
     }
 }

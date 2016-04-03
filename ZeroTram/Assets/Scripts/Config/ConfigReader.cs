@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Client;
 
 public static class ConfigReader
 {
@@ -22,5 +24,14 @@ public static class ConfigReader
             }
         }
         return _config;
+    }
+
+    public static void LoadConfigFromServer()
+    {
+        Client client = MonobehaviorHandler.GetMonobeharior().GetObject<Client>("webClient");
+        client.GET("config/get", (String result) =>
+        {
+            Debug.Log(result);
+        });
     }
 }
