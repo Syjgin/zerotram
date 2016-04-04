@@ -13,7 +13,7 @@ public class SelectBonusWindow : MonoBehaviour
     [SerializeField] private MegaBonusButton _megaBonusButton;
     [SerializeField] private BonusTimer _bonusTimer;
 
-    private const int ItemHeight = 105;
+    private const int ItemHeight = 165;
 	// Use this for initialization
 	void Start ()
 	{
@@ -27,14 +27,14 @@ public class SelectBonusWindow : MonoBehaviour
 	        {
 	            GameObject instantiated = Instantiate(_bonusPanelPrefab);
 	            RectTransform instRect = instantiated.GetComponent<RectTransform>();
-                instRect.SetParent(_scrollContent);
+                instRect.SetParent(_scrollContent, false);
                 instRect.transform.localPosition = new Vector3(0, -index*ItemHeight);
 	            Image image = instantiated.GetComponentInChildren<Image>();
 	            image.sprite = currentSprite;
                 string description = GetBonusDescription(currentType);
 	            Text textField = instantiated.GetComponentInChildren<Text>();
 	            textField.text = description;
-	            Button but = instantiated.GetComponentInChildren<Button>();
+	            Button but = instantiated.GetComponent<Button>();
 	            var copyType = currentType;
 	            but.onClick.AddListener(() =>
                 {

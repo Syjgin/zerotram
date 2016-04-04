@@ -63,7 +63,8 @@ public class Floor : MonoBehaviour
         Vector2 position = _hero.transform.position;
         if (central)
             position.y -= 0.7f;
-        return wayout.OverlapPoint(position);
+        Vector3 position2check = new Vector3(position.x, position.y, wayout.transform.position.z);
+        return wayout.OverlapPoint(position2check);
     }
 
     public ConductorSM GetHero()
@@ -159,7 +160,8 @@ public class Floor : MonoBehaviour
         Vector2 position = ps.transform.position;
         foreach (var door in _doors)
         {
-            if (door.OverlapPoint(position))
+            Vector3 position2check = new Vector3(position.x, position.y, door.transform.position.z);
+            if (door.OverlapPoint(position2check))
                 return true;
         }
         return false;
@@ -170,7 +172,8 @@ public class Floor : MonoBehaviour
         Vector2 position = passenger.transform.position;
         foreach (var door in _doors)
         {
-            if (door.OverlapPoint(position))
+            Vector3 position2check = new Vector3(position.x, position.y, door.transform.position.z);
+            if (door.OverlapPoint(position2check))
                 return door.gameObject;
         }
         return null;

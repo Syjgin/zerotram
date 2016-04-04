@@ -21,7 +21,7 @@ public class DoorsAnimationController : MonoBehaviour
     {
         _animator.enabled = true;
         _animator.Play("doors_open");
-        if(spawn)
+        if (spawn)
             _unitSpawner.Spawn(gameObject);
         _isOpened = true;
     }

@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -167,6 +161,8 @@
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerStickState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\State.cs" />
     <Compile Include="Assets\Scripts\StateMachine\StateMachine.cs" />
+    <Compile Include="Assets\Scripts\Training\FloorScript.cs" />
+    <Compile Include="Assets\Scripts\Training\VideoScript.cs" />
     <Compile Include="Assets\Scripts\Units\Alien.cs" />
     <Compile Include="Assets\Scripts\Units\Bird.cs" />
     <Compile Include="Assets\Scripts\Units\Cat.cs" />

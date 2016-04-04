@@ -23,12 +23,12 @@ public class MegaBonusButton : MonoBehaviour
         GameObject icon = Instantiate(_megaIconPrefab);
         MegaBonusIcon iconObject = icon.GetComponent<MegaBonusIcon>();
         iconObject.SetBonus(_megaBonus, _image.sprite);
-        _background.gameObject.SetActive(false);
         _megaBonusButton.gameObject.SetActive(false);
     }
 
     public void SetVisible(bool isVisible)
     {
+        
         _background.gameObject.SetActive(isVisible);
         _megaBonusButton.gameObject.SetActive(isVisible);
     }
