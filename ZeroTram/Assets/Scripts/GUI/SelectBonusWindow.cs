@@ -13,7 +13,7 @@ public class SelectBonusWindow : MonoBehaviour
     [SerializeField] private MegaBonusButton _megaBonusButton;
     [SerializeField] private BonusTimer _bonusTimer;
 
-    private const int ItemHeight = 105;
+    private const int ItemHeight = 165;
 	// Use this for initialization
 	void Start ()
 	{
