@@ -46,6 +46,7 @@ public class SelectBonusWindow : MonoBehaviour
                 index++;
 	        }
 	    }
+        //ConfigReader.LoadConfigFromServer();
         _scrollContent.sizeDelta = new Vector2(_scrollContent.sizeDelta.x, ItemHeight*index);
 	}
 

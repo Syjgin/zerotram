@@ -29,10 +29,15 @@ public class MegaBonusButton : MonoBehaviour
 
     public void SetVisible(bool isVisible)
     {
+<<<<<<< HEAD
         if (isVisible)
         {
            // _background.gameObject.SetActive(isVisible);
             _megaBonusButton.gameObject.SetActive(isVisible);
         }
+=======
+        _background.gameObject.SetActive(isVisible);
+        _megaBonusButton.gameObject.SetActive(isVisible);
+>>>>>>> refs/remotes/Syjgin/master
     }
 }
