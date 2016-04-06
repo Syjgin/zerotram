@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.4f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -128,7 +130,6 @@
     <Compile Include="Assets\Scripts\Level\Floor\FloorCollisionDetector.cs" />
     <Compile Include="Assets\Scripts\Level\GameStateNotificationListener.cs" />
     <Compile Include="Assets\Scripts\Level\NewParallax.cs" />
-    <Compile Include="Assets\Scripts\Level\Parallax.cs" />
     <Compile Include="Assets\Scripts\Level\RandomObject.cs" />
     <Compile Include="Assets\Scripts\Level\ScrollingScript.cs" />
     <Compile Include="Assets\Scripts\Managers\GUIManager.cs" />
