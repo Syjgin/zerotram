@@ -36,7 +36,7 @@ public class NewParallax : MonoBehaviour
         }
     }
 
-    private void UpdateScale()
+    public void UpdateScale()
     {
         float screenY = Camera.main.WorldToViewportPoint(transform.position).y + ScaleIncrement;
         if (screenY < MinScaleCoef)
