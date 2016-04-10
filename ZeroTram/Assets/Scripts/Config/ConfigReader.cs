@@ -1,37 +1,54 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Security.Cryptography;
+using System.Text;
 using Assets.Scripts.Client;
 
 public static class ConfigReader
 {
-
+    private static String ConfigKey = "ConfigKey";
     private static JSONObject _config;
+
 
     public static JSONObject GetConfig()
     {
         if (_config == null)
         {
-            TextAsset config = Resources.Load("config") as TextAsset;
-            if (config != null)
+            if (IsLocalConfigAvailable())
             {
-                _config = new JSONObject(config.text);
-                _config.Bake();
+                _config = new JSONObject(PlayerPrefs.GetString(ConfigKey));
             }
             else
             {
-                _config = new JSONObject();
+                TextAsset config = Resources.Load("config") as TextAsset;
+                if (config != null)
+                {
+                    _config = new JSONObject(config.text);
+                    _config.Bake();
+                }
+                else
+                {
+                    _config = new JSONObject();
+                }
             }
         }
         return _config;
     }
 
-    public static void LoadConfigFromServer()
+    public static String ConfigVersion()
     {
-        Client client = MonobehaviorHandler.GetMonobeharior().GetObject<Client>("webClient");
-        client.GET("config/get", (String result) =>
-        {
-            Debug.Log(result);
-        });
+        return GetConfig().GetField("version").str;
+    }
+
+    public static void SetConfig(JSONObject config)
+    {
+        _config = config;
+        PlayerPrefs.SetString(ConfigKey, _config.ToString());
+    }
+
+    public static bool IsLocalConfigAvailable()
+    {
+        return PlayerPrefs.HasKey(ConfigKey);
     }
 }
