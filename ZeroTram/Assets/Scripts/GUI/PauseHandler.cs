@@ -11,10 +11,15 @@ public class PauseHandler : MonoBehaviour
     [SerializeField] private GameObject _pauseMenu;
 
     private AudioPlayer _player;
+    private GameObject _stopcrane_unpressed;
+    private GameObject _stopcrane_pressed;
 
     void Awake()
     {
         _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
+        _stopcrane_unpressed = GameObject.Find("Stopcrane_unpressed");
+        _stopcrane_pressed = GameObject.Find("Stopcrane_pressed");
+        _stopcrane_pressed.SetActive(false);
     }
 
 	void Start () {
@@ -25,7 +30,9 @@ public class PauseHandler : MonoBehaviour
                 _player.HandlePauseMenu(true);
 	            _pauseMenu.SetActive(true);
 	            _pauseButton.enabled = false;
-	            Time.timeScale = 0;
+                _stopcrane_unpressed.SetActive(false);
+                _stopcrane_pressed.SetActive(true);
+                Time.timeScale = 0;
 	        }
 	    });
         _resumeButton.onClick.AddListener(() =>
@@ -33,6 +40,8 @@ public class PauseHandler : MonoBehaviour
             _player.HandlePauseMenu(false);
             _pauseMenu.SetActive(false);
             _pauseButton.enabled = true;
+            _stopcrane_unpressed.SetActive(true);
+            _stopcrane_pressed.SetActive(false);
             Time.timeScale = 1;
         });
         _toMenuButton.onClick.AddListener(() =>
