@@ -19,6 +19,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
     private float _num_right_posY;
     private const float _baraban_left_speed = 35f;
     private const float _baraban_right_speed = 35f;
+    private const float _baraban_right_y = 31.6f;
 
     void Start()
     {
@@ -31,8 +32,21 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _bar_left = true;
+            _bar_right = true;
+            _killed++;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _bar_left = true;
+            _bar_right = true;
+            _killed--;
+        }
         int xx = Mathf.FloorToInt(_killed / 10);
         int x = _killed - (xx * 10);
+        //  *(_num_right_posY / 866)
         if (!_bar_left && !_bar_right)
         {
             _killed_old = _killed;
@@ -50,7 +64,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
                 }
                 if (x > 0)
                 {
-                    if (Num_Right.transform.position.y > (_num_right_posY - (31.6f * x)))
+                    if (Num_Right.transform.position.y > (_num_right_posY - (_baraban_right_y * x)))
                         Num_Right.transform.Translate(0, Time.deltaTime * _baraban_right_speed * (_killed_old - _killed), 0);
                     else
                         _bar_right = false;
@@ -76,7 +90,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
                 }
                 if (x < 9)
                 {
-                    if (Num_Right.transform.position.y < (_num_right_posY - (31.6f * x)))
+                    if (Num_Right.transform.position.y < (_num_right_posY - (_baraban_right_y * x * (_num_right_posY / 866))))
                         Num_Right.transform.Translate(0, Time.deltaTime * _baraban_right_speed * (_killed_old - _killed), 0);
                     else
                     {
@@ -86,7 +100,7 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
                 }
                 else
                 {
-                    if (Num_Right.transform.position.y > (_num_right_posY - (31.6f * 9)))
+                    if (Num_Right.transform.position.y > (_num_right_posY - (_baraban_right_y * 9 * (_num_right_posY / 866))))
                         Num_Right.transform.Translate(0, Time.deltaTime * _baraban_right_speed * -9, 0);
                     else
                     {
