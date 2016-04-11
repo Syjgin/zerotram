@@ -27,14 +27,14 @@ public class SelectBonusWindow : MonoBehaviour
 	        {
 	            GameObject instantiated = Instantiate(_bonusPanelPrefab);
 	            RectTransform instRect = instantiated.GetComponent<RectTransform>();
-                instRect.SetParent(_scrollContent);
+                instRect.SetParent(_scrollContent, false);
                 instRect.transform.localPosition = new Vector3(0, -index*ItemHeight);
 	            Image image = instantiated.GetComponentInChildren<Image>();
 	            image.sprite = currentSprite;
                 string description = GetBonusDescription(currentType);
 	            Text textField = instantiated.GetComponentInChildren<Text>();
 	            textField.text = description;
-	            Button but = instantiated.GetComponentInChildren<Button>();
+	            Button but = instantiated.GetComponent<Button>();
 	            var copyType = currentType;
 	            but.onClick.AddListener(() =>
                 {
