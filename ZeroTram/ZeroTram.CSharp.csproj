@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\Data\Bonuses\WheelMegaBonus.cs" />
     <Compile Include="Assets\Scripts\Data\Bonuses\WrenchBonus.cs" />
     <Compile Include="Assets\Scripts\Data\PersistentDataStorage.cs" />
+    <Compile Include="Assets\Scripts\Data\ServerConfigLoader.cs" />
     <Compile Include="Assets\Scripts\Data\StationInfo.cs" />
     <Compile Include="Assets\Scripts\GUI\BoomEffect.cs" />
     <Compile Include="Assets\Scripts\GUI\CurrentBonusTimer.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Assets\Scripts\Level\Floor\FloorCollisionDetector.cs" />
     <Compile Include="Assets\Scripts\Level\GameStateNotificationListener.cs" />
     <Compile Include="Assets\Scripts\Level\NewParallax.cs" />
-    <Compile Include="Assets\Scripts\Level\Parallax.cs" />
     <Compile Include="Assets\Scripts\Level\RandomObject.cs" />
     <Compile Include="Assets\Scripts\Level\ScrollingScript.cs" />
     <Compile Include="Assets\Scripts\Managers\GUIManager.cs" />
