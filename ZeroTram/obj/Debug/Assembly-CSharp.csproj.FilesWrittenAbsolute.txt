@@ -1,0 +1,17 @@
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/UnityEngine.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/UnityEditor.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/UnityEngine.UI.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/UnityEngine.Networking.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Unity.DataContract.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Mono.Cecil.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Unity.SerializationLogic.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Unity.UNetWeaver.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Unity.CecilTools.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/home/harinezumi/projects/zerotram/ZeroTram/Temp/bin/Debug/Assembly-CSharp.dll
+/home/harinezumi/projects/zerotram/ZeroTram/obj/Debug/Assembly-CSharp.dll
+/home/harinezumi/projects/zerotram/ZeroTram/obj/Debug/Assembly-CSharp.dll.mdb

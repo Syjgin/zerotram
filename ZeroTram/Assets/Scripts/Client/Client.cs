@@ -11,9 +11,17 @@ namespace Assets.Scripts.Client
     {
         private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
         private const String SavedUseridString = "UserId";
+		private const String SavedTokenString = "ServerToken";
+
 
         private static string UserId;
         private static string Token;
+
+		private static bool IsClientDisabled;
+
+		public void DisableClient() {
+			IsClientDisabled = true;
+		}
 
         public bool IsUserIdSaved()
         {
@@ -37,8 +45,24 @@ namespace Assets.Scripts.Client
             POST("user/register", new Dictionary<string, string> { { "uuid", userName } }, onComplete);
         }
 
-        public void AuthorizeUser(string token)
+		public void UpdateToken(String token){
+			Token = token;
+			PlayerPrefs.SetString(SavedTokenString, token);
+		}
+
+		public void AuthorizeUser(Action<JSONObject> onComplete)
         {
+			if(Token == null) {
+				if(PlayerPrefs.HasKey (SavedTokenString)) {
+					Token = PlayerPrefs.GetString (SavedTokenString);
+				} else {
+					String response = "{\"error\": \"no token found\"}";
+					JSONObject jsonResponse = new JSONObject (response);
+					jsonResponse.Bake ();
+					onComplete (jsonResponse);
+					return;
+				}
+			}
             if (UserId == null)
             {
                 if (PlayerPrefs.HasKey(SavedUseridString))
@@ -47,19 +71,14 @@ namespace Assets.Scripts.Client
                 }
                 else
                 {
-                    Debug.Log("no user id found");
-                    return;   
+					String response = "{\"error\": \"no userid found\"}";
+					JSONObject jsonResponse = new JSONObject (response);
+					jsonResponse.Bake ();
+					onComplete (jsonResponse);
+					return;   
                 }
             }
-            POST("user/authorize", new Dictionary<string, string> { { "token", token }, {"uuid", UserId} }, result =>
-            {
-                if (result.HasField("error"))
-                {
-                    Debug.Log("authorization error" + result.GetField("message").str);
-                    return;
-                }
-                Token = result.GetField("token").str;
-            });
+			POST ("user/authorize", new Dictionary<string, string> { { "token", Token }, { "uuid", UserId } }, onComplete);
         }
 
         public void BindUser(string newUsername, Action<JSONObject> onComplete)
