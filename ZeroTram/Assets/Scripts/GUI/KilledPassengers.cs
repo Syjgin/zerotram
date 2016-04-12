@@ -33,18 +33,18 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.E))
-        //{
-        //    _bar_left = true;
-        //    _bar_right = true;
-        //    _killed++;
-        //}
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    _bar_left = true;
-        //    _bar_right = true;
-        //    _killed--;
-        //}
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _bar_left = true;
+            _bar_right = true;
+            _killed++;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _bar_left = true;
+            _bar_right = true;
+            _killed--;
+        }
         int xx = Mathf.FloorToInt(_killed / 10);
         int x = _killed - (xx * 10);
         if (!_bar_left && !_bar_right)
