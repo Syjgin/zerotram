@@ -58,6 +58,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -103,6 +109,7 @@
     <Compile Include="Assets\Scripts\GUI\FadeTimer.cs" />
     <Compile Include="Assets\Scripts\GUI\GameOverHandler.cs" />
     <Compile Include="Assets\Scripts\GUI\HaresPassengers.cs" />
+    <Compile Include="Assets\Scripts\GUI\HpScript.cs" />
     <Compile Include="Assets\Scripts\GUI\KilledPassengers.cs" />
     <Compile Include="Assets\Scripts\GUI\MegaBonusButton.cs" />
     <Compile Include="Assets\Scripts\GUI\MegaBonusIcon.cs" />
