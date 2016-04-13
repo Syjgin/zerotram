@@ -68,36 +68,116 @@ namespace Assets
             }
             else
             {
-                if (Num_Left.transform.position.y > (_num_posY - (_baraban_y * xxxx)))
-                    Num_Left.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
-                else
+                if (_bar_left)
                 {
-                    Num_Left.transform.position = new Vector3(Num_Left.transform.position.x, _num_posY - (_baraban_y * xxxx), Num_Left.transform.position.z);
-                    _bar_left = false;
-                }
-                _bar_left_middle = false;
-                if (_time < _time_old)
-                {
-                    if (xx < 9)
+                    if (Num_Left.transform.position.y > (_num_posY - (_baraban_y * xxxx)))
+                        Num_Left.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
+                    else
                     {
-                        if (Num_Right_Middle.transform.position.y < (_num_posY - (_baraban_y * xx)))
-                            Num_Right_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
+                        Num_Left.transform.position = new Vector3(Num_Left.transform.position.x, _num_posY - (_baraban_y * xxxx), Num_Left.transform.position.z);
+                        _bar_left = false;
+                    }
+                }
+                if (_bar_left_middle)
+                {
+                    if (_time < _time_old)
+                    {
+                        if (xxx < 9)
+                        {
+                            if (Num_Left_Middle.transform.position.y < (_num_posY - (_baraban_y * xxx)))
+                                Num_Left_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
+                            else
+                            {
+                                Num_Left_Middle.transform.position = new Vector3(Num_Left_Middle.transform.position.x, _num_posY - (_baraban_y * xxx), Num_Left_Middle.transform.position.z);
+                                _bar_left_middle = false;
+                            }
+                        }
                         else
                         {
-                            Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * xx), Num_Right_Middle.transform.position.z);
-                            _bar_right_middle = false;
+                            if (Num_Left_Middle.transform.position.y > (_num_posY - (_baraban_y * 9)))
+                                Num_Left_Middle.transform.Translate(0, -0.2f * _baraban_speed, 0);
+                            else
+                            {
+                                Num_Left_Middle.transform.position = new Vector3(Num_Left_Middle.transform.position.x, _num_posY - (_baraban_y * 9), Num_Left_Middle.transform.position.z);
+                                _bar_left_middle = false;
+                            }
                         }
                     }
                     else
                     {
-                        if (Num_Right_Middle.transform.position.y > (_num_posY - (_baraban_y * 9)))
-                            Num_Right_Middle.transform.Translate(0, -0.1f * _baraban_speed, 0);
+                        if (xxx > 0)
+                        {
+                            if (Num_Left_Middle.transform.position.y > (_num_posY - (_baraban_y * xxx)))
+                                Num_Left_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
+                            else
+                            {
+                                Num_Left_Middle.transform.position = new Vector3(Num_Left_Middle.transform.position.x, _num_posY - (_baraban_y * xxx), Num_Left_Middle.transform.position.z);
+                                _bar_left_middle = false;
+                            }
+                        }
                         else
                         {
-                            Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * 9), Num_Right_Middle.transform.position.z);
-                            _bar_right_middle = false;
+                            if (Num_Left_Middle.transform.position.y < _num_posY)
+                                Num_Left_Middle.transform.Translate(0, 0.45f * _baraban_speed, 0);
+                            else
+                            {
+                                Num_Left_Middle.transform.position = new Vector3(Num_Left_Middle.transform.position.x, _num_posY, Num_Left_Middle.transform.position.z);
+                                _bar_left_middle = false;
+                            }
                         }
                     }
+                }
+                if (_bar_right_middle)
+                {
+                    if (_time < _time_old)
+                    {
+                        if (xx < 5)
+                        {
+                            if (Num_Right_Middle.transform.position.y < (_num_posY - (_baraban_y * xx)))
+                                Num_Right_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
+                            else
+                            {
+                                Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * xx), Num_Right_Middle.transform.position.z);
+                                _bar_right_middle = false;
+                            }
+                        }
+                        else
+                        {
+                            if (Num_Right_Middle.transform.position.y > (_num_posY - (_baraban_y * 5)))
+                                Num_Right_Middle.transform.Translate(0, -0.1f * _baraban_speed, 0);
+                            else
+                            {
+                                Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * 5), Num_Right_Middle.transform.position.z);
+                                _bar_right_middle = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (xx > 0)
+                        {
+                            if (Num_Right_Middle.transform.position.y > (_num_posY - (_baraban_y * xx)))
+                                Num_Right_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
+                            else
+                            {
+                                Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * xx), Num_Right_Middle.transform.position.z);
+                                _bar_right_middle = false;
+                            }
+                        }
+                        else
+                        {
+                            if (Num_Right_Middle.transform.position.y < _num_posY)
+                                Num_Right_Middle.transform.Translate(0, 0.45f * _baraban_speed, 0);
+                            else
+                            {
+                                Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY, Num_Right_Middle.transform.position.z);
+                                _bar_right_middle = false;
+                            }
+                        }
+                    }
+                }
+                if (_time < _time_old)
+                {
                     if (x < 9)
                     {
                         if (Num_Right.transform.position.y < (_num_posY - (_baraban_y * x)))
@@ -111,7 +191,7 @@ namespace Assets
                     else
                     {
                         if (Num_Right.transform.position.y > (_num_posY - (_baraban_y * 9)))
-                            Num_Right.transform.Translate(0, -0.1f * _baraban_speed, 0);
+                            Num_Right.transform.Translate(0, -0.2f * _baraban_speed, 0);
                         else
                         {
                             Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_posY - (_baraban_y * 9), Num_Right.transform.position.z);
@@ -121,26 +201,6 @@ namespace Assets
                 }
                 else
                 {
-                    if (xx > 0)
-                    {
-                        if (Num_Right_Middle.transform.position.y > (_num_posY - (_baraban_y * xx)))
-                            Num_Right_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_time_old - _time), 0);
-                        else
-                        {
-                            Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY - (_baraban_y * xx), Num_Right_Middle.transform.position.z);
-                            _bar_right_middle = false;
-                        }
-                    }
-                    else
-                    {
-                        if (Num_Right_Middle.transform.position.y < _num_posY)
-                            Num_Right_Middle.transform.Translate(0, 0.45f * _baraban_speed, 0);
-                        else
-                        {
-                            Num_Right_Middle.transform.position = new Vector3(Num_Right_Middle.transform.position.x, _num_posY, Num_Right_Middle.transform.position.z);
-                            _bar_right_middle = false;
-                        }
-                    }
                     if (x > 0)
                     {
                         if (Num_Right.transform.position.y > (_num_posY - (_baraban_y * x)))

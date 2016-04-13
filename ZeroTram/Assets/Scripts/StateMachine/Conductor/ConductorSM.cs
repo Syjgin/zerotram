@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class ConductorSM : MovableCharacterSM
 {
+    public static int _hp { get; set; }
     public bool IsInWayoutZone;
 
     private PassengerSM _dragTarget;
@@ -145,6 +146,7 @@ public class ConductorSM : MovableCharacterSM
         base.AddDamageValue(damage);
         int lifesPercent = Mathf.RoundToInt(100 * (Hp / (float)InitialLifes));
         _lifes.text = lifesPercent + "%";
+        _hp = lifesPercent;
     }
 
     public bool IsDragging()
