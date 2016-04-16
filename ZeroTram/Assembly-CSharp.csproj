@@ -85,6 +85,7 @@
      <Compile Include="Assets\Scripts\GUI\FadeTimer.cs" />
      <Compile Include="Assets\Scripts\GUI\GameOverHandler.cs" />
      <Compile Include="Assets\Scripts\GUI\HaresPassengers.cs" />
+     <Compile Include="Assets\Scripts\GUI\HpScript.cs" />
      <Compile Include="Assets\Scripts\GUI\KilledPassengers.cs" />
      <Compile Include="Assets\Scripts\GUI\MegaBonusButton.cs" />
      <Compile Include="Assets\Scripts\GUI\MegaBonusIcon.cs" />
@@ -92,6 +93,7 @@
      <Compile Include="Assets\Scripts\GUI\NewCharacterWindowHandler.cs" />
      <Compile Include="Assets\Scripts\GUI\PauseHandler.cs" />
      <Compile Include="Assets\Scripts\GUI\RecordsVisualizer.cs" />
+     <Compile Include="Assets\Scripts\GUI\ResolutionAdapter.cs" />
      <Compile Include="Assets\Scripts\GUI\SelectBonusWindow.cs" />
      <Compile Include="Assets\Scripts\GUI\StationCount.cs" />
      <Compile Include="Assets\Scripts\GUI\StickNote.cs" />
