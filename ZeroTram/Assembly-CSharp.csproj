@@ -76,6 +76,7 @@
      <Compile Include="Assets\Scripts\Data\Bonuses\WheelBonus.cs" />
      <Compile Include="Assets\Scripts\Data\Bonuses\WheelMegaBonus.cs" />
      <Compile Include="Assets\Scripts\Data\Bonuses\WrenchBonus.cs" />
+     <Compile Include="Assets\Scripts\Data\EncryptedPlayerPrefs.cs" />
      <Compile Include="Assets\Scripts\Data\PersistentDataStorage.cs" />
      <Compile Include="Assets\Scripts\Data\ServerConfigLoader.cs" />
      <Compile Include="Assets\Scripts\Data\StationInfo.cs" />

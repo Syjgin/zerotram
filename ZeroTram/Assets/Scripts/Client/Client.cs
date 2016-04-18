@@ -12,20 +12,44 @@ namespace Assets.Scripts.Client
         private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
         private const String SavedUseridString = "UserId";
 		private const String SavedTokenString = "ServerToken";
+		private const String TicketsRecordKey = "TicketsRecordKey";
 
+		private int currentRecord;
+		private bool recordLoaded;
+		private String userId;
+		private String token;
 
-        private static string UserId;
-        private static string Token;
+		private String GetUserid() {
+			if(userId == null) {
+				userId = AssemblyCSharp.EncryptedPlayerPrefs.GetString (SavedUseridString, "");
+			}
+			return userId;
+		}
 
-		private static bool IsClientDisabled;
+		private void SetUserid(String newid) {
+			userId = newid;
+			AssemblyCSharp.EncryptedPlayerPrefs.SetString (SavedUseridString, newid);
+		}
+
+		private String GetToken() {
+			if(token == null) {
+				token = AssemblyCSharp.EncryptedPlayerPrefs.GetString (SavedTokenString, "");
+			}
+			return token;
+		}
+
+		public void UpdateToken(String newToken) {
+			token = newToken;
+			AssemblyCSharp.EncryptedPlayerPrefs.SetString (SavedTokenString, newToken);
+		}
 
 		public void DisableClient() {
-			IsClientDisabled = true;
+			
 		}
 
         public bool IsUserIdSaved()
         {
-            return PlayerPrefs.HasKey(SavedUseridString);
+			return AssemblyCSharp.EncryptedPlayerPrefs.HasKey (SavedUseridString);
         }
         
         public void LoadConfig(Action<JSONObject> onComplete)
@@ -41,44 +65,33 @@ namespace Assets.Scripts.Client
         public void RegisterUser(string userName, Action<JSONObject> onComplete)
         {
             PlayerPrefs.SetString(SavedUseridString, userName);
-            UserId = userName;
+			SetUserid (userName);
             POST("user/register", new Dictionary<string, string> { { "uuid", userName } }, onComplete);
         }
 
-		public void UpdateToken(String token){
-			Token = token;
-			PlayerPrefs.SetString(SavedTokenString, token);
-		}
-
 		public void AuthorizeUser(Action<JSONObject> onComplete)
         {
-			if(Token == null) {
-				if(PlayerPrefs.HasKey (SavedTokenString)) {
-					Token = PlayerPrefs.GetString (SavedTokenString);
-				} else {
-					String response = "{\"error\": \"no token found\"}";
-					JSONObject jsonResponse = new JSONObject (response);
-					jsonResponse.Bake ();
-					onComplete (jsonResponse);
-					return;
-				}
+			if(token == null) {
+				token = GetToken ();
 			}
-            if (UserId == null)
-            {
-                if (PlayerPrefs.HasKey(SavedUseridString))
-                {
-                    UserId = PlayerPrefs.GetString(SavedUseridString);
-                }
-                else
-                {
-					String response = "{\"error\": \"no userid found\"}";
-					JSONObject jsonResponse = new JSONObject (response);
-					jsonResponse.Bake ();
-					onComplete (jsonResponse);
-					return;   
-                }
-            }
-			POST ("user/authorize", new Dictionary<string, string> { { "token", Token }, { "uuid", UserId } }, onComplete);
+			if(token == "") {
+				String response = "{\"error\": \"no token found\"}";
+				JSONObject jsonResponse = new JSONObject (response);
+				jsonResponse.Bake ();
+				onComplete (jsonResponse);
+				return;
+			}
+			if (userId == null) {
+				userId = GetUserid ();
+			}
+			if(userId == "") {
+				String response = "{\"error\": \"no userid found\"}";
+				JSONObject jsonResponse = new JSONObject (response);
+				jsonResponse.Bake ();
+				onComplete (jsonResponse);
+				return;   
+			}    
+			POST ("user/authorize", new Dictionary<string, string> { { "token", token }, { "uuid", userId } }, onComplete);
         }
 
         public void BindUser(string newUsername, Action<JSONObject> onComplete)
@@ -87,7 +100,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            POST("user/bind", new Dictionary<string, string> { { "token", Token }, {"bindid", newUsername} }, onComplete);
+            POST("user/bind", new Dictionary<string, string> { { "token", token }, {"bindid", newUsername} }, onComplete);
         }
 
         public void UnlockEvent(string eventName, string stringParameter, int intParameter, Action<JSONObject> onComplete)
@@ -96,7 +109,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            POST("user/authorize", new Dictionary<string, string> { { "token", Token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
+            POST("user/authorize", new Dictionary<string, string> { { "token", token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
         }
 
         public void GetEvents(Action<JSONObject> onComplete)
@@ -105,7 +118,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            GET("event/"+ UserId, onComplete);
+			GET("event/"+ userId, onComplete);
         }
 
         public void GetBonuses(Action<JSONObject> onComplete)
@@ -114,7 +127,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            GET("bonus/" + UserId, onComplete);
+			GET("bonus/" + userId, onComplete);
         }
 
         public void UseBonus(string bonusName, Action<JSONObject> onComplete)
@@ -123,7 +136,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", Token} },  onComplete);
+            POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", token} },  onComplete);
         }
 
         public void DecreaseTramLives(Action<JSONObject> onComplete)
@@ -132,7 +145,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            POST("tramlives/decrease", new Dictionary<string, string> { { "token", Token } }, onComplete);
+            POST("tramlives/decrease", new Dictionary<string, string> { { "token", token } }, onComplete);
         }
 
         public void GetTramLives(Action<JSONObject> onComplete)
@@ -141,7 +154,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            GET("tramlives/get/" + UserId, onComplete);
+			GET("tramlives/get/" + userId, onComplete);
         }
 
         public void GetResources(Action<JSONObject> onComplete)
@@ -150,7 +163,7 @@ namespace Assets.Scripts.Client
             {
                 return;
             }
-            GET("resources/" + UserId, onComplete);
+			GET("resources/" + userId, onComplete);
         }
 
         private WWW GET(string url, System.Action<JSONObject> onComplete)
@@ -197,31 +210,51 @@ namespace Assets.Scripts.Client
 
         private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
         {
-            if (UserId == null)
+			if (userId == null)
             {
-                if (PlayerPrefs.HasKey(SavedUseridString))
-                {
-                    UserId = PlayerPrefs.GetString(SavedUseridString);
-                    return true;
-                }
-                JSONObject response = new JSONObject();
-                response.AddField("error", "null userid passed");
-                onComplete(response);
-                return false;
+				userId = GetUserid ();
+				if (userId == "") {
+					JSONObject response = new JSONObject();
+					response.AddField("error", "null userid passed");
+					onComplete(response);
+					return false;	
+				}
             }
             return true;
         }
 
         private bool HandleUnsetToken(System.Action<JSONObject> onComplete)
         {
-            if (Token == null)
+            if (token == null)
             {
-                JSONObject response = new JSONObject();
-                response.AddField("error", "null token passed");
-                onComplete(response);
-                return false;
+				token = GetToken ();
+				if(token == "") {
+					JSONObject response = new JSONObject();
+					response.AddField("error", "null token passed");
+					onComplete(response);
+					return false;	
+				}
             }
             return true;
         }
+
+		public int LoadRecord() {
+			if(!recordLoaded) {
+				recordLoaded = true;
+				currentRecord = AssemblyCSharp.EncryptedPlayerPrefs.GetInt (TicketsRecordKey, 0);
+			}
+			return currentRecord;
+		}
+
+		public void SaveRecord(int newRecord, System.Action<JSONObject> onComplete) {
+			if(newRecord > currentRecord) {
+				currentRecord = newRecord;
+				AssemblyCSharp.EncryptedPlayerPrefs.SetInt (TicketsRecordKey, currentRecord);
+				if(!HandleUnsetToken (onComplete)) {
+					return;
+				}
+				POST ("/event/unlock/", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intValue", newRecord.ToString()}}, onComplete);
+			}
+		}
     }
 }
