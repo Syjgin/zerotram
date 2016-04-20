@@ -1,5 +1,5 @@
-﻿using Assets.Scripts.Math;
-using UnityEngine;
+﻿using UnityEngine;
+
 public class PassengerSitState : MovableCharacterState
 {
     private PassengerSM _passenger;

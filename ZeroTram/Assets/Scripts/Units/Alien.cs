@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets
+public class Alien : PassengerSM
 {
-    public class Alien : PassengerSM
-    {
-        public override string GetClassName()
-        {
-            return "alien";
-        }
-    }
+	public override string GetClassName()
+	{
+		return "alien";
+	}
 }

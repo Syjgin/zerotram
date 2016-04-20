@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets;
-using Assets.Scripts.Math;
 using UnityEngine;
 
 public class PassengerIdleState : IdleState

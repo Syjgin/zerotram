@@ -1,6 +1,4 @@
 ﻿using System;
-using Assets;
-using Assets.Scripts.Level;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -14,6 +12,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _countText;
     [SerializeField] private Text _captionText;
     [SerializeField] private GameObject _stickCaption;
+	[SerializeField] private Client _client;
 
     private const string DeathReason = "Кондуктор погиб";
     private const string HareReason = "Слишком много зайцев";

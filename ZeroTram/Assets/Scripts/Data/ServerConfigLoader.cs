@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Client;
 using UnityEngine.SceneManagement;
 
 public class ServerConfigLoader : MonoBehaviour

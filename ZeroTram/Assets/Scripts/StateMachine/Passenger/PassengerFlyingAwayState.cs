@@ -1,6 +1,4 @@
 ﻿using System;
-using Assets;
-using Assets.Scripts.Math;
 using UnityEngine;
 public class PassengerFlyingAwayState : MovableCharacterState
 {

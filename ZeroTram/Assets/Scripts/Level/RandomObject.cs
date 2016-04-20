@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using Assets;
 using System.Collections;
-using Assets.Scripts.Math;
 
 public class RandomObject : MonoBehaviour {
     public GameObject[] go;

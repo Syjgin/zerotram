@@ -1,9 +1,7 @@
 ﻿using System;
-using Assets;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Math;
 using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour
