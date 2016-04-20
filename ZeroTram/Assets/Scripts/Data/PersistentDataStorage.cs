@@ -7,6 +7,7 @@ using UnityEngine;
 public static class PersistentDataStorage
 {
     private const char Separator = ';';
+
     public static void SaveStringDictionary(string key, Dictionary<string, List<string>> dict)
     {
         if(dict.Count == 0)
