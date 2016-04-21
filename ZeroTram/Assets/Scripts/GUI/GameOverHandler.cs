@@ -100,5 +100,12 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         gameOverMenu.SetActive(true);
         if(_stateInfo.TicketCount > 0)
             RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
+		if(_stateInfo.TicketCount > _client.GetRecord ()) {
+			_client.SaveRecord (_stateInfo.TicketCount, (result) => {
+				if(result.HasField ("money")) {
+					Debug.Log (result);
+				}
+			});
+		}
     }
 }

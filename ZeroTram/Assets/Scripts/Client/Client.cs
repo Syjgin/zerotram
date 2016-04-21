@@ -7,12 +7,12 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
-	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
+	private const String ServerName = "http://www.golang-zerotramserver.rhcloud.com/";
 	private const String SavedUseridString = "UserId";
 	private const String SavedTokenString = "ServerToken";
 	private const String TicketsRecordKey = "TicketsRecordKey";
 
-	private int currentRecord;
+	private int _currentRecord;
 	private bool recordLoaded;
 	private String userId;
 	private String token;
@@ -236,18 +236,18 @@ public class Client : MonoBehaviour
 		return true;
 	}
 
-	public int LoadRecord() {
+	public int GetRecord() {
 		if(!recordLoaded) {
 			recordLoaded = true;
-			currentRecord = EncryptedPlayerPrefs.GetInt (TicketsRecordKey, 0);
+			_currentRecord = EncryptedPlayerPrefs.GetInt (TicketsRecordKey, 0);
 		}
-		return currentRecord;
+		return _currentRecord;
 	}
 
 	public void SaveRecord(int newRecord, System.Action<JSONObject> onComplete) {
-		if(newRecord > currentRecord) {
-			currentRecord = newRecord;
-			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, currentRecord);
+		if(newRecord > _currentRecord) {
+			_currentRecord = newRecord;
+			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, _currentRecord);
 			if(!HandleUnsetToken (onComplete)) {
 				return;
 			}
