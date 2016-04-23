@@ -7,37 +7,37 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
-	private const String ServerName = "http://www.golang-zerotramserver.rhcloud.com/";
+	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
 	private const String SavedUseridString = "UserId";
 	private const String SavedTokenString = "ServerToken";
 	private const String TicketsRecordKey = "TicketsRecordKey";
 
 	private int _currentRecord;
-	private bool recordLoaded;
-	private String userId;
-	private String token;
+	private bool _isRecordLoaded;
+	private String _userId;
+	private String _token;
 
 	private String GetUserid() {
-		if(userId == null) {
-			userId = EncryptedPlayerPrefs.GetString (SavedUseridString, "");
+		if(_userId == null) {
+			_userId = EncryptedPlayerPrefs.GetString (SavedUseridString, "");
 		}
-		return userId;
+		return _userId;
 	}
 
 	private void SetUserid(String newid) {
-		userId = newid;
+		_userId = newid;
 		EncryptedPlayerPrefs.SetString (SavedUseridString, newid);
 	}
 
 	private String GetToken() {
-		if(token == null) {
-			token = EncryptedPlayerPrefs.GetString (SavedTokenString, "");
+		if(_token == null) {
+			_token = EncryptedPlayerPrefs.GetString (SavedTokenString, "");
 		}
-		return token;
+		return _token;
 	}
 
 	public void UpdateToken(String newToken) {
-		token = newToken;
+		_token = newToken;
 		EncryptedPlayerPrefs.SetString (SavedTokenString, newToken);
 	}
 
@@ -69,27 +69,27 @@ public class Client : MonoBehaviour
 
 	public void AuthorizeUser(Action<JSONObject> onComplete)
 	{
-		if(token == null) {
-			token = GetToken ();
+		if(_token == null) {
+			_token = GetToken ();
 		}
-		if(token == "") {
+		if(_token == "") {
 			String response = "{\"error\": \"no token found\"}";
 			JSONObject jsonResponse = new JSONObject (response);
 			jsonResponse.Bake ();
 			onComplete (jsonResponse);
 			return;
 		}
-		if (userId == null) {
-			userId = GetUserid ();
+		if (_userId == null) {
+			_userId = GetUserid ();
 		}
-		if(userId == "") {
+		if(_userId == "") {
 			String response = "{\"error\": \"no userid found\"}";
 			JSONObject jsonResponse = new JSONObject (response);
 			jsonResponse.Bake ();
 			onComplete (jsonResponse);
 			return;   
 		}    
-		POST ("user/authorize", new Dictionary<string, string> { { "token", token }, { "uuid", userId } }, onComplete);
+		POST ("user/authorize", new Dictionary<string, string> { { "token", _token }, { "uuid", _userId } }, onComplete);
 	}
 
 	public void BindUser(string newUsername, Action<JSONObject> onComplete)
@@ -98,7 +98,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("user/bind", new Dictionary<string, string> { { "token", token }, {"bindid", newUsername} }, onComplete);
+		POST("user/bind", new Dictionary<string, string> { { "token", _token }, {"bindid", newUsername} }, onComplete);
 	}
 
 	public void UnlockEvent(string eventName, string stringParameter, int intParameter, Action<JSONObject> onComplete)
@@ -107,7 +107,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("user/authorize", new Dictionary<string, string> { { "token", token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
+		POST("user/authorize", new Dictionary<string, string> { { "token", _token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
 	}
 
 	public void GetEvents(Action<JSONObject> onComplete)
@@ -116,7 +116,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		GET("event/"+ userId, onComplete);
+		GET("event/"+ _userId, onComplete);
 	}
 
 	public void GetBonuses(Action<JSONObject> onComplete)
@@ -125,7 +125,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		GET("bonus/" + userId, onComplete);
+		GET("bonus/" + _userId, onComplete);
 	}
 
 	public void UseBonus(string bonusName, Action<JSONObject> onComplete)
@@ -134,7 +134,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", token} },  onComplete);
+		POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
 	}
 
 	public void DecreaseTramLives(Action<JSONObject> onComplete)
@@ -143,7 +143,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("tramlives/decrease", new Dictionary<string, string> { { "token", token } }, onComplete);
+		POST("tramlives/decrease", new Dictionary<string, string> { { "token", _token } }, onComplete);
 	}
 
 	public void GetTramLives(Action<JSONObject> onComplete)
@@ -152,7 +152,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		GET("tramlives/get/" + userId, onComplete);
+		GET("tramlives/get/" + _userId, onComplete);
 	}
 
 	public void GetResources(Action<JSONObject> onComplete)
@@ -161,7 +161,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		GET("resources/" + userId, onComplete);
+		GET("resources/" + _userId, onComplete);
 	}
 
 	private WWW GET(string url, System.Action<JSONObject> onComplete)
@@ -208,10 +208,10 @@ public class Client : MonoBehaviour
 
 	private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
 	{
-		if (userId == null)
+		if (_userId == null)
 		{
-			userId = GetUserid ();
-			if (userId == "") {
+			_userId = GetUserid ();
+			if (_userId == "") {
 				JSONObject response = new JSONObject();
 				response.AddField("error", "null userid passed");
 				onComplete(response);
@@ -223,10 +223,10 @@ public class Client : MonoBehaviour
 
 	private bool HandleUnsetToken(System.Action<JSONObject> onComplete)
 	{
-		if (token == null)
+		if (_token == null)
 		{
-			token = GetToken ();
-			if(token == "") {
+			_token = GetToken ();
+			if(_token == "") {
 				JSONObject response = new JSONObject();
 				response.AddField("error", "null token passed");
 				onComplete(response);
@@ -237,8 +237,8 @@ public class Client : MonoBehaviour
 	}
 
 	public int GetRecord() {
-		if(!recordLoaded) {
-			recordLoaded = true;
+		if(!_isRecordLoaded) {
+			_isRecordLoaded = true;
 			_currentRecord = EncryptedPlayerPrefs.GetInt (TicketsRecordKey, 0);
 		}
 		return _currentRecord;
@@ -251,7 +251,7 @@ public class Client : MonoBehaviour
 			if(!HandleUnsetToken (onComplete)) {
 				return;
 			}
-			POST ("/event/unlock/", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intValue", newRecord.ToString()}}, onComplete);
+			POST ("event/unlock", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intParameter", newRecord.ToString()}, {"token", _token}}, onComplete);
 		}
 	}
 }
