@@ -1,9 +1,8 @@
 ﻿using System;
-using Assets;
-using Assets.Scripts.Level;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 {
@@ -14,6 +13,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _countText;
     [SerializeField] private Text _captionText;
     [SerializeField] private GameObject _stickCaption;
+	[SerializeField] private Client _client;
 
     private const string DeathReason = "Кондуктор погиб";
     private const string HareReason = "Слишком много зайцев";
@@ -29,12 +29,12 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         _restartButton.onClick.AddListener(() =>
         {
             Time.timeScale = 1;
-            Application.LoadLevel("main");
+            SceneManager.LoadScene("main");
         });
         _exitButton.onClick.AddListener(() =>
         {
             Time.timeScale = 1;
-            Application.LoadLevel("MainMenu");
+			SceneManager.LoadScene("MainMenu");
         });
         GameController.GetInstance().AddListener(this);
     }
@@ -66,17 +66,17 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
                 if (!MapManager.GetInstance().IsNewWorldAnimationNeedToBePlayed())
                 {
                     MapManager.GetInstance().SetCurrentStation(nextStationId);
-                    Application.LoadLevel("main");
+					SceneManager.LoadScene("main");
                 }
                 else
                 {
-                    Application.LoadLevel("Map");
+					SceneManager.LoadScene("Map");
                 }
             });
             _exitButton.onClick.AddListener(() =>
             {
                 Time.timeScale = 1;
-                Application.LoadLevel("Map");
+				SceneManager.LoadScene("Map");
             });
         }
         else
@@ -101,5 +101,8 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         gameOverMenu.SetActive(true);
         if(_stateInfo.TicketCount > 0)
             RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
+		_client.SaveRecord (_stateInfo.TicketCount, (result) => {
+			Debug.Log (result);
+		});
     }
 }

@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Math;
-using UnityEngine;
+﻿using UnityEngine;
 public class PassengerDraggedState : MovableCharacterState
 {
     private float _timeSinceStateChanged;

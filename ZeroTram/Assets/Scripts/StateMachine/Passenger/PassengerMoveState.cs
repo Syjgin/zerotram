@@ -1,5 +1,4 @@
-﻿using Assets;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PassengerMoveState : MoveState
 {

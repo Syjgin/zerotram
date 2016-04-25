@@ -1,5 +1,4 @@
-﻿using Assets;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public abstract class AbstractBonus :IBonus

@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Client;
 using UnityEngine.SceneManagement;
 
 public class ServerConfigLoader : MonoBehaviour
@@ -12,7 +11,7 @@ public class ServerConfigLoader : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		//PlayerPrefs.DeleteAll ();
+		PlayerPrefs.DeleteAll ();
 	    if (ConfigReader.IsLocalConfigAvailable())
 	    {
 	        _serverClient.CheckConfig((result) =>

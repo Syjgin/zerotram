@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Math;
 
 public class Bench : MonoBehaviour
 {

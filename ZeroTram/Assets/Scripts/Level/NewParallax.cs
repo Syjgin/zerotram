@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Assets;
 using System.Collections.Generic;
 
 public class NewParallax : MonoBehaviour

@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using Assets;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
