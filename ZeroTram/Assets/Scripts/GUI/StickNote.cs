@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets;
 using UnityEngine.UI;
 
 public class StickNote : MonoBehaviour

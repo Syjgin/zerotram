@@ -5,204 +5,253 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Client
+public class Client : MonoBehaviour
 {
-    public class Client : MonoBehaviour
-    {
-        private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
-        private const String SavedUseridString = "UserId";
+	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
+	private const String SavedUseridString = "UserId";
+	private const String SavedTokenString = "ServerToken";
+	private const String TicketsRecordKey = "TicketsRecordKey";
 
-        private static string UserId;
-        private static string Token;
+	private int _currentRecord;
+	private bool _isRecordLoaded;
+	private String _userId;
+	private String _token;
 
-        public bool IsUserIdSaved()
-        {
-            return PlayerPrefs.HasKey(SavedUseridString);
-        }
-        
-        public void LoadConfig(Action<JSONObject> onComplete)
-        {
-            GET("config/get", onComplete);
-        }
+	private String GetUserid() {
+		if(_userId == null) {
+			_userId = EncryptedPlayerPrefs.GetString (SavedUseridString, "");
+		}
+		return _userId;
+	}
 
-        public void CheckConfig(Action<JSONObject> onComplete)
-        {
-            GET("config/version", onComplete);
-        }
+	private void SetUserid(String newid) {
+		_userId = newid;
+		EncryptedPlayerPrefs.SetString (SavedUseridString, newid);
+	}
 
-        public void RegisterUser(string userName, Action<JSONObject> onComplete)
-        {
-            PlayerPrefs.SetString(SavedUseridString, userName);
-            UserId = userName;
-            POST("user/register", new Dictionary<string, string> { { "uuid", userName } }, onComplete);
-        }
+	private String GetToken() {
+		if(_token == null) {
+			_token = EncryptedPlayerPrefs.GetString (SavedTokenString, "");
+		}
+		return _token;
+	}
 
-        public void AuthorizeUser(string token)
-        {
-            if (UserId == null)
-            {
-                if (PlayerPrefs.HasKey(SavedUseridString))
-                {
-                    UserId = PlayerPrefs.GetString(SavedUseridString);
-                }
-                else
-                {
-                    Debug.Log("no user id found");
-                    return;   
-                }
-            }
-            POST("user/authorize", new Dictionary<string, string> { { "token", token }, {"uuid", UserId} }, result =>
-            {
-                if (result.HasField("error"))
-                {
-                    Debug.Log("authorization error" + result.GetField("message").str);
-                    return;
-                }
-                Token = result.GetField("token").str;
-            });
-        }
+	public void UpdateToken(String newToken) {
+		_token = newToken;
+		EncryptedPlayerPrefs.SetString (SavedTokenString, newToken);
+	}
 
-        public void BindUser(string newUsername, Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetToken(onComplete))
-            {
-                return;
-            }
-            POST("user/bind", new Dictionary<string, string> { { "token", Token }, {"bindid", newUsername} }, onComplete);
-        }
+	public void DisableClient() {
 
-        public void UnlockEvent(string eventName, string stringParameter, int intParameter, Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetToken(onComplete))
-            {
-                return;
-            }
-            POST("user/authorize", new Dictionary<string, string> { { "token", Token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
-        }
+	}
 
-        public void GetEvents(Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetUserid(onComplete))
-            {
-                return;
-            }
-            GET("event/"+ UserId, onComplete);
-        }
+	public bool IsUserIdSaved()
+	{
+		return EncryptedPlayerPrefs.HasKey (SavedUseridString);
+	}
 
-        public void GetBonuses(Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetUserid(onComplete))
-            {
-                return;
-            }
-            GET("bonus/" + UserId, onComplete);
-        }
+	public void LoadConfig(Action<JSONObject> onComplete)
+	{
+		GET("config/get", onComplete);
+	}
 
-        public void UseBonus(string bonusName, Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetToken(onComplete))
-            {
-                return;
-            }
-            POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", Token} },  onComplete);
-        }
+	public void CheckConfig(Action<JSONObject> onComplete)
+	{
+		GET("config/version", onComplete);
+	}
 
-        public void DecreaseTramLives(Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetToken(onComplete))
-            {
-                return;
-            }
-            POST("tramlives/decrease", new Dictionary<string, string> { { "token", Token } }, onComplete);
-        }
+	public void RegisterUser(string userName, Action<JSONObject> onComplete)
+	{
+		PlayerPrefs.SetString(SavedUseridString, userName);
+		SetUserid (userName);
+		POST("user/register", new Dictionary<string, string> { { "uuid", userName } }, onComplete);
+	}
 
-        public void GetTramLives(Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetUserid(onComplete))
-            {
-                return;
-            }
-            GET("tramlives/get/" + UserId, onComplete);
-        }
+	public void AuthorizeUser(Action<JSONObject> onComplete)
+	{
+		if(_token == null) {
+			_token = GetToken ();
+		}
+		if(_token == "") {
+			String response = "{\"error\": \"no token found\"}";
+			JSONObject jsonResponse = new JSONObject (response);
+			jsonResponse.Bake ();
+			onComplete (jsonResponse);
+			return;
+		}
+		if (_userId == null) {
+			_userId = GetUserid ();
+		}
+		if(_userId == "") {
+			String response = "{\"error\": \"no userid found\"}";
+			JSONObject jsonResponse = new JSONObject (response);
+			jsonResponse.Bake ();
+			onComplete (jsonResponse);
+			return;   
+		}    
+		POST ("user/authorize", new Dictionary<string, string> { { "token", _token }, { "uuid", _userId } }, onComplete);
+	}
 
-        public void GetResources(Action<JSONObject> onComplete)
-        {
-            if (!HandleUnsetUserid(onComplete))
-            {
-                return;
-            }
-            GET("resources/" + UserId, onComplete);
-        }
+	public void BindUser(string newUsername, Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("user/bind", new Dictionary<string, string> { { "token", _token }, {"bindid", newUsername} }, onComplete);
+	}
 
-        private WWW GET(string url, System.Action<JSONObject> onComplete)
-        {
+	public void UnlockEvent(string eventName, string stringParameter, int intParameter, Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("user/authorize", new Dictionary<string, string> { { "token", _token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
+	}
 
-            WWW www = new WWW(ServerName + url);
-            StartCoroutine(WaitForRequest(www, onComplete));
-            return www;
-        }
+	public void GetEvents(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetUserid(onComplete))
+		{
+			return;
+		}
+		GET("event/"+ _userId, onComplete);
+	}
 
-        private WWW POST(string url, Dictionary<string, string> post, System.Action<JSONObject> onComplete)
-        {
-            WWWForm form = new WWWForm();
+	public void GetBonuses(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetUserid(onComplete))
+		{
+			return;
+		}
+		GET("bonus/" + _userId, onComplete);
+	}
 
-            foreach (KeyValuePair<string, string> post_arg in post)
-            {
-                form.AddField(post_arg.Key, post_arg.Value);
-            }
+	public void UseBonus(string bonusName, Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
+	}
 
-            WWW www = new WWW(ServerName + url, form);
+	public void DecreaseTramLives(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("tramlives/decrease", new Dictionary<string, string> { { "token", _token } }, onComplete);
+	}
 
-            StartCoroutine(WaitForRequest(www, onComplete));
-            return www;
-        }
+	public void GetTramLives(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetUserid(onComplete))
+		{
+			return;
+		}
+		GET("tramlives/get/" + _userId, onComplete);
+	}
 
-        private IEnumerator WaitForRequest(WWW www, System.Action<JSONObject> onComplete)
-        {
-            yield return www;
-            // check for errors
-            if (www.error == null)
-            {
-                JSONObject result = new JSONObject(www.text);
-                result.Bake();
-                onComplete(result);
-            }
-            else {
-                Debug.Log(www.error);
-                JSONObject result = new JSONObject();
-                result.AddField("error", www.error);
-                result.Bake();
-                onComplete(result);
-            }
-        }
+	public void GetResources(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetUserid(onComplete))
+		{
+			return;
+		}
+		GET("resources/" + _userId, onComplete);
+	}
 
-        private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
-        {
-            if (UserId == null)
-            {
-                if (PlayerPrefs.HasKey(SavedUseridString))
-                {
-                    UserId = PlayerPrefs.GetString(SavedUseridString);
-                    return true;
-                }
-                JSONObject response = new JSONObject();
-                response.AddField("error", "null userid passed");
-                onComplete(response);
-                return false;
-            }
-            return true;
-        }
+	private WWW GET(string url, System.Action<JSONObject> onComplete)
+	{
 
-        private bool HandleUnsetToken(System.Action<JSONObject> onComplete)
-        {
-            if (Token == null)
-            {
-                JSONObject response = new JSONObject();
-                response.AddField("error", "null token passed");
-                onComplete(response);
-                return false;
-            }
-            return true;
-        }
-    }
+		WWW www = new WWW(ServerName + url);
+		StartCoroutine(WaitForRequest(www, onComplete));
+		return www;
+	}
+
+	private WWW POST(string url, Dictionary<string, string> post, System.Action<JSONObject> onComplete)
+	{
+		WWWForm form = new WWWForm();
+
+		foreach (KeyValuePair<string, string> post_arg in post)
+		{
+			form.AddField(post_arg.Key, post_arg.Value);
+		}
+
+		WWW www = new WWW(ServerName + url, form);
+
+		StartCoroutine(WaitForRequest(www, onComplete));
+		return www;
+	}
+
+	private IEnumerator WaitForRequest(WWW www, System.Action<JSONObject> onComplete)
+	{
+		yield return www;
+		// check for errors
+		if (www.error == null)
+		{
+			JSONObject result = new JSONObject(www.text);
+			result.Bake();
+			onComplete(result);
+		}
+		else {
+			Debug.Log(www.error);
+			JSONObject result = new JSONObject();
+			result.AddField("error", www.error);
+			result.Bake();
+			onComplete(result);
+		}
+	}
+
+	private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
+	{
+		if (_userId == null)
+		{
+			_userId = GetUserid ();
+			if (_userId == "") {
+				JSONObject response = new JSONObject();
+				response.AddField("error", "null userid passed");
+				onComplete(response);
+				return false;	
+			}
+		}
+		return true;
+	}
+
+	private bool HandleUnsetToken(System.Action<JSONObject> onComplete)
+	{
+		if (_token == null)
+		{
+			_token = GetToken ();
+			if(_token == "") {
+				JSONObject response = new JSONObject();
+				response.AddField("error", "null token passed");
+				onComplete(response);
+				return false;	
+			}
+		}
+		return true;
+	}
+
+	public int GetRecord() {
+		if(!_isRecordLoaded) {
+			_isRecordLoaded = true;
+			_currentRecord = EncryptedPlayerPrefs.GetInt (TicketsRecordKey, 0);
+		}
+		return _currentRecord;
+	}
+
+	public void SaveRecord(int newRecord, System.Action<JSONObject> onComplete) {
+		if(newRecord > _currentRecord) {
+			_currentRecord = newRecord;
+			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, _currentRecord);
+			if(!HandleUnsetToken (onComplete)) {
+				return;
+			}
+			POST ("event/unlock", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intParameter", newRecord.ToString()}, {"token", _token}}, onComplete);
+		}
+	}
 }

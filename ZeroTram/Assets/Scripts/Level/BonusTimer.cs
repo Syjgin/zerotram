@@ -2,8 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Assets;
-using Assets.Scripts.Math;
 
 public class BonusTimer : MonoBehaviour
 {

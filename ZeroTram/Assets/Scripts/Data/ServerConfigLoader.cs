@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Client;
 using UnityEngine.SceneManagement;
 
 public class ServerConfigLoader : MonoBehaviour
@@ -12,7 +11,7 @@ public class ServerConfigLoader : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	    String currentConfig = ConfigReader.GetConfig().ToString();
+		PlayerPrefs.DeleteAll ();
 	    if (ConfigReader.IsLocalConfigAvailable())
 	    {
 	        _serverClient.CheckConfig((result) =>
@@ -20,7 +19,8 @@ public class ServerConfigLoader : MonoBehaviour
 	            if (result.HasField("error"))
 	            {
 	                Debug.Log("error check config");
-	                LoadScene();
+					_serverClient.DisableClient();
+					LoadNextScene ();
 	            }
 	            else
 	            {
@@ -28,7 +28,7 @@ public class ServerConfigLoader : MonoBehaviour
 	                String localversion = ConfigReader.ConfigVersion();
                     if (localversion.Equals(version))
 	                {
-	                    LoadScene();
+						ContinueLoading();
 	                }
 	                else
 	                {
@@ -49,19 +49,60 @@ public class ServerConfigLoader : MonoBehaviour
         {
             if (result.HasField("error"))
             {
-                Debug.Log("error loading config");
-                LoadScene();
+				Debug.LogError(result.GetField ("error"));
             }
             else
             {
                 ConfigReader.SetConfig(result);
-                LoadScene();
+				ContinueLoading();
             }
         });
     }
 
-    private void LoadScene()
+    private void ContinueLoading()
     {
-        SceneManager.LoadScene(_scene2load);
+		if (_serverClient.IsUserIdSaved()) {
+			_serverClient.AuthorizeUser((result) => {
+				if (result.HasField("error"))
+				{
+					Debug.LogError(result.GetField ("error"));
+					_serverClient.DisableClient();
+					LoadNextScene ();
+				} else {
+					_serverClient.UpdateToken (result.GetField ("token").str);
+					LoadNextScene ();
+				}
+			});
+		} else {
+			String username = System.Guid.NewGuid().ToString();
+			registerWithUsername (username);
+		}
     }
+
+	private void registerWithUsername(String username) {
+		_serverClient.RegisterUser (username, (result) => {
+			if (result.HasField("error"))
+			{
+				Debug.LogError(result.GetField ("error"));
+				_serverClient.DisableClient();
+				LoadNextScene ();
+			}
+			else
+			{
+				if(result.HasField ("freeuuid")) {
+					Debug.Log ("this user id already exists. Trying with different one");
+					registerWithUsername (result.GetField ("freeuuid").str);
+				} else {
+					if(result.HasField ("token"))	{
+						_serverClient.UpdateToken (result.GetField ("token").str);
+						LoadNextScene();
+					}
+				}
+			}	
+		});
+	}
+
+	private void LoadNextScene() {
+		SceneManager.LoadScene (_scene2load);
+	}
 }

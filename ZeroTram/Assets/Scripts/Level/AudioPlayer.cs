@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using Assets;
-using Assets.Scripts.Level;
-using Assets.Scripts.Math;
 using UnityEngine;
 using System.Collections;
 

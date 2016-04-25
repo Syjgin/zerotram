@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets;
-using Assets.Scripts.Math;
 
 public class PassengerSM : MovableCharacterSM
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets;
 using UnityEngine.UI;
 
 public class SelectBonusWindow : MonoBehaviour

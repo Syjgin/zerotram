@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets;
 using UnityEngine;
 
 public class ConductorDragState : MovableCharacterState

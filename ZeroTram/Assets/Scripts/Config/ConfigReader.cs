@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
-using Assets.Scripts.Client;
 
 public static class ConfigReader
 {

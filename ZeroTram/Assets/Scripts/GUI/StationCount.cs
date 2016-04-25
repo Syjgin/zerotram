@@ -1,8 +1,6 @@
 ﻿using System;
-using Assets;
 using UnityEngine;
 using System.Collections;
-using Assets.Scripts.Level;
 using UnityEngine.UI;
 
 public class StationCount : MonoBehaviour, GameStateNotificationListener

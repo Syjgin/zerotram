@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Assets;
 using System.Collections.Generic;
 
 public class NewParallax : MonoBehaviour
@@ -27,7 +26,7 @@ public class NewParallax : MonoBehaviour
 
     void Update()
     {
-        if (!GameController.GetInstance().IsDoorsOpen())
+		if (!GameController.GetInstance().IsDoorsOpen() && Time.timeScale > 0)
         {
             float newY = transform.position.y + Time.deltaTime * _velocity;
             float newX = transform.position.x + _horizontalVelocity;
