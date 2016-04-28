@@ -11,7 +11,7 @@ public class ServerConfigLoader : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		PlayerPrefs.DeleteAll ();
+		//PlayerPrefs.DeleteAll ();
 	    if (ConfigReader.IsLocalConfigAvailable())
 	    {
 	        _serverClient.CheckConfig((result) =>

@@ -4,8 +4,6 @@ using System.Collections;
 
 public class Bench : MonoBehaviour
 {
-    [HideInInspector]public PassengerSM CurrentPassenger;
-
     private float _timeAfterPassengerCheck;
     private float _maxWaitingTime;
     private bool _isCheckPossible;
@@ -24,13 +22,6 @@ public class Bench : MonoBehaviour
         {
             _isCheckPossible = true;
         }
-    }
-
-    public string CurrentPassengerClassName()
-    {
-        if (CurrentPassenger == null)
-            return string.Empty;
-        return CurrentPassenger.GetClassName();
     }
 
     private int GetSitPossibility()
@@ -77,12 +68,10 @@ public class Bench : MonoBehaviour
         passenger.IsNearBench = true;
         if (passenger.IsOnTheBench())
         {
-            CurrentPassenger = passenger;
             return;
         }
         if (Randomizer.GetPercentageBasedBoolean(GetSitPossibility()))
         {
-            CurrentPassenger = passenger;
             if (passenger.GetActiveState() == (int) MovableCharacterSM.MovableCharacterStates.Dragged &&
                 passenger.HasTicket())
             {

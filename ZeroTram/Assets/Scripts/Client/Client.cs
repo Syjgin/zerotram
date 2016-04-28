@@ -134,7 +134,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
+		POST("bonus/use" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
 	}
 
 	public void DecreaseTramLives(Action<JSONObject> onComplete)
@@ -144,6 +144,25 @@ public class Client : MonoBehaviour
 			return;
 		}
 		POST("tramlives/decrease", new Dictionary<string, string> { { "token", _token } }, onComplete);
+	}
+
+	public void StartCombination(Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("combination/start", new Dictionary<string, string> { { "token", _token } }, onComplete);
+	}
+
+	public void SendCombination(Action<JSONObject> onComplete, List<string> passengerNames)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		string joinedNames = string.Join (",", passengerNames.ToArray ());
+		POST("combination/send", new Dictionary<string, string> { { "token", _token }, {"passengersArray", joinedNames} }, onComplete);
 	}
 
 	public void GetTramLives(Action<JSONObject> onComplete)

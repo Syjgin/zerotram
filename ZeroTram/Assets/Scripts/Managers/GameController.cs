@@ -183,6 +183,16 @@ public class GameController
 		UpdateStats();
 	}
 
+	public List<String> GetSitPassengers() {
+		List<String> result = new List<String> ();
+		foreach(PassengerSM passenger in _passengers) {
+			if(passenger.IsOnTheBench ()) {
+				result.Add (passenger.GetClassName ());
+			}
+		}
+		return result;
+	}
+
 	public void ReplacePassenger(PassengerSM newPassenger, PassengerSM oldPassenger)
 	{
 		if(_passengersToAdd == null)
