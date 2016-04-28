@@ -134,7 +134,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("bonus/use" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
+		POST("bonus/use/" + bonusName, new Dictionary<string, string> { {"token", _token} },  onComplete);
 	}
 
 	public void DecreaseTramLives(Action<JSONObject> onComplete)
