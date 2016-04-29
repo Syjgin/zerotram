@@ -22,6 +22,7 @@ public class GameController
 		Clew = 12
 	}
 
+	private Dictionary<string, int> _flyingAwayByKinds;
 	private bool _isPassengersListChanged;
 	private List<PassengerSM> _passengersToAdd;
 	private List<PassengerSM> _passengersToDelete; 
@@ -129,6 +130,7 @@ public class GameController
 		_minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
 		_stickPeriod = (int)ConfigReader.GetConfig().GetField("tram").GetField("StickPeriod").n;
 		_passengers = new List<PassengerSM>();
+		_flyingAwayByKinds = new Dictionary<string, int> ();
 	}
 
 	public void StartNewGame()
@@ -143,6 +145,7 @@ public class GameController
 		_killedPassengers = 0;
 		_maxKilledPassengers = 0;
 		_haresPercent = 0;
+		_flyingAwayByKinds.Clear ();
 		_isGameFinished = false;
 	}
 
@@ -181,6 +184,16 @@ public class GameController
 		_totalHares++;
 		_passengers.Add(ps);
 		UpdateStats();
+	}
+
+	public List<String> GetSitPassengers() {
+		List<String> result = new List<String> ();
+		foreach(PassengerSM passenger in _passengers) {
+			if(passenger.IsOnTheBench ()) {
+				result.Add (passenger.GetClassName ());
+			}
+		}
+		return result;
 	}
 
 	public void ReplacePassenger(PassengerSM newPassenger, PassengerSM oldPassenger)
@@ -270,6 +283,12 @@ public class GameController
 				}
 				else
 				{
+					if(!_flyingAwayByKinds.ContainsKey (ps.GetClassName ())) {
+						_flyingAwayByKinds.Add (ps.GetClassName (), 1);
+					} else {
+						int currentValue = _flyingAwayByKinds [ps.GetClassName ()];
+						_flyingAwayByKinds [ps.GetClassName ()] = currentValue + 1;
+					}
 					if(_totalHares > 0)
 						_totalHares--;
 				}
@@ -289,6 +308,10 @@ public class GameController
 				}
 			}
 		}
+	}
+
+	public Dictionary<string, int> GetFlyingAwayDuringGame() {
+		return _flyingAwayByKinds;
 	}
 
 	public void GameOver(bool isConductorDied)

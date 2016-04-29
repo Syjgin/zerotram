@@ -103,8 +103,7 @@ public class DoorsTimer : MonoBehaviour
     {        
         if (_isDoorsOpen)
         {
-            int reward = _benchCombinationManager.GetCombinationReward();
-            Debug.Log(string.Format("reward: {0}", reward));
+			_benchCombinationManager.CalculateCurrent ();
             _player.SetDoorsOpen(true);
             MoveObjects(false);
             _spawner.PrepareToSpawn();
