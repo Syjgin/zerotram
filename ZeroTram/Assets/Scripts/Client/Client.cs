@@ -273,4 +273,11 @@ public class Client : MonoBehaviour
 			POST ("event/unlock", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intParameter", newRecord.ToString()}, {"token", _token}}, onComplete);
 		}
 	}
+
+	public void SendPacifistRecord(int stationCount, System.Action<JSONObject> onComplete) {
+		if(!HandleUnsetToken (onComplete)) {
+			return;
+		}
+		POST ("event/unlock", new Dictionary<String, String>{{"eventName", "pacifist"}, {"intParameter", stationCount.ToString ()}, {"token", _token}}, onComplete);
+	}
 }

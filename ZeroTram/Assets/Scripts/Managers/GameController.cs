@@ -22,6 +22,7 @@ public class GameController
 		Clew = 12
 	}
 
+	private int _flyingAwayCount;
 	private bool _isPassengersListChanged;
 	private List<PassengerSM> _passengersToAdd;
 	private List<PassengerSM> _passengersToDelete; 
@@ -143,6 +144,7 @@ public class GameController
 		_killedPassengers = 0;
 		_maxKilledPassengers = 0;
 		_haresPercent = 0;
+		_flyingAwayCount = 0;
 		_isGameFinished = false;
 	}
 
@@ -280,6 +282,7 @@ public class GameController
 				}
 				else
 				{
+					_flyingAwayCount++;
 					if(_totalHares > 0)
 						_totalHares--;
 				}
@@ -299,6 +302,10 @@ public class GameController
 				}
 			}
 		}
+	}
+
+	public int GetFlyingAwayCount() {
+		return _flyingAwayCount;
 	}
 
 	public void GameOver(bool isConductorDied)

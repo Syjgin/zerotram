@@ -101,12 +101,18 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         gameOverMenu.SetActive(true);
 		_client.DecreaseTramLives ((response) => {
 			Debug.Log (response);
-			if(_stateInfo.TicketCount > 0) {
-				RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
-				_client.SaveRecord (_stateInfo.TicketCount, (result) => {
-					Debug.Log (result);
-				});
-			}
 		});
+		if(_stateInfo.TicketCount > 0) {
+			RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
+			_client.SaveRecord (_stateInfo.TicketCount, (result) => {
+				Debug.Log (result);
+			});
+		}
+		int stationNumber = GameController.GetInstance ().GetCurrentStationNumber ();
+		if(stationNumber > 0 && GameController.GetInstance ().GetFlyingAwayCount () == 0) {
+			_client.SendPacifistRecord (stationNumber, (response) => {
+				Debug.Log (response);
+			});
+		}
     }
 }
