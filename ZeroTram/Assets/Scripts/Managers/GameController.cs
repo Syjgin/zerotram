@@ -22,7 +22,7 @@ public class GameController
 		Clew = 12
 	}
 
-	private int _flyingAwayCount;
+	private Dictionary<string, int> _flyingAwayByKinds;
 	private bool _isPassengersListChanged;
 	private List<PassengerSM> _passengersToAdd;
 	private List<PassengerSM> _passengersToDelete; 
@@ -130,6 +130,7 @@ public class GameController
 		_minDistance = ConfigReader.GetConfig().GetField("tram").GetField("MinDistance").n;
 		_stickPeriod = (int)ConfigReader.GetConfig().GetField("tram").GetField("StickPeriod").n;
 		_passengers = new List<PassengerSM>();
+		_flyingAwayByKinds = new Dictionary<string, int> ();
 	}
 
 	public void StartNewGame()
@@ -144,7 +145,7 @@ public class GameController
 		_killedPassengers = 0;
 		_maxKilledPassengers = 0;
 		_haresPercent = 0;
-		_flyingAwayCount = 0;
+		_flyingAwayByKinds.Clear ();
 		_isGameFinished = false;
 	}
 
@@ -282,7 +283,12 @@ public class GameController
 				}
 				else
 				{
-					_flyingAwayCount++;
+					if(!_flyingAwayByKinds.ContainsKey (ps.GetClassName ())) {
+						_flyingAwayByKinds.Add (ps.GetClassName (), 1);
+					} else {
+						int currentValue = _flyingAwayByKinds [ps.GetClassName ()];
+						_flyingAwayByKinds [ps.GetClassName ()] = currentValue + 1;
+					}
 					if(_totalHares > 0)
 						_totalHares--;
 				}
@@ -304,8 +310,8 @@ public class GameController
 		}
 	}
 
-	public int GetFlyingAwayCount() {
-		return _flyingAwayCount;
+	public Dictionary<string, int> GetFlyingAwayDuringGame() {
+		return _flyingAwayByKinds;
 	}
 
 	public void GameOver(bool isConductorDied)

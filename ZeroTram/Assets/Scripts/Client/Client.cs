@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
-	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";
+	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";//"http://127.0.0.1:8080/"
 	private const String SavedUseridString = "UserId";
 	private const String SavedTokenString = "ServerToken";
 	private const String TicketsRecordKey = "TicketsRecordKey";
@@ -263,14 +263,18 @@ public class Client : MonoBehaviour
 		return _currentRecord;
 	}
 
-	public void SaveRecord(int newRecord, System.Action<JSONObject> onComplete) {
+	public void SendRecord(int newRecord, bool withFriends, System.Action<JSONObject> onComplete) {
 		if(newRecord > _currentRecord) {
 			_currentRecord = newRecord;
 			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, _currentRecord);
 			if(!HandleUnsetToken (onComplete)) {
 				return;
 			}
-			POST ("event/unlock", new Dictionary<String, String>{{"eventName", "ticketRecord"}, {"intParameter", newRecord.ToString()}, {"token", _token}}, onComplete);
+			POST ("event/unlock", new Dictionary<String, String>{
+				{"eventName", withFriends ? "friendsRecord" : "ticketRecord"}, 
+				{"intParameter", newRecord.ToString()}, 
+				{"token", _token}
+			}, onComplete);
 		}
 	}
 
@@ -279,5 +283,24 @@ public class Client : MonoBehaviour
 			return;
 		}
 		POST ("event/unlock", new Dictionary<String, String>{{"eventName", "pacifist"}, {"intParameter", stationCount.ToString ()}, {"token", _token}}, onComplete);
+	}
+
+	public void SendTruckerRecord(int stationCount, System.Action<JSONObject> onComplete) {
+		if(!HandleUnsetToken (onComplete)) {
+			return;
+		}
+		POST ("event/unlock", new Dictionary<String, String>{{"eventName", "trucker"}, {"intParameter", stationCount.ToString ()}, {"token", _token}}, onComplete);
+	}
+
+	public void SendDangerRecord(int beatenCount, String passengerName, bool isBoss, System.Action<JSONObject> onComplete) {
+		if(!HandleUnsetToken (onComplete)) {
+			return;
+		}
+		POST ("event/unlock", new Dictionary<String, String>{
+			{"eventName", isBoss ? "dangerBoss" : "danger"}, 
+			{"intParameter", beatenCount.ToString ()}, 
+			{"stringParameter", passengerName}, 
+			{"token", _token}
+		}, onComplete);
 	}
 }
