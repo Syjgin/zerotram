@@ -15,16 +15,14 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
     private int _killed;
     private float _num_left_posY;
     private float _num_right_posY;
-    private const float _baraban_left_speed = 35f;
-    private const float _baraban_right_speed = 35f;
-    private const float _baraban_left_y = 23f;
-    private const float _baraban_right_y = 22.5f;
+    private const float _baraban_speed = 15f;
+    private const float _baraban_y = 47f;
 
     void Start()
     {
         Txt.text = "-";
-        _num_left_posY = Num_Left.transform.position.y;
-        _num_right_posY = Num_Right.transform.position.y;
+        _num_left_posY = Num_Left.transform.localPosition.y;
+        _num_right_posY = Num_Right.transform.localPosition.y;
         _shouldUpdate = true;
         GameController.GetInstance().AddListener(this);
     }
@@ -53,62 +51,62 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
         {
             if (_killed > _killed_old)
             {
-                if (Num_Left.transform.position.y > (_num_left_posY - (_baraban_left_y * xx)))
-                    Num_Left.transform.Translate(0, Time.deltaTime * -_baraban_left_speed, 0);
+                if (Num_Left.transform.localPosition.y > (_num_left_posY - (_baraban_y * xx)))
+                    Num_Left.transform.Translate(0, 0.1f * -_baraban_speed, 0);
                 else
                 {
-                    Num_Left.transform.position = new Vector3(Num_Left.transform.position.x, _num_left_posY - (_baraban_left_y * xx), Num_Left.transform.position.z);
+                    Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x, _num_left_posY - (_baraban_y * xx), Num_Left.transform.localPosition.z);
                     _bar_left = false;
                 }
                 if (x > 0)
                 {
-                    if (Num_Right.transform.position.y > (_num_right_posY - (_baraban_right_y * x)))
-                        Num_Right.transform.Translate(0, 0.1f * _baraban_right_speed * (_killed_old - _killed), 0);
+                    if (Num_Right.transform.localPosition.y > (_num_right_posY - (_baraban_y * x)))
+                        Num_Right.transform.Translate(0, 0.1f * _baraban_speed * (_killed_old - _killed), 0);
                     //  Num_Right.transform.Translate(0, Time.deltaTime * _baraban_right_speed * (_killed_old - _killed), 0);
                     else
                     {
-                        Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_right_posY - (_baraban_right_y * x), Num_Right.transform.position.z);
+                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_right_posY - (_baraban_y * x), Num_Right.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
                 else
                 {
-                    if (Num_Right.transform.position.y < _num_right_posY)
-                        Num_Right.transform.Translate(0, 0.45f * _baraban_right_speed, 0);
+                    if (Num_Right.transform.localPosition.y < _num_right_posY)
+                        Num_Right.transform.Translate(0, 0.45f * _baraban_speed, 0);
                   //  Num_Right.transform.Translate(0, Time.deltaTime * _baraban_right_speed * 9, 0);
                     else
                     {
-                        Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_right_posY, Num_Right.transform.position.z);
+                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_right_posY, Num_Right.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
             }
             if (_killed < _killed_old)
             {
-                if (Num_Left.transform.position.y < (_num_left_posY - (_baraban_left_y * xx)))
-                    Num_Left.transform.Translate(0, Time.deltaTime * _baraban_left_speed, 0);
+                if (Num_Left.transform.localPosition.y < (_num_left_posY - (_baraban_y * xx)))
+                    Num_Left.transform.Translate(0, 0.1f * _baraban_speed, 0);
                 else
                 {
-                    Num_Left.transform.position = new Vector3(Num_Left.transform.position.x, _num_left_posY - (_baraban_left_y * xx), Num_Left.transform.position.z);
+                    Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x, _num_left_posY - (_baraban_y * xx), Num_Left.transform.localPosition.z);
                     _bar_left = false;
                 }
                 if (x < 9)
                 {
-                    if (Num_Right.transform.position.y < (_num_right_posY - (_baraban_right_y * x)))
-                        Num_Right.transform.Translate(0, 0.1f * _baraban_right_speed * (_killed_old - _killed), 0);
+                    if (Num_Right.transform.localPosition.y < (_num_right_posY - (_baraban_y * x)))
+                        Num_Right.transform.Translate(0, 0.1f * _baraban_speed * (_killed_old - _killed), 0);
                     else
                     {
-                        Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_right_posY - (_baraban_right_y * x), Num_Right.transform.position.z);
+                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_right_posY - (_baraban_y * x), Num_Right.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
                 else
                 {
-                    if (Num_Right.transform.position.y > (_num_right_posY - (_baraban_right_y * 9)))
-                        Num_Right.transform.Translate(0, -0.45f * _baraban_right_speed, 0);
+                    if (Num_Right.transform.localPosition.y > (_num_right_posY - (_baraban_y * 9)))
+                        Num_Right.transform.Translate(0, -0.45f * _baraban_speed, 0);
                     else
                     {
-                        Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_right_posY - (_baraban_right_y * 9), Num_Right.transform.position.z);
+                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_right_posY - (_baraban_y * 9), Num_Right.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
