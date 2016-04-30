@@ -194,14 +194,12 @@ public class Client : MonoBehaviour
 	private WWW POST(string url, Dictionary<string, string> post, System.Action<JSONObject> onComplete)
 	{
 		WWWForm form = new WWWForm();
-
 		foreach (KeyValuePair<string, string> post_arg in post)
 		{
 			form.AddField(post_arg.Key, post_arg.Value);
 		}
 
 		WWW www = new WWW(ServerName + url, form);
-
 		StartCoroutine(WaitForRequest(www, onComplete));
 		return www;
 	}
@@ -303,4 +301,17 @@ public class Client : MonoBehaviour
 			{"token", _token}
 		}, onComplete);
 	}
+
+    public void SendAntiStickRecord(int savedCount, System.Action<JSONObject> onComplete)
+    {
+        if (!HandleUnsetToken(onComplete))
+        {
+            return;
+        }
+        POST("event/unlock", new Dictionary<String, String>{
+            {"eventName", "antistick"},
+            {"intParameter", savedCount.ToString ()},          
+            {"token", _token}
+        }, onComplete);
+    }
 }

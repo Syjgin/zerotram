@@ -308,6 +308,7 @@ public class PassengerSM : MovableCharacterSM
         if (!IsGoingAway)
             CalculateRandomTarget();
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
+        GameController.GetInstance().IncreaseAntiStick();
     }
 
     private void ShowCharacterInfo()

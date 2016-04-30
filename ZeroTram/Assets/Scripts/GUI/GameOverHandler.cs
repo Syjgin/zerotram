@@ -20,8 +20,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     private const string HareReason = "Слишком много зайцев";
     private const string KilledPassengersReason = "Слишком много погибших";
     private const string VictoryReason = "Вы достигли следующей станции!";
-	private const string DangerRecord = "DangerRecord";
-
+	
     private const int ZeroCount = 6;
 
     private GameController.StateInformation _stateInfo;
@@ -110,26 +109,26 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 				Debug.Log (result);
 			});
 		}
-		Dictionary<string, int> filteredDangerRecords = new Dictionary<string, int> ();
 		int flyingAwayCount = 0;
 		foreach (KeyValuePair<string, int> pair in GameController.GetInstance().GetFlyingAwayDuringGame ()) {
 			flyingAwayCount += pair.Value;
-			int previousRecord = PlayerPrefs.GetInt (DangerRecord + pair.Key);
-			if(pair.Value > previousRecord) {
-				filteredDangerRecords.Add (pair.Key, pair.Value);
-				PlayerPrefs.SetInt (DangerRecord + pair.Key, pair.Value);
-			}
-		}
+            _client.SendDangerRecord(pair.Value, pair.Key, false, (result) => {
+                Debug.Log(result);
+            });
+        }
 		int stationNumber = GameController.GetInstance ().GetCurrentStationNumber ();
 		if(stationNumber > 0 && flyingAwayCount == 0) {
 			_client.SendPacifistRecord (stationNumber, (response) => {
 				Debug.Log (response);
 			});
 		}
-		foreach (KeyValuePair<string, int> pair in filteredDangerRecords) {
-			_client.SendDangerRecord (pair.Value, pair.Key, false, (result) => {
-				Debug.Log (result);
-			});
-		}
+        int antistick = GameController.GetInstance().GetAntiStick();
+        if (antistick > 0)
+        {
+            _client.SendAntiStickRecord(antistick, (response) =>
+            {
+                Debug.Log(response);
+            });
+        }
     }
 }
