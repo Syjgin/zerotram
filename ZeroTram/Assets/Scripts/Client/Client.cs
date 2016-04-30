@@ -221,6 +221,7 @@ public class Client : MonoBehaviour
 			result.Bake();
 			onComplete(result);
 		}
+		www.Dispose ();
 	}
 
 	private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
