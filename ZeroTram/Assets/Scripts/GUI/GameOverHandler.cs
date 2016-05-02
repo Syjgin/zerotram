@@ -130,5 +130,18 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
                 Debug.Log(response);
             });
         }
+		int bigStationsCount = GameController.GetInstance ().GetBigStationsCount ();
+		if(bigStationsCount > 0) {
+			if(GameController.GetInstance ().GetKilledPassengersCount () == 0) {
+				_client.SendLivesaverRecord (bigStationsCount, (response) => {
+					Debug.Log(response);
+				});
+			}
+			if(bigStationsCount > 1) {
+				_client.SendTruckerRecord (bigStationsCount, (response) => {
+					Debug.Log(response);
+				});
+			}
+		}
     }
 }

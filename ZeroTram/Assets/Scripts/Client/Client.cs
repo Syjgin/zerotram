@@ -315,4 +315,17 @@ public class Client : MonoBehaviour
             {"token", _token}
         }, onComplete);
     }
+
+	public void SendLivesaverRecord(int stationNumber, System.Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("event/unlock", new Dictionary<String, String>{
+			{"eventName", "livesaver"},
+			{"intParameter", stationNumber.ToString ()},          
+			{"token", _token}
+		}, onComplete);
+	}
 }

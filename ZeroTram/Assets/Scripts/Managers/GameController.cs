@@ -22,6 +22,7 @@ public class GameController
 		Clew = 12
 	}
 
+	private int _bigStationsCount;
 	private Dictionary<string, int> _flyingAwayByKinds;
 	private bool _isPassengersListChanged;
 	private List<PassengerSM> _passengersToAdd;
@@ -148,6 +149,19 @@ public class GameController
 		_flyingAwayByKinds.Clear ();
 		_isGameFinished = false;
         _antiStickCounter = 0;
+		_bigStationsCount = 0;
+	}
+
+	public int GetKilledPassengersCount() {
+		return _killedPassengers;
+	}
+
+	public int GetBigStationsCount() {
+		return _bigStationsCount;
+	}
+
+	public void IncreaseBigStationCount() {
+		_bigStationsCount++;
 	}
 
 	public int GetCurrentStationNumber()
