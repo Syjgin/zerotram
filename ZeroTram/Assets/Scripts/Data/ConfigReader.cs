@@ -6,7 +6,7 @@ using System.Text;
 
 public static class ConfigReader
 {
-    private static String ConfigKey = "ConfigKey";
+    private const String ConfigKey = "ConfigKey";
     private static JSONObject _config;
 
 

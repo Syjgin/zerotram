@@ -15,12 +15,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _captionText;
     [SerializeField] private GameObject _stickCaption;
 	[SerializeField] private Client _client;
-
-    private const string DeathReason = "Кондуктор погиб";
-    private const string HareReason = "Слишком много зайцев";
-    private const string KilledPassengersReason = "Слишком много погибших";
-    private const string VictoryReason = "Вы достигли следующей станции!";
-	
+    
     private const int ZeroCount = 6;
 
     private GameController.StateInformation _stateInfo;
@@ -56,8 +51,8 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         _stickCaption.SetActive(false);
         if (_stateInfo.IsLevelFinished)
         {
-            _reasonText.text = VictoryReason;
-            _captionText.text = "победа!";
+            _reasonText.text = StringResources.GetLocalizedString("GameOverVictory");
+            _captionText.text = StringResources.GetLocalizedString("GameOverVictoryCaption");
             _restartButton.onClick.RemoveAllListeners();
             _exitButton.onClick.RemoveAllListeners();
             _restartButton.onClick.AddListener(() =>
@@ -83,11 +78,11 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         else
         {
             if (_stateInfo.Hares > GameController.GetInstance().MaxHaresPercent)
-                _reasonText.text = HareReason;
+                _reasonText.text = StringResources.GetLocalizedString("GameOverHare");
             if (_stateInfo.RemainKilled < 0)
-                _reasonText.text = KilledPassengersReason;
+                _reasonText.text = StringResources.GetLocalizedString("GameOverKilledPassengers");
             if (_stateInfo.IsConductorDied)
-                _reasonText.text = DeathReason;
+                _reasonText.text = StringResources.GetLocalizedString("GameOverDeath");
         }
         
         int leadingZeroCount = ZeroCount - _stateInfo.TicketCount.ToString().Length;
