@@ -30,9 +30,7 @@ public class PassengerSM : MovableCharacterSM
     private float _savedStickProbability;
 
     public List<GameController.BonusTypes> ActiveBonuses; 
-
-    protected NewCharacterWindow Window;
-
+    
     [SerializeField]
     private Sprite _question;
     [SerializeField]
@@ -104,7 +102,6 @@ public class PassengerSM : MovableCharacterSM
         _tramStopCount = stopCount;
         if(register)
             GameController.GetInstance().RegisterPassenger(this);
-        Window = NewCharacterWindowHandler.GetWindow();
     }
 
     public float AttackTargetDistance()
@@ -310,16 +307,7 @@ public class PassengerSM : MovableCharacterSM
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         GameController.GetInstance().IncreaseAntiStick();
     }
-
-    private void ShowCharacterInfo()
-    {
-        string key = NewCharacterWindow.Prefix + GetClassName();
-        if (PlayerPrefs.GetInt(key) == 1)
-            return;
-        PlayerPrefs.SetInt(key, 1);
-        Window.SetCharacterToShow(GetClassName());
-    }
-
+    
     public void FlyAway()
     {
         ActivateState((int)MovableCharacterStates.FlyingAway);
@@ -356,7 +344,6 @@ public class PassengerSM : MovableCharacterSM
                 {
                     MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("coins");
                 }
-                ShowCharacterInfo();
             }
             return;
         }

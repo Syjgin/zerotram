@@ -25,8 +25,6 @@ public class Spawner : MonoBehaviour
     public PassengerSM SpawnAlternativePassenger(Vector3 position, string previousClass)
     {
         string newPassengerClass = MapManager.GetInstance().GetRandomCharacterWithExcludedIndex(previousClass);
-        if (VideoScript._isTraining)
-            newPassengerClass = "gnome";
         return InstantiateNPC(newPassengerClass, position, false);
     }
 
@@ -61,8 +59,6 @@ public class Spawner : MonoBehaviour
             if (GameController.GetInstance().GetPassengersCount() > _maxPassengers || _currentSessionSpawnCount >= maxCount)
                 return;
             string passengerString = MapManager.GetInstance().GetRandomCharacter();
-            if (VideoScript._isTraining)
-                passengerString = "gnome";
             PassengerSM ps = InstantiateNPC(passengerString, spawnPoint.transform.position, true);
             _currentSessionSpawnCount++;
             if (ps == null)

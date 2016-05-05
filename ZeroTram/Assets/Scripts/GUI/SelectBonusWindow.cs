@@ -11,6 +11,7 @@ public class SelectBonusWindow : MonoBehaviour
     [SerializeField] private RectTransform _scrollContent;
     [SerializeField] private MegaBonusButton _megaBonusButton;
     [SerializeField] private BonusTimer _bonusTimer;
+    [SerializeField] private TrainingHandler _trainingHandler;
 
     private const int ItemHeight = 165;
 	// Use this for initialization
@@ -18,6 +19,11 @@ public class SelectBonusWindow : MonoBehaviour
 	{
 	    Time.timeScale = 0;
 	    int index = 0;
+	    if (!_trainingHandler.IsTrainingFinished())
+	    {
+	        gameObject.SetActive(false);
+            return;
+	    }
         _megaBonusButton.SetVisible(false);
 	    foreach (GameController.BonusTypes currentType in Enum.GetValues(typeof(GameController.BonusTypes)))
 	    {
