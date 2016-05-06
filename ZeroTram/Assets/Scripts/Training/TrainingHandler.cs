@@ -41,7 +41,10 @@ public class TrainingHandler : MonoBehaviour
                 _fullConductorWindow.DisplayText(StringResources.GetLocalizedString("Training1"), false);
                 break;
             case 1:
-                _fullConductorWindow.DisplayText(StringResources.GetLocalizedString("Training2"), true);
+                _fullConductorWindow.DisplayTextWithImage(StringResources.GetLocalizedString("Training2"), Resources.Load<Sprite>("Sprites/training/training1"), false);
+                break;
+            case 2:
+                _fullConductorWindow.DisplayText(StringResources.GetLocalizedString("Training3"), true);
                 break;
         }
     }
