@@ -7,11 +7,14 @@ public class TrainingHandler : MonoBehaviour
     [SerializeField]
     private ConductorWindow _fullConductorWindow;
 
+    [SerializeField] private GameObject _bonusSelectWindow;
+    [SerializeField] private DoorsAnimationController[] _doors;
+
     private const string TrainingKey = "TrainingFinished";
 
     private int _currentStep;
 
-    public bool IsTrainingFinished()
+    public static bool IsTrainingFinished()
     {
         return PlayerPrefs.HasKey(TrainingKey);
     }
@@ -37,6 +40,7 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
+                _bonusSelectWindow.SetActive(false);
                 _fullConductorWindow.gameObject.SetActive(true);
                 _fullConductorWindow.DisplayText(StringResources.GetLocalizedString("Training1"), false);
                 break;
@@ -45,6 +49,10 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 2:
                 _fullConductorWindow.DisplayText(StringResources.GetLocalizedString("Training3"), true);
+                break;
+            case 3:
+                int index = Randomizer.GetInRange(0, _doors.Length);
+                _doors[index].OpenAndSpawnByName("gnome");
                 break;
         }
     }

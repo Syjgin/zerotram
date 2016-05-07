@@ -4,13 +4,13 @@ using System.Collections;
 public class DoorsAnimationController : MonoBehaviour
 {
     private Animator _animator;
+    [SerializeField]
     private Spawner _unitSpawner;
     private bool _isOpened;
 
 	void Awake ()
 	{
 	    _animator = GetComponent<Animator>();
-	    _unitSpawner = GameObject.Find("Spawner").GetComponent<Spawner>();
 	}
 	
 	void Update () {
@@ -23,6 +23,14 @@ public class DoorsAnimationController : MonoBehaviour
         _animator.Play("doors_open");
         if (spawn)
             _unitSpawner.Spawn(gameObject);
+        _isOpened = true;
+    }
+
+    public void OpenAndSpawnByName(string passengerName)
+    {
+        _animator.enabled = true;
+        _animator.Play("doors_open");
+        _unitSpawner.Spawn(gameObject, passengerName);
         _isOpened = true;
     }
 

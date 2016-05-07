@@ -77,7 +77,7 @@ public class PassengerSM : MovableCharacterSM
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
     }
 
-    public virtual void Init(bool register)
+    public virtual void Init(bool register, bool unstickable = false)
     {
         AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
@@ -96,7 +96,8 @@ public class PassengerSM : MovableCharacterSM
         _attackingDenyPeriod = ConfigReader.GetConfig().GetField("tram").GetField("AttackDenyPeriod").n;
         ParseBonusMap();
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
-        CalculateStick();
+        if(!unstickable)
+            CalculateStick();
         _maxStopCount = ConfigReader.GetConfig().GetField("tram").GetField("MaxStopCount").n;
         int stopCount = Randomizer.GetInRange(1, (int)_maxStopCount);
         _tramStopCount = stopCount;
