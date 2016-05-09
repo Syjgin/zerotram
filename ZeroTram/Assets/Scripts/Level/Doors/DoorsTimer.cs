@@ -41,6 +41,8 @@ public class DoorsTimer : MonoBehaviour
 
     private bool[] _doorOpened;
 
+    private bool _isDurationSetExplicitly;
+
     void Awake()
     {
         _moveDuration = ConfigReader.GetConfig().GetField("tram").GetField("MoveDuration").n;
@@ -51,7 +53,14 @@ public class DoorsTimer : MonoBehaviour
 
     private void UpdateMoveDuration()
     {
-        _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+        if(!_isDurationSetExplicitly)
+            _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+    }
+
+    public void SetMoveDuration(float duration)
+    {
+        _currentStationTotalMoveDuration = duration;
+        _isDurationSetExplicitly = true;
     }
 
     public int GetCurrentRemainingTime()
@@ -109,6 +118,7 @@ public class DoorsTimer : MonoBehaviour
     {        
         if (_isDoorsOpen)
         {
+            _isDurationSetExplicitly = false;
 			_benchCombinationManager.CalculateCurrent ();
             _player.SetDoorsOpen(true);
             MoveObjects(false);
@@ -283,7 +293,6 @@ public class DoorsTimer : MonoBehaviour
                     _currentMoveDuration = 0;
                     GameController.GetInstance().CheckBeforeDoorsOpen();
                     UpdateDoors();
-
                 }
             }
 	    }

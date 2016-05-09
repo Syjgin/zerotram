@@ -20,6 +20,12 @@ public class TrainingHandler : MonoBehaviour
     private GameObject _killedCounter;
     [SerializeField]
     private GameObject _lifes;
+    [SerializeField]
+    private GameObject _arrowPrefab;
+
+    [SerializeField] private DoorsTimer _doorsTimerController;
+
+    private GameObject _activeArrow;
 
     private const string TrainingKey = "TrainingFinished";
 
@@ -33,11 +39,21 @@ public class TrainingHandler : MonoBehaviour
 
     public bool IsDoorsTimerEnabled()
     {
-        return _currentStep > 6;
+        return _currentStep > 5;
     }
 
-	// Use this for initialization
-	void Start () {
+    public bool IsPassengerClickAllowed()
+    {
+        return _currentStep > 4;
+    }
+
+    public bool IsFlyAwayEnabled()
+    {
+        return _currentStep > 8;
+    }
+
+    // Use this for initialization
+    void Start () {
         ShowTrainingStep(0);
     }
 	
@@ -60,6 +76,7 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
+                GameController.GetInstance().SetDoorsOpen(true);
                 _doorsTimer.SetActive(false);
                 _ticketsCounter.SetActive(false);
                 _haresCounter.SetActive(false);
@@ -86,6 +103,10 @@ public class TrainingHandler : MonoBehaviour
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training4"), true);
                 GameObject gnomeObject = GameObject.Find("gnome(Clone)");
                 Gnome passenger = gnomeObject.GetComponent<Gnome>();
+                GameObject arrow = (GameObject)Instantiate(_arrowPrefab, passenger.gameObject.transform.position, Quaternion.identity);
+                arrow.transform.parent = passenger.gameObject.transform;
+                arrow.transform.localPosition = new Vector3(0, 1.7f, -8);
+                _activeArrow = arrow;
                 passenger.EnableTrainingClick();
                 break;
             case 5:
@@ -94,6 +115,8 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 6:
                 Time.timeScale = 0;
+                Destroy(_activeArrow);
+                _doorsTimerController.SetMoveDuration(3);
                 _doorsTimer.SetActive(true);
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training5"), true);
                 break;

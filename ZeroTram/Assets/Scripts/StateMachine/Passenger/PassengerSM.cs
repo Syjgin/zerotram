@@ -41,7 +41,7 @@ public class PassengerSM : MovableCharacterSM
     private Sprite _stick;
     [SerializeField]
     protected SpriteRenderer Indicator;
-
+    
     private bool _isTrainingEnabled;
 
     void Awake()
@@ -371,6 +371,8 @@ public class PassengerSM : MovableCharacterSM
 
     public override void HandleDoubleClick()
     {
+        if (!MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler").IsFlyAwayEnabled())
+            return;
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero.CanKick(this))
         {
