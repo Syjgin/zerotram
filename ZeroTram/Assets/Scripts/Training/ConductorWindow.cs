@@ -7,41 +7,37 @@ public class ConductorWindow : MonoBehaviour
 
     [SerializeField]
     private Text _replica;
-    [SerializeField] private TrainingHandler _handler;
     [SerializeField]
     private Image _trainingPicture;
+
+    [SerializeField] private GameObject _window;
 
     [SerializeField] private Image _background;
 
     private Sprite _baseSprite;
     private bool _hideAfterClick;
+    private const float MinimalShowTime = 0.2f;
+    private bool _canBeHidden;
 
-    public void OnMouseClicked()
+    public bool Hide()
     {
-        bool hide = _hideAfterClick;
-        _handler.ShowNext();
-        if (hide)
-        {
-            gameObject.SetActive(false);
-            Time.timeScale = 1;
-        }
+        if (!_canBeHidden)
+            return false;
+        if(_hideAfterClick)
+            _window.SetActive(false);
+        return true;
     }
 
     private void Awake()
     {
         _baseSprite = _trainingPicture.sprite;
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnMouseClicked();
-        }
+        _hideAfterClick = true;
     }
 
     public void DisplayText(string text, bool hideAfterClick)
     {
+        _canBeHidden = false;
+        _window.SetActive(true);
         _background.gameObject.SetActive(false);
         if (_trainingPicture.sprite.name != _baseSprite.name)
         {
@@ -49,13 +45,27 @@ public class ConductorWindow : MonoBehaviour
         }
         _replica.text = text;
         _hideAfterClick = hideAfterClick;
+        StartCoroutine(WaitAndUnlock());
     }
 
     public void DisplayTextWithImage(string text, Sprite sprite, bool hideAfterClick)
     {
+        _canBeHidden = false;
+        _window.SetActive(true);
         _background.gameObject.SetActive(true);
         _trainingPicture.sprite = sprite;
         _replica.text = text;
         _hideAfterClick = hideAfterClick;
+        StartCoroutine(WaitAndUnlock());
+    }
+
+    private IEnumerator WaitAndUnlock()
+    {
+        float start = Time.realtimeSinceStartup;
+        while (Time.realtimeSinceStartup < start + MinimalShowTime)
+        {
+            yield return null;
+        }
+        _canBeHidden = true;
     }
 }

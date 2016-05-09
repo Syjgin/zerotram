@@ -13,6 +13,13 @@ public class Spawner : MonoBehaviour
 
     public static float StickYOffset = 0.8f;
 
+    public enum TicketAdditionMode
+    {
+        WithTicket,
+        WithoutTicket,
+        Default
+    }
+
     void Awake()
     {
         //PlayerPrefs.DeleteAll();
@@ -45,7 +52,7 @@ public class Spawner : MonoBehaviour
         _currentSessionSpawnCount = 0;
     }
 
-    public void Spawn(GameObject spawnPoint, string passengerName = "")
+    public void Spawn(GameObject spawnPoint, string passengerName = "", TicketAdditionMode ticketMode = TicketAdditionMode.Default)
     {
         if(GameController.GetInstance().IsGameFinished)
             return;
@@ -57,6 +64,10 @@ public class Spawner : MonoBehaviour
         {
             PassengerSM ps = InstantiateNPC(passengerName, spawnPoint.transform.position, true, true);
             ps.CalculateRandomTarget(true);
+            if (ticketMode != TicketAdditionMode.Default)
+            {
+                ps.SetTicketAndVisibility(ticketMode == TicketAdditionMode.WithTicket, false);
+            }
         }
     }
 

@@ -42,6 +42,8 @@ public class PassengerSM : MovableCharacterSM
     [SerializeField]
     protected SpriteRenderer Indicator;
 
+    private bool _isTrainingEnabled;
+
     void Awake()
     {
         ActiveBonuses = new List<GameController.BonusTypes>();
@@ -75,6 +77,11 @@ public class PassengerSM : MovableCharacterSM
         if(onlyForInvisible && _isVisibleToHero)
             return;
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
+    }
+
+    public void EnableTrainingClick()
+    {
+        _isTrainingEnabled = true;
     }
 
     public virtual void Init(bool register, bool unstickable = false)
@@ -113,7 +120,7 @@ public class PassengerSM : MovableCharacterSM
         Vector2 attackTargetPosition2D = AttackTarget.BoxCollider2D.bounds.ClosestPoint(transform.position);
         return (position2D - attackTargetPosition2D).sqrMagnitude;
     }
-    
+
     public bool HasTicket()
     {
         return _hasTicket;
@@ -325,6 +332,12 @@ public class PassengerSM : MovableCharacterSM
 
     public override void HandleClick()
     {
+        if (_isTrainingEnabled)
+        {
+            TrainingHandler handler = MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.ShowNext();
+            _isTrainingEnabled = false;
+        }
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (!_isVisibleToHero)
         {

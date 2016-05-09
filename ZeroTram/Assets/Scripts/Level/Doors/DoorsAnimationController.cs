@@ -26,11 +26,11 @@ public class DoorsAnimationController : MonoBehaviour
         _isOpened = true;
     }
 
-    public void OpenAndSpawnByName(string passengerName)
+    public void OpenAndSpawnByName(string passengerName, Spawner.TicketAdditionMode ticketMode)
     {
         _animator.enabled = true;
         _animator.Play("doors_open");
-        _unitSpawner.Spawn(gameObject, passengerName);
+        _unitSpawner.Spawn(gameObject, passengerName, ticketMode);
         _isOpened = true;
     }
 

@@ -28,6 +28,7 @@ public class DoorsTimer : MonoBehaviour
     [SerializeField] private GameObject _stickNote;
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
+    [SerializeField] private TrainingHandler _trainingHandler;
 
     private PassengerSM _currentStickPassenger;
     private DoorsAnimationController _currentStickDoor;
@@ -55,6 +56,10 @@ public class DoorsTimer : MonoBehaviour
 
     public int GetCurrentRemainingTime()
     {
+        if (!_trainingHandler.IsDoorsTimerEnabled())
+        {
+            return 0;
+        }
         if (_isDoorsOpen)
             return (int) (_stopDuration - _currentStopDuration);
         return (int) (_currentStationTotalMoveDuration - _currentMoveDuration);
@@ -269,15 +274,18 @@ public class DoorsTimer : MonoBehaviour
 	    }
 	    else
 	    {
-            _currentMoveDuration += Time.fixedDeltaTime;
-	        if (_currentMoveDuration > _currentStationTotalMoveDuration)
+	        if (_trainingHandler.IsDoorsTimerEnabled())
 	        {
-	            _isDoorsOpen = true;
-	            _currentMoveDuration = 0;
-                GameController.GetInstance().CheckBeforeDoorsOpen();
-                UpdateDoors();
+                _currentMoveDuration += Time.fixedDeltaTime;
+                if (_currentMoveDuration > _currentStationTotalMoveDuration)
+                {
+                    _isDoorsOpen = true;
+                    _currentMoveDuration = 0;
+                    GameController.GetInstance().CheckBeforeDoorsOpen();
+                    UpdateDoors();
 
-	        }
+                }
+            }
 	    }
 
 	}
