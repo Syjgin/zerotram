@@ -24,6 +24,7 @@ public class PassengerSM : MovableCharacterSM
 
     public bool IsAttackingAllowed;
     private Bench _currentBench;
+    private float _oldAttackProbability;
 
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
@@ -71,6 +72,19 @@ public class PassengerSM : MovableCharacterSM
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
 
+    public void SetAttackEnabled(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            _oldAttackProbability = AttackProbability;
+            AttackProbability = 0;
+        }
+        else
+        {
+            AttackProbability = _oldAttackProbability;
+        }
+    }
+
     public void RecalculateTicketProbability(float coef, bool onlyForInvisible)
     {
         TicketProbability *= coef;
@@ -86,7 +100,7 @@ public class PassengerSM : MovableCharacterSM
 
     public virtual void Init(bool register, bool unstickable = false)
     {
-        AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
+        AttackProbability = _oldAttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
         ChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("ChangeStatePeriod").n;
         AttackDistance = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackDistance").n;
