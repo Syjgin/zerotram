@@ -24,7 +24,6 @@ public class PassengerSM : MovableCharacterSM
 
     public bool IsAttackingAllowed;
     private Bench _currentBench;
-    private float _oldAttackProbability;
 
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
@@ -44,6 +43,8 @@ public class PassengerSM : MovableCharacterSM
     protected SpriteRenderer Indicator;
     
     private bool _isTrainingEnabled;
+
+    private bool _attackDenyedByTraining;
 
     void Awake()
     {
@@ -74,15 +75,13 @@ public class PassengerSM : MovableCharacterSM
 
     public void SetAttackEnabled(bool isEnabled)
     {
-        if (isEnabled)
-        {
-            _oldAttackProbability = AttackProbability;
-            AttackProbability = 0;
-        }
-        else
-        {
-            AttackProbability = _oldAttackProbability;
-        }
+        _attackDenyedByTraining = !isEnabled;
+    }
+    
+    public void AttackIfPossible()
+    {
+        if (IsAttackingAllowed && !_attackDenyedByTraining)
+            ActivateState((int)MovableCharacterSM.MovableCharacterStates.Attack);
     }
 
     public void RecalculateTicketProbability(float coef, bool onlyForInvisible)
@@ -100,7 +99,7 @@ public class PassengerSM : MovableCharacterSM
 
     public virtual void Init(bool register, bool unstickable = false)
     {
-        AttackProbability = _oldAttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
+        AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
         ChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("ChangeStatePeriod").n;
         AttackDistance = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackDistance").n;
@@ -266,6 +265,8 @@ public class PassengerSM : MovableCharacterSM
 
     public void TryAttackMovable(MovableCharacterSM movable)
     {
+        if(_attackDenyedByTraining)
+            return;
         float currentAttackProbability = AttackProbability;
         if (movable is PassengerSM)
         {
@@ -279,8 +280,7 @@ public class PassengerSM : MovableCharacterSM
         if (Randomizer.GetPercentageBasedBoolean((int)currentAttackProbability))
         {
             AttackTarget = movable;
-            if(IsAttackingAllowed)
-                ActivateState((int)MovableCharacterStates.Attack);
+            AttackIfPossible();
         }
         else
         {
@@ -306,11 +306,13 @@ public class PassengerSM : MovableCharacterSM
 
     public void CalculateAttackReaction()
     {
+        if(_attackDenyedByTraining)
+            return;
         bool willCounterAttack = Randomizer.GetPercentageBasedBoolean((int)CounterAttackProbability);
         if (willCounterAttack)
         {
-            if (AttackTarget != null && IsAttackingAllowed)
-                ActivateState((int)MovableCharacterStates.Attack);
+            if (AttackTarget != null)
+                AttackIfPossible();
             else
                 MakeIdle();
         }
@@ -432,7 +434,7 @@ public class PassengerSM : MovableCharacterSM
             if (attack)
             {
                 AttackTarget = conductor;
-                ActivateState((int) MovableCharacterStates.Attack);
+                AttackIfPossible();
             }
             else
             {

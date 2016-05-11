@@ -56,8 +56,7 @@ public class PassengerIdleState : IdleState
                 }
                 else
                 {
-                    if(_passenger.IsAttackingAllowed)
-                        _passenger.ActivateState((int) MovableCharacterSM.MovableCharacterStates.Attack);
+                    _passenger.AttackIfPossible();
                 }
             }
         }

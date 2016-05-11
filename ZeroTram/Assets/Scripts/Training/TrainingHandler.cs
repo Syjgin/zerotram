@@ -109,6 +109,7 @@ public class TrainingHandler : MonoBehaviour
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training4"), true);
                 GameObject gnomeObject = GameObject.Find("gnome(Clone)");
                 Gnome passenger = gnomeObject.GetComponent<Gnome>();
+                passenger.SetAttackEnabled(false);
                 DisplayArrowForPassenger(passenger);
                 _isPassengerClickAllowed = true;
                 break;
@@ -146,6 +147,11 @@ public class TrainingHandler : MonoBehaviour
                 _centralWayoutSprite.SetActive(true);
                 DisplayArrow(_centralWayout);
                 Time.timeScale = 1;
+                _doorsTimerController.SetMovementLocked(false);
+                StartCoroutine(WaitAndMoveNext(2));
+                break;
+            case 11:
+                _doorsTimerController.SetMovementLocked(true);
                 break;
         }
         _isRefreshInProgress = false;
