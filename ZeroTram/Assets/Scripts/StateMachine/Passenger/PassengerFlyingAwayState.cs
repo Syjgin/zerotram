@@ -21,6 +21,10 @@ public class PassengerFlyingAwayState : MovableCharacterState
         float sqrRemainingDistance = ((Vector2)newPosition - (Vector2)_flyTarget).sqrMagnitude;
         if (sqrRemainingDistance <= 1)
         {
+            if (_passenger.IsFlyAwayListenerActivated())
+            {
+                MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler").ShowNext();
+            }
             MonoBehaviour.Destroy(MovableCharacter.gameObject);
         }
     }

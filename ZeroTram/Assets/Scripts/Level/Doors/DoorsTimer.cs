@@ -58,6 +58,12 @@ public class DoorsTimer : MonoBehaviour
             _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
     }
 
+    public void OpenDoors()
+    {
+        _isDoorsOpen = true;
+        UpdateDoors();
+    }
+
     public void SetMoveAndStopDuration(float moveDuration, float stopDuration)
     {
         _currentStationTotalMoveDuration = moveDuration;

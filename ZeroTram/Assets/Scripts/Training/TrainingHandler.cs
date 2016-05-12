@@ -24,10 +24,9 @@ public class TrainingHandler : MonoBehaviour
     private GameObject _arrowPrefab;
 
     [SerializeField] private GameObject _centralWayout;
-    [SerializeField]
-    private GameObject _centralWayoutSprite;
-
+    [SerializeField] private GameObject _centralWayoutSprite;
     [SerializeField] private DoorsTimer _doorsTimerController;
+    [SerializeField] private Floor _floor;
 
     private GameObject _activeArrow;
 
@@ -37,6 +36,8 @@ public class TrainingHandler : MonoBehaviour
     private bool _isRefreshInProgress;
     private bool _isPassengerClickAllowed;
     private bool _isFlyAwayEnabled;
+    private Bird _birdPassenger;
+    private Gnome _gnomePassenger;
 
     public static bool IsTrainingFinished()
     {
@@ -77,7 +78,6 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
-                GameController.GetInstance().SetDoorsOpen(true);
                 _doorsTimer.SetActive(false);
                 _ticketsCounter.SetActive(false);
                 _haresCounter.SetActive(false);
@@ -108,9 +108,9 @@ public class TrainingHandler : MonoBehaviour
                 Time.timeScale = 0;
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training4"), true);
                 GameObject gnomeObject = GameObject.Find("gnome(Clone)");
-                Gnome passenger = gnomeObject.GetComponent<Gnome>();
-                passenger.SetAttackEnabled(false);
-                DisplayArrowForPassenger(passenger);
+                _gnomePassenger = gnomeObject.GetComponent<Gnome>();
+                _gnomePassenger.SetAttackEnabled(false);
+                DisplayArrowForPassenger(_gnomePassenger);
                 _isPassengerClickAllowed = true;
                 break;
             case 5:
@@ -131,9 +131,10 @@ public class TrainingHandler : MonoBehaviour
             case 8:
                 SpawnPassengerFromRandomDoor("bird", Spawner.TicketAdditionMode.WithoutTicket);
                 GameObject bird = GameObject.Find("bird(Clone)");
-                Bird birdPassenger = bird.GetComponent<Bird>();
-                birdPassenger.SetAttackEnabled(false);
-                DisplayArrowForPassenger(birdPassenger);
+                _birdPassenger = bird.GetComponent<Bird>();
+                _birdPassenger.SetAttackEnabled(false);
+                _birdPassenger.SetRunawayDenied(true);
+                DisplayArrowForPassenger(_birdPassenger);
                 _doorsTimerController.SetMovementLocked(true);
                 break;
             case 9:
@@ -147,11 +148,22 @@ public class TrainingHandler : MonoBehaviour
                 _centralWayoutSprite.SetActive(true);
                 DisplayArrow(_centralWayout);
                 Time.timeScale = 1;
-                _doorsTimerController.SetMovementLocked(false);
-                StartCoroutine(WaitAndMoveNext(2));
+                _floor.AddDragCenterListner();
                 break;
             case 11:
-                _doorsTimerController.SetMovementLocked(true);
+                Time.timeScale = 0;
+                Destroy(_activeArrow);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training7"), true);
+                break;
+            case 12:
+                Time.timeScale = 1;
+                _birdPassenger.SetRunawayDenied(false);
+                _isFlyAwayEnabled = true;
+                _birdPassenger.ActivateFlyAwayListener();
+                break;
+            case 13:
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training8"), true);
                 break;
         }
         _isRefreshInProgress = false;
@@ -179,6 +191,7 @@ public class TrainingHandler : MonoBehaviour
 
     private void SpawnPassengerFromRandomDoor(string passengerName, Spawner.TicketAdditionMode mode)
     {
+        _doorsTimerController.OpenDoors();
         int index = Randomizer.GetInRange(0, _doors.Length);
         _doors[index].OpenAndSpawnByName(passengerName, mode);
     }

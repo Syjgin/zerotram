@@ -16,6 +16,7 @@ public class ConductorSM : MovableCharacterSM
     private Text _lifes;
     public float MovingToDragTargetVelocity;
     private PassengerSM _stickTarget;
+    private bool _isTrainingKickHandlerActivated;
 
     void Awake()
     {
@@ -52,6 +53,7 @@ public class ConductorSM : MovableCharacterSM
     {
         _stickTarget = passenger;
     }
+
 
     public void StopStickIfNeeded()
     {

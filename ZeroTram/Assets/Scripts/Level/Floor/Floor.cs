@@ -14,13 +14,16 @@ public class Floor : MonoBehaviour
     [SerializeField] private BonusTimer _bonusTimer;
     [SerializeField] private GameObject _snowDropGameObject;
     [SerializeField] private PolygonCollider2D _polygonCollider2D;
-    
+    [SerializeField] private TrainingHandler _trainingHandler;
+
     private const float HeroOffset = 0.6f;
     private const float Epsilon = 0.2f;
 
     private float _normalizedMax;
 
-    private List<GameObject> _spawnedDrops; 
+    private List<GameObject> _spawnedDrops;
+
+    private bool _isDragListenerActivated;
 
 	// Use this for initialization
 	void Awake ()
@@ -29,11 +32,24 @@ public class Floor : MonoBehaviour
 	    _normalizedMax = _polygonCollider2D.bounds.max.y - _polygonCollider2D.bounds.min.y;
 	}
 
+    public void AddDragCenterListner()
+    {
+        _isDragListenerActivated = true;
+    }
+
     void Update()
     {
         if (IsHeroNearCentralWayout())
         {
             _hero.IsInWayoutZone = true;
+            if (_isDragListenerActivated)
+            {
+                if (_hero.IsDragging() && _centralWayout.OverlapPoint(GetCurrentMousePosition()))
+                {
+                    _trainingHandler.ShowNext();
+                    _isDragListenerActivated = false;
+                }
+            }
         }
         else
         {

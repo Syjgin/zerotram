@@ -25,12 +25,16 @@ public class PassengerSM : MovableCharacterSM
     public bool IsAttackingAllowed;
     private Bench _currentBench;
 
+    private bool _isFlyingAwayListenerActivated;
+
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
     private float _savedStickProbability;
 
-    public List<GameController.BonusTypes> ActiveBonuses; 
-    
+    public List<GameController.BonusTypes> ActiveBonuses;
+
+    private bool _isDragRunawayDeniedByTraining;
+
     [SerializeField]
     private Sprite _question;
     [SerializeField]
@@ -82,6 +86,26 @@ public class PassengerSM : MovableCharacterSM
     {
         if (IsAttackingAllowed && !_attackDenyedByTraining)
             ActivateState((int)MovableCharacterSM.MovableCharacterStates.Attack);
+    }
+
+    public void SetRunawayDenied(bool denied)
+    {
+        _isDragRunawayDeniedByTraining = denied;
+    }
+
+    public bool IsRunawayDenied()
+    {
+        return _isDragRunawayDeniedByTraining;
+    }
+
+    public void ActivateFlyAwayListener()
+    {
+        _isFlyingAwayListenerActivated = true;
+    }
+
+    public bool IsFlyAwayListenerActivated()
+    {
+        return _isFlyingAwayListenerActivated;
     }
 
     public void RecalculateTicketProbability(float coef, bool onlyForInvisible)

@@ -19,16 +19,22 @@ public class PassengerDraggedState : MovableCharacterState
     {
         if (MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(_passenger) && !_passenger.HasTicket())
         {
-            StopDragByConductor(false);
-            return;
+            if (!_passenger.IsRunawayDenied())
+            {
+                StopDragByConductor(false);
+                return;
+            }
         }
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
             if ((Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability) && !_passenger.IsNearBench) || !_passenger.HasTicket())
             {
-                StopDragByConductor(true);
-                return;
+                if (!_passenger.IsRunawayDenied())
+                {
+                    StopDragByConductor(true);
+                    return;
+                }
             }
         }
         MovableCharacter.Animator.Play("attacked");
