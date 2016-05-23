@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Networking.NetworkSystem;
 
 public class PassengerSM : MovableCharacterSM
 {
@@ -50,6 +51,7 @@ public class PassengerSM : MovableCharacterSM
 
     private bool _attackDenyedByTraining;
 
+    private String _doorToGoAwayName;
     void Awake()
     {
         ActiveBonuses = new List<GameController.BonusTypes>();
@@ -205,18 +207,55 @@ public class PassengerSM : MovableCharacterSM
         ActivateState((int)MovableCharacterStates.Dragged);
     }
 
+    public void StartGoAway(String doorName)
+    {
+        _currentTramStopCount = int.MaxValue - 1;
+        _doorToGoAwayName = doorName;
+    }
+
     public void IncrementStationCount()
     {
         _currentTramStopCount++;
-        if (_currentTramStopCount > _tramStopCount)
+        if (_currentTramStopCount > _tramStopCount && !IsGoingAway)
         {
-            GameObject leftDoor = GameObject.Find("door1");
-            GameObject rightDoor = GameObject.Find("door2");
+            DoorsAnimationController door1 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door1");
+            DoorsAnimationController door2 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door2");
+            DoorsAnimationController door3 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door3");
+            DoorsAnimationController door4 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door4");
             Vector2 target;
-            if (Randomizer.GetRandomPercent() > 50)
-                target = leftDoor.transform.position;
+            if (_doorToGoAwayName == null)
+            {
+                List<DoorsAnimationController> selected = new List<DoorsAnimationController>();
+                if (door1.IsWillBeOpened())
+                    selected.Add(door1);
+                if (door2.IsWillBeOpened())
+                    selected.Add(door2);
+                if (door3.IsWillBeOpened())
+                    selected.Add(door3);
+                if (door4.IsWillBeOpened())
+                    selected.Add(door4);
+                if (selected.Count == 0)
+                    return;
+                int randomPercent = Randomizer.GetRandomPercent();
+                int step = 100/selected.Count;
+                int currentStep = 0;
+                int i = 0;
+                for (i = 0; i < selected.Count - 1; i++)
+                {
+                    if (currentStep > randomPercent)
+                    {
+                        break;
+                    }
+                    currentStep += step;
+                }
+                target = selected[i].gameObject.transform.position;
+            }
             else
-                target = rightDoor.transform.position;
+            {
+                DoorsAnimationController door = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>(_doorToGoAwayName);
+                target = door.gameObject.transform.position;
+            }
+            
             Velocity *= 2;
             SetTarget(target);
             IsGoingAway = true;

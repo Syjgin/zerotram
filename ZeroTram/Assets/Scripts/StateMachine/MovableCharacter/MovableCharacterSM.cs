@@ -90,8 +90,19 @@ public class MovableCharacterSM : StateMachine
             Hp = 0;
             IsDead = true;
             GameController.GetInstance().RegisterDeath(this);
+            if (!TrainingHandler.IsTrainingFinished())
+            {
+                if (this is ConductorSM)
+                    return;
+            }
             Destroy(this.gameObject);
         }
+    }
+
+    public void Resurrect()
+    {
+        Hp = InitialLifes;
+        GameController.GetInstance().Resurrect();
     }
 
     public virtual void AddDamage(MovableCharacterSM attacker)

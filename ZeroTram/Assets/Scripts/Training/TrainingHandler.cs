@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -38,10 +39,19 @@ public class TrainingHandler : MonoBehaviour
     private bool _isFlyAwayEnabled;
     private Bird _birdPassenger;
     private Gnome _gnomePassenger;
+    private int _lastSavedStep;
+    private int _goAwayDoorIndex;
+
+    private bool _isBonusDropEnabled;
 
     public static bool IsTrainingFinished()
     {
         return PlayerPrefs.HasKey(TrainingKey);
+    }
+
+    public bool IsBonusDropEnabled()
+    {
+        return _isBonusDropEnabled;
     }
     
     public bool IsPassengerClickAllowed()
@@ -78,6 +88,7 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
+                _isBonusDropEnabled = false;
                 _doorsTimer.SetActive(false);
                 _ticketsCounter.SetActive(false);
                 _haresCounter.SetActive(false);
@@ -165,8 +176,42 @@ public class TrainingHandler : MonoBehaviour
                 Time.timeScale = 0;
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training8"), true);
                 break;
+            case 14:
+                _doorsTimerController.SetMoveAndStopDuration(3, 5);
+                Time.timeScale = 1;
+                _doorsTimerController.SetMovementLocked(false);
+                _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length) + 1;
+                _gnomePassenger.StartGoAway(String.Format("door{0}",_goAwayDoorIndex));
+                _lastSavedStep = 14;
+                StartCoroutine(WaitAndMoveNext(3));
+                break;
+            case 15:
+                _doors[(_goAwayDoorIndex-1)].Open(false);
+                break;
         }
         _isRefreshInProgress = false;
+    }
+
+    private void TrainingFail(string textId)
+    {
+        Time.timeScale = 0;
+        _currentStep = _lastSavedStep - 1;
+        _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true);
+    }
+
+    public void TrainingFailPassengers()
+    {
+        TrainingFail("TrainingFailPassengers");
+    }
+
+    public void TrainingFailHare()
+    {
+        TrainingFail("TrainingFailHare");
+    }
+
+    public void TrainingFailDeath()
+    {
+        TrainingFail("TrainingFailDeath");
     }
 
     private IEnumerator WaitAndMoveNext(float amount)
@@ -185,7 +230,7 @@ public class TrainingHandler : MonoBehaviour
     {
         GameObject arrow = (GameObject)Instantiate(_arrowPrefab, go.gameObject.transform.position, Quaternion.identity);
         arrow.transform.parent = go.gameObject.transform;
-        arrow.transform.localPosition = new Vector3(0, 1.7f, -8);
+        arrow.transform.localPosition = new Vector3(1, -1.4f, -8);
         _activeArrow = arrow;
     }
 

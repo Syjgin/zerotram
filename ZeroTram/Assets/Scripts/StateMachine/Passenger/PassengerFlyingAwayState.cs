@@ -42,6 +42,16 @@ public class PassengerFlyingAwayState : MovableCharacterState
 
     public void DropBonus()
     {
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            if (
+                !MonobehaviorHandler.GetMonobeharior()
+                    .GetObject<TrainingHandler>("TrainingHandler")
+                    .IsBonusDropEnabled())
+            {
+                return;
+            }
+        }
         if (MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer")
                 .IsAnyBonusActive())

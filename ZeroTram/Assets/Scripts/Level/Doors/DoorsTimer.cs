@@ -43,6 +43,7 @@ public class DoorsTimer : MonoBehaviour
 
     private bool _isTrainingMode;
     private bool _isMovementTimeLocked;
+    private List<DoorsAnimationController> _doorsThatWillBeOpened; 
 
     void Awake()
     {
@@ -50,6 +51,7 @@ public class DoorsTimer : MonoBehaviour
         _stopDuration = ConfigReader.GetConfig().GetField("tram").GetField("StopDuration").n;
         _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
         _doorOpened = new bool[DoorsCount];
+        _doorsThatWillBeOpened = new List<DoorsAnimationController>();
     }
 
     private void UpdateMoveDuration()
@@ -61,6 +63,7 @@ public class DoorsTimer : MonoBehaviour
     public void OpenDoors()
     {
         _isDoorsOpen = true;
+        PrepareToOpen();
         UpdateDoors();
     }
 
@@ -69,6 +72,11 @@ public class DoorsTimer : MonoBehaviour
         _currentStationTotalMoveDuration = moveDuration;
         _stopDuration = stopDuration;
         _isTrainingMode = true;
+    }
+
+    public void SetTrainingMode(bool mode)
+    {
+        _isTrainingMode = mode;
     }
 
     public int GetCurrentRemainingTime()
@@ -83,8 +91,11 @@ public class DoorsTimer : MonoBehaviour
         _currentMoveDuration = 0;
         _currentStopDuration = 0;
         _isDoorsOpen = true;
-        if(TrainingHandler.IsTrainingFinished())
+        if (TrainingHandler.IsTrainingFinished())
+        {
+            PrepareToOpen();
             UpdateDoors();
+        }
     }
 
     public void SetMovementLocked(bool locked)
@@ -123,6 +134,45 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    void PrepareToOpen()
+    {
+        _doorsThatWillBeOpened.Clear();
+        switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+        {
+            case DoorsOpenMode.single:
+                CalculateOpenProbabilities(false);
+                for (int i = 0; i < DoorsCount; i++)
+                {
+                    if (_doorOpened[i])
+                    {
+                        _doorsThatWillBeOpened.Add(_doors[i]);
+                        _doors[i].SetWillBeOpened();
+                    }
+                }
+                break;
+            case DoorsOpenMode.tween:
+                CalculateOpenProbabilities(true);
+                for (int i = 0; i < DoorsCount; i++)
+                {
+                    if (_doorOpened[i])
+                    {
+                        _doorsThatWillBeOpened.Add(_doors[i]);
+                        _doors[i].SetWillBeOpened();
+                    }
+                }
+                break;
+            case DoorsOpenMode.all:
+                for (int i = 0; i < DoorsCount; i++)
+                {
+                    _doorsThatWillBeOpened.Add(_doors[i]);
+                    _doors[i].SetWillBeOpened();
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     void UpdateDoors()
     {        
         if (_isDoorsOpen)
@@ -133,36 +183,9 @@ public class DoorsTimer : MonoBehaviour
             if (!_isTrainingMode)
             {
                 _benchCombinationManager.CalculateCurrent();
-                switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+                foreach (var doorsAnimationController in _doorsThatWillBeOpened)
                 {
-                    case DoorsOpenMode.single:
-                        CalculateOpenProbabilities(false);
-                        for (int i = 0; i < DoorsCount; i++)
-                        {
-                            if (_doorOpened[i])
-                            {
-                                _doors[i].Open(true);
-                            }
-                        }
-                        break;
-                    case DoorsOpenMode.tween:
-                        CalculateOpenProbabilities(true);
-                        for (int i = 0; i < DoorsCount; i++)
-                        {
-                            if (_doorOpened[i])
-                            {
-                                _doors[i].Open(true);
-                            }
-                        }
-                        break;
-                    case DoorsOpenMode.all:
-                        for (int i = 0; i < DoorsCount; i++)
-                        {
-                            _doors[i].Open(true);
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    doorsAnimationController.Open(true);
                 }
             }
             GameController.GetInstance().SetDoorsOpen(true);
@@ -255,6 +278,7 @@ public class DoorsTimer : MonoBehaviour
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;
+            PrepareToOpen();
             UpdateDoors();
         }
         _currentMoveDuration = _currentStationTotalMoveDuration;
@@ -301,6 +325,7 @@ public class DoorsTimer : MonoBehaviour
             {
                 _isDoorsOpen = true;
                 _currentMoveDuration = 0;
+                PrepareToOpen();
                 GameController.GetInstance().CheckBeforeDoorsOpen();
                 UpdateDoors();
             }

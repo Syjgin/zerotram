@@ -15,7 +15,9 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Text _captionText;
     [SerializeField] private GameObject _stickCaption;
 	[SerializeField] private Client _client;
-    
+    [SerializeField] private TrainingHandler _trainingHandler;
+    [SerializeField] private ConductorSM _hero;
+
     private const int ZeroCount = 6;
 
     private GameController.StateInformation _stateInfo;
@@ -78,11 +80,47 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         else
         {
             if (_stateInfo.Hares > GameController.GetInstance().MaxHaresPercent)
-                _reasonText.text = StringResources.GetLocalizedString("GameOverHare");
+            {
+                if (TrainingHandler.IsTrainingFinished())
+                {
+                    _reasonText.text = StringResources.GetLocalizedString("GameOverHare");
+                }
+                else
+                {
+                    GameController.GetInstance().ResetHarePercent();
+                    _trainingHandler.TrainingFailHare();
+                    gameOverMenu.gameObject.SetActive(false);
+                    return;
+                }
+            }
             if (_stateInfo.RemainKilled < 0)
-                _reasonText.text = StringResources.GetLocalizedString("GameOverKilledPassengers");
+            {
+                if (TrainingHandler.IsTrainingFinished())
+                {
+                    _reasonText.text = StringResources.GetLocalizedString("GameOverKilledPassengers");
+                }
+                else
+                {
+                    GameController.GetInstance().ResetDiedPassengersPercent();
+                    _trainingHandler.TrainingFailPassengers();
+                    gameOverMenu.gameObject.SetActive(false);
+                    return;
+                }
+            }
             if (_stateInfo.IsConductorDied)
-                _reasonText.text = StringResources.GetLocalizedString("GameOverDeath");
+            {
+                if (TrainingHandler.IsTrainingFinished())
+                {
+                    _reasonText.text = StringResources.GetLocalizedString("GameOverDeath");
+                }
+                else
+                {
+                    _hero.Resurrect();
+                    _trainingHandler.TrainingFailDeath();
+                    gameOverMenu.gameObject.SetActive(false);
+                    return;
+                }
+            }
         }
         
         int leadingZeroCount = ZeroCount - _stateInfo.TicketCount.ToString().Length;

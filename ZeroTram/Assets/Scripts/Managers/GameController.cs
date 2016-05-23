@@ -39,6 +39,11 @@ public class GameController
 		return _isDoorsOpen;
 	}
 
+    public void Resurrect()
+    {
+        _isGameFinished = false;
+    }
+
 	public void SetDoorsOpen(bool open)
 	{
 		_isDoorsOpen = open;
@@ -133,6 +138,21 @@ public class GameController
             _passengersToAdd.Clear();
             _passengersToDelete.Clear();
         }
+    }
+
+    public void ResetHarePercent()
+    {
+        _haresPercent = 0;
+        _isGameFinished = false;
+        UpdateListeners(false);
+    }
+
+    public void ResetDiedPassengersPercent()
+    {
+        _killedPassengers = 0;
+        _maxKilledPassengers = 0;
+        _isGameFinished = false;
+        UpdateListeners(false);
     }
 
     public void StartNewGame()
