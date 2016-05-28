@@ -17,7 +17,7 @@ public class Floor : MonoBehaviour
     [SerializeField] private TrainingHandler _trainingHandler;
 
     private const float HeroOffset = 0.6f;
-    private const float Epsilon = 0.2f;
+    private const float Epsilon = 0.3f;
 
     private float _normalizedMax;
 
@@ -170,13 +170,18 @@ public class Floor : MonoBehaviour
         return NormalizePosition(ref position, withOffset);
     }
 
+    private bool IsPointCloseToCollider(Vector2 point, BoxCollider2D collider)
+    {
+        return Vector2.Distance(collider.bounds.ClosestPoint(point), point) < Epsilon ||
+               collider.OverlapPoint(point);
+    }
+
     public bool IsPassengerNearDoors(PassengerSM ps)
     {
         Vector2 position = ps.transform.position;
         foreach (var door in _doors)
         {
-            Vector3 doorPos = door.transform.position;
-            if (Vector2.Distance(doorPos, position) < Epsilon)
+            if (IsPointCloseToCollider(position, door))
                 return true;
         }
         return false;
@@ -187,8 +192,7 @@ public class Floor : MonoBehaviour
         Vector2 position = passenger.transform.position;
         foreach (var door in _doors)
         {
-            Vector3 doorPos = door.transform.position;
-            if (Vector2.Distance(doorPos, position) < Epsilon)
+            if (IsPointCloseToCollider(position, door))
                 return door.gameObject;
         }
         return null;

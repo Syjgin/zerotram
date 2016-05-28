@@ -7,7 +7,6 @@ public class DoorsAnimationController : MonoBehaviour
     [SerializeField]
     private Spawner _unitSpawner;
     private bool _isOpened;
-    private bool _willBeOpened;
 
 	void Awake ()
 	{
@@ -39,7 +38,6 @@ public class DoorsAnimationController : MonoBehaviour
     {
         _animator.Play("doors_close");
         _isOpened = false;
-        _willBeOpened = false;
     }
 
     public void Glitch()
@@ -51,15 +49,5 @@ public class DoorsAnimationController : MonoBehaviour
     public bool IsOpened()
     {
         return _isOpened;
-    }
-
-    public void SetWillBeOpened()
-    {
-        _willBeOpened = true;
-    }
-
-    public bool IsWillBeOpened()
-    {
-        return _willBeOpened;
     }
 }

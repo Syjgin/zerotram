@@ -55,7 +55,7 @@ public class MovableCharacterSM : StateMachine
     {
         return _target;
     }
-    public void SetTarget(Vector2 target)
+    public virtual void SetTarget(Vector2 target)
     {
         _target = target;
         CalculateOrientation(target);

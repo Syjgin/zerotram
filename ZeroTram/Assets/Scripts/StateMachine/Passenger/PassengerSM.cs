@@ -50,8 +50,8 @@ public class PassengerSM : MovableCharacterSM
     private bool _isTrainingEnabled;
 
     private bool _attackDenyedByTraining;
+    private bool _isStickModifiedForTraining;
 
-    private String _doorToGoAwayName;
     void Awake()
     {
         ActiveBonuses = new List<GameController.BonusTypes>();
@@ -207,10 +207,15 @@ public class PassengerSM : MovableCharacterSM
         ActivateState((int)MovableCharacterStates.Dragged);
     }
 
-    public void StartGoAway(String doorName)
+    public void StartGoAway()
     {
         _currentTramStopCount = int.MaxValue - 1;
-        _doorToGoAwayName = doorName;
+    }
+
+    public void SetAlwaysStickForTraining()
+    {
+        StickProbability = 100;
+        _isStickModifiedForTraining = true;
     }
 
     public void IncrementStationCount()
@@ -218,47 +223,41 @@ public class PassengerSM : MovableCharacterSM
         _currentTramStopCount++;
         if (_currentTramStopCount > _tramStopCount && !IsGoingAway)
         {
-            DoorsAnimationController door1 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door1");
-            DoorsAnimationController door2 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door2");
-            DoorsAnimationController door3 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door3");
-            DoorsAnimationController door4 = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door4");
-            Vector2 target;
-            if (_doorToGoAwayName == null)
+            DoorsAnimationController door1 =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door1");
+            DoorsAnimationController door2 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door2");
+            DoorsAnimationController door3 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door3");
+            DoorsAnimationController door4 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door4");
+            List<DoorsAnimationController> selected = new List<DoorsAnimationController>();
+            if (door1.IsOpened())
+                selected.Add(door1);
+            if (door2.IsOpened())
+                selected.Add(door2);
+            if (door3.IsOpened())
+                selected.Add(door3);
+            if (door4.IsOpened())
+                selected.Add(door4);
+            if (selected.Count == 0)
+                return;
+            int randomPercent = Randomizer.GetRandomPercent();
+            int step = 100 / selected.Count;
+            int currentStep = 0;
+            int i = 0;
+            for (i = 0; i < selected.Count - 1; i++)
             {
-                List<DoorsAnimationController> selected = new List<DoorsAnimationController>();
-                if (door1.IsWillBeOpened())
-                    selected.Add(door1);
-                if (door2.IsWillBeOpened())
-                    selected.Add(door2);
-                if (door3.IsWillBeOpened())
-                    selected.Add(door3);
-                if (door4.IsWillBeOpened())
-                    selected.Add(door4);
-                if (selected.Count == 0)
-                    return;
-                int randomPercent = Randomizer.GetRandomPercent();
-                int step = 100/selected.Count;
-                int currentStep = 0;
-                int i = 0;
-                for (i = 0; i < selected.Count - 1; i++)
+                if (currentStep > randomPercent)
                 {
-                    if (currentStep > randomPercent)
-                    {
-                        break;
-                    }
-                    currentStep += step;
+                    break;
                 }
-                target = selected[i].gameObject.transform.position;
+                currentStep += step;
             }
-            else
-            {
-                DoorsAnimationController door = MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>(_doorToGoAwayName);
-                target = door.gameObject.transform.position;
-            }
-            
+            Vector2 target = selected[i].gameObject.transform.position;
             Velocity *= 2;
-            SetTarget(target);
             IsGoingAway = true;
+            base.SetTarget(target);
         }
     }
     
@@ -269,6 +268,12 @@ public class PassengerSM : MovableCharacterSM
         bool stick = Randomizer.GetPercentageBasedBoolean((int)StickProbability);
         if (stick && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
         {
+            if (_isStickModifiedForTraining)
+            {
+                TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+                handler.ShowNext();
+            }
             ActivateState((int)MovableCharacterStates.Stick);
             Indicator.sprite = _stick;
         }
@@ -358,8 +363,26 @@ public class PassengerSM : MovableCharacterSM
             base.MakeIdle();
     }
 
+    public override void SetTarget(Vector2 target)
+    {
+        if (IsGoingAway)
+        {
+            CalculateOrientation(GetTarget());
+            ActivateState((int) MovableCharacterStates.Move);
+        }
+        else
+        {
+            base.SetTarget(target);
+        }
+    }
+
     public void CalculateRandomTarget(bool force = false)
     {
+        if (IsGoingAway)
+        {
+            SetTarget(GetTarget());
+            return;
+        }
         if(AttackTarget != null && !force)
             return;
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
@@ -555,14 +578,6 @@ public class PassengerSM : MovableCharacterSM
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero == null)
             return;
-        if (IsGoingAway && 
-            GameController.GetInstance().IsDoorsOpen() && 
-            !IsStick() &&
-            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
-        {
-            Destroy(gameObject);
-            return;
-        }
         CalculateIndicator();
         if(!hero.IsDragging())
             StopDrag(false);

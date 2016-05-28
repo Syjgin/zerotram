@@ -177,16 +177,29 @@ public class TrainingHandler : MonoBehaviour
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training8"), true);
                 break;
             case 14:
-                _doorsTimerController.SetMoveAndStopDuration(3, 5);
+                _doorsTimerController.SetMoveAndStopDuration(3, 10);
                 Time.timeScale = 1;
                 _doorsTimerController.SetMovementLocked(false);
-                _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length) + 1;
-                _gnomePassenger.StartGoAway(String.Format("door{0}",_goAwayDoorIndex));
+                _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
+                _gnomePassenger.SetAlwaysStickForTraining();
+                _gnomePassenger.StartGoAway();
                 _lastSavedStep = 14;
-                StartCoroutine(WaitAndMoveNext(3));
+                StartCoroutine(WaitAndMoveNext(2.9f));
+                GameController.GetInstance().SetKillStickDisabled();
                 break;
             case 15:
-                _doors[(_goAwayDoorIndex-1)].Open(false);
+                _doors[(_goAwayDoorIndex)].Open(false);
+                _lastSavedStep = 15;
+                break;
+            case 16:
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training9"), true);
+                _lastSavedStep = 16;
+                break;
+            case 17:
+                Time.timeScale = 1;
+                //_doors[(_goAwayDoorIndex - 1)].Glitch();
+                _lastSavedStep = 17;
                 break;
         }
         _isRefreshInProgress = false;

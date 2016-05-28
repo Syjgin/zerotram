@@ -16,7 +16,7 @@ public class PassengerMoveState : MoveState
         {
             if (MovableCharacter.IsGoingAway)
             {
-                if (GameController.GetInstance().IsDoorsOpen())
+                if (GameController.GetInstance().IsDoorsOpen() && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(_passenger))
                 {
                     CalculateStickOnExit();
                     if (!_passenger.IsStick())

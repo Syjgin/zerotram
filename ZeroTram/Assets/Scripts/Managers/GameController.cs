@@ -398,6 +398,15 @@ public class GameController
 		}
 	}
 
+    public void IncrementStationNumberForPassengers()
+    {
+        _currentSpawnCount += (int)_spawnIncrementCount;
+        foreach (var passenger in _passengers)
+        {
+            passenger.IncrementStationCount();
+        }
+    }
+
 	private void NextStationReached()
 	{
 		_currentStationNumber++;
@@ -405,11 +414,6 @@ public class GameController
 		{
 			MapManager.GetInstance().OpenNextLevel();
 			Victory();
-		}
-		_currentSpawnCount += (int)_spawnIncrementCount;
-		foreach (var passenger in _passengers)
-		{
-			passenger.IncrementStationCount();
 		}
 	}
 
@@ -481,6 +485,11 @@ public class GameController
 			}
 		}
 	}
+
+    public void SetKillStickDisabled()
+    {
+        _stickPeriod = int.MaxValue;
+    }
 
 	public PassengerSM GetStickPassenger()
 	{
