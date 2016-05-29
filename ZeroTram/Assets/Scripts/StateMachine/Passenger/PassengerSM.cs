@@ -254,7 +254,8 @@ public class PassengerSM : MovableCharacterSM
                 }
                 currentStep += step;
             }
-            Vector2 target = selected[i].gameObject.transform.position;
+            BoxCollider2D collider = selected[i].GetComponent<BoxCollider2D>();
+            Vector2 target = new Vector2(selected[i].gameObject.transform.position.x, selected[i].gameObject.transform.position.y) + collider.offset;
             Velocity *= 2;
             IsGoingAway = true;
             base.SetTarget(target);
@@ -409,11 +410,28 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
+    public bool IsStickModifiedForTraining()
+    {
+        return _isStickModifiedForTraining;
+    }
+
     public void StopStick()
     {
-        MakeIdle();
         if (!IsGoingAway)
+        {
             CalculateRandomTarget();
+        }
+        else
+        {
+            if (_isStickModifiedForTraining)
+            {
+                TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+                handler.SetIsGnomeSurvived(true);
+                handler.ShowNext();
+            }
+            Destroy(gameObject);       
+        }
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
         GameController.GetInstance().IncreaseAntiStick();
     }

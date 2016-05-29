@@ -67,7 +67,7 @@ public class MovableCharacterSM : StateMachine
         Hp -= damage;
         if (Hp > InitialLifes)
             Hp = InitialLifes;
-        float lifesPercent = Hp / (float)InitialLifes;
+        float lifesPercent = Hp / InitialLifes;
         float originalValue = _lifebar.bounds.min.x;
         _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);
         float newValue = _lifebar.bounds.min.x;

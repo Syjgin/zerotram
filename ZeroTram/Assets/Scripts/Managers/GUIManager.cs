@@ -30,7 +30,7 @@ public class GUIManager : MonoBehaviour {
 		_loadingText.SetActive(true);
 		_loadingButton.enabled = false;
 		_startClip.Play();
-		Application.LoadLevelAsync("Main"); 
+		SceneManager.LoadSceneAsync("Main"); 
 	}
 
 	public void Pause () {
@@ -44,15 +44,15 @@ public class GUIManager : MonoBehaviour {
 	}
 
 	public void Authors(){
-		Application.LoadLevelAsync("Authors");
+        SceneManager.LoadSceneAsync("Authors");
 	}
 
 	public void Records(){
-		Application.LoadLevelAsync("Records");
+        SceneManager.LoadSceneAsync("Records");
 	}
 
 	public void BacktoMenu(){
-		Application.LoadLevelAsync("MainMenu");
+        SceneManager.LoadSceneAsync("MainMenu");
 	}
 
 	public void Retry(){

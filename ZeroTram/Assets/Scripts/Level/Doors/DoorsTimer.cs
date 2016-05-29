@@ -217,6 +217,20 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public void Unstick()
+    {
+        _stickNote.SetActive(false);
+        if (_currentStickDoor != null)
+        {
+            if (_isDoorsOpen)
+                _currentStickDoor.Open(false);
+            else
+                _currentStickDoor.Close();
+            _currentStickPassenger = null;
+        }
+        _isPaused = false;
+    }
+
     public void SetPaused(bool paused)
     {
         if(paused == _isPaused)
@@ -231,16 +245,7 @@ public class DoorsTimer : MonoBehaviour
         {
             if (!GameController.GetInstance().IsAnybodyStick())
             {
-                _stickNote.SetActive(false);
-                if (_currentStickDoor != null)
-                {
-                    if(_isDoorsOpen)
-                        _currentStickDoor.Open(false);
-                    else 
-                        _currentStickDoor.Close();
-                    _currentStickPassenger = null;
-                }
-                _isPaused = false;
+                Unstick();
             }
         }
     }

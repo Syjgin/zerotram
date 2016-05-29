@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseHandler : MonoBehaviour
@@ -46,7 +47,7 @@ public class PauseHandler : MonoBehaviour
         });
         _toMenuButton.onClick.AddListener(() =>
         {
-            Application.LoadLevelAsync("MainMenu");
+            SceneManager.LoadSceneAsync("MainMenu");
             _toMenuButton.enabled = false;
             Time.timeScale = 1;
         });

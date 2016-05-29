@@ -479,18 +479,27 @@ public class GameController
 		{
 			if (passengerSm.IsStick())
 			{
-				RegisterDeath(passengerSm);
-				MonoBehaviour.Destroy(passengerSm.gameObject);
+			    if (!TrainingHandler.IsTrainingFinished())
+			    {
+			        if (passengerSm.IsStickModifiedForTraining())
+			        {
+			            TrainingHandler handler =
+			                MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+			            handler.SetIsGnomeSurvived(false);
+			            handler.ShowNext();
+			        }
+			    }
+			    else
+			    {
+                    RegisterDeath(passengerSm);
+                }
+                if(passengerSm != null)
+				    MonoBehaviour.Destroy(passengerSm.gameObject);
 				return;
 			}
 		}
 	}
-
-    public void SetKillStickDisabled()
-    {
-        _stickPeriod = int.MaxValue;
-    }
-
+    
 	public PassengerSM GetStickPassenger()
 	{
 		foreach (var passengerSm in _passengers)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FadeTimer : MonoBehaviour
@@ -24,7 +25,7 @@ public class FadeTimer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-        _clicker.onClick.AddListener(() => Application.LoadLevelAsync("MainMenu"));
+        _clicker.onClick.AddListener(() => SceneManager.LoadSceneAsync("MainMenu"));
 	    _timeSincePreviousFrame = 0;
 	    _currentFrame = 0;
         phrasesByFrames.Add(2, "Есть правило: \n самые затаенные желания всегда исполняются неожиданно.");
@@ -58,7 +59,7 @@ public class FadeTimer : MonoBehaviour
 	    else
 	    {
 	        if (_currentFrame > 5)
-	            Application.LoadLevelAsync("MainMenu");
+	            SceneManager.LoadSceneAsync("MainMenu");
 	        else
 	        {
 	            if (_currentFrame == 3)

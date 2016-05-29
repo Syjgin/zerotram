@@ -24,6 +24,7 @@ public class Floor : MonoBehaviour
     private List<GameObject> _spawnedDrops;
 
     private bool _isDragListenerActivated;
+    private string _dragTrainingPassengerName;
 
 	// Use this for initialization
 	void Awake ()
@@ -32,8 +33,9 @@ public class Floor : MonoBehaviour
 	    _normalizedMax = _polygonCollider2D.bounds.max.y - _polygonCollider2D.bounds.min.y;
 	}
 
-    public void AddDragCenterListner()
+    public void AddDragCenterListner(string passengerName)
     {
+        _dragTrainingPassengerName = passengerName;
         _isDragListenerActivated = true;
     }
 
@@ -46,8 +48,11 @@ public class Floor : MonoBehaviour
             {
                 if (_hero.IsDragging() && _centralWayout.OverlapPoint(GetCurrentMousePosition()))
                 {
-                    _trainingHandler.ShowNext();
-                    _isDragListenerActivated = false;
+                    if (_hero.GetDragTarget().name.Equals(_dragTrainingPassengerName))
+                    {
+                        _trainingHandler.ShowNext();
+                        _isDragListenerActivated = false;
+                    }
                 }
             }
         }

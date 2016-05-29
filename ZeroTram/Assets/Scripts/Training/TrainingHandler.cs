@@ -43,6 +43,12 @@ public class TrainingHandler : MonoBehaviour
     private int _goAwayDoorIndex;
 
     private bool _isBonusDropEnabled;
+    private bool _isGnomeSurvived;
+
+    public void SetIsGnomeSurvived(bool val)
+    {
+        _isGnomeSurvived = val;
+    }
 
     public static bool IsTrainingFinished()
     {
@@ -159,7 +165,7 @@ public class TrainingHandler : MonoBehaviour
                 _centralWayoutSprite.SetActive(true);
                 DisplayArrow(_centralWayout);
                 Time.timeScale = 1;
-                _floor.AddDragCenterListner();
+                _floor.AddDragCenterListner(_birdPassenger.name);
                 break;
             case 11:
                 Time.timeScale = 0;
@@ -177,7 +183,7 @@ public class TrainingHandler : MonoBehaviour
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training8"), true);
                 break;
             case 14:
-                _doorsTimerController.SetMoveAndStopDuration(3, 10);
+                _doorsTimerController.SetMoveAndStopDuration(3, 5);
                 Time.timeScale = 1;
                 _doorsTimerController.SetMovementLocked(false);
                 _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
@@ -185,7 +191,6 @@ public class TrainingHandler : MonoBehaviour
                 _gnomePassenger.StartGoAway();
                 _lastSavedStep = 14;
                 StartCoroutine(WaitAndMoveNext(2.9f));
-                GameController.GetInstance().SetKillStickDisabled();
                 break;
             case 15:
                 _doors[(_goAwayDoorIndex)].Open(false);
@@ -198,8 +203,18 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 17:
                 Time.timeScale = 1;
-                //_doors[(_goAwayDoorIndex - 1)].Glitch();
                 _lastSavedStep = 17;
+                break;
+            case 18:
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(_isGnomeSurvived ? "Training10" : "Training11"), true);
+                _lastSavedStep = 18;
+                break;
+            case 19:
+                Time.timeScale = 1;
+                _doors[(_goAwayDoorIndex)].Close();
+                _doorsTimerController.Unstick();
+                _lastSavedStep = 19;
                 break;
         }
         _isRefreshInProgress = false;
