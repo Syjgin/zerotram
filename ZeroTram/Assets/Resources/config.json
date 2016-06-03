@@ -255,7 +255,7 @@
 			"SitPossibility": 25,
 			"StandPossibility": 75,
 			"StopStandCheckPeriod" : 8,
-			"SitRecheckPeriod" : 1,
+			"SitRecheckPeriod" : 5,
 			"SitAggressionIncrement" : 2
 		},
 	"combinations" : {

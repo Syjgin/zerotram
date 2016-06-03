@@ -35,6 +35,8 @@ public class PassengerSM : MovableCharacterSM
     public List<GameController.BonusTypes> ActiveBonuses;
 
     private bool _isDragRunawayDeniedByTraining;
+    private bool _isFlyAwayDenied;
+    private bool _isDragDenied;
 
     [SerializeField]
     private Sprite _question;
@@ -51,6 +53,7 @@ public class PassengerSM : MovableCharacterSM
 
     private bool _attackDenyedByTraining;
     private bool _isStickModifiedForTraining;
+    private bool _isConductorAttackDenied;
 
     void Awake()
     {
@@ -77,6 +80,21 @@ public class PassengerSM : MovableCharacterSM
             {(int) MovableCharacterStates.Sit, sitState},
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
+    }
+
+    public void SetFlyAwayDenied(bool denied)
+    {
+        _isFlyAwayDenied = denied;
+    }
+
+    public void SetConductorAttackDenied(bool value)
+    {
+        _isConductorAttackDenied = value;
+    }
+
+    public void SetDragDenied(bool denied)
+    {
+        _isDragDenied = denied;
     }
 
     public void SetAttackEnabled(bool isEnabled)
@@ -326,6 +344,8 @@ public class PassengerSM : MovableCharacterSM
 
     public void HandleSitdown(Bench bench)
     {
+        if(IsGoingAway)
+            return;
         _currentBench = bench;
         AttackTarget = null;
         transform.position = new Vector3(bench.transform.position.x, bench.transform.position.y, transform.position.z);
@@ -337,9 +357,10 @@ public class PassengerSM : MovableCharacterSM
         if(_attackDenyedByTraining)
             return;
         float currentAttackProbability = AttackProbability;
-        if (movable is PassengerSM)
+        var sm = movable as PassengerSM;
+        if (sm != null)
         {
-            PassengerSM passenger = (PassengerSM) movable;
+            PassengerSM passenger = sm;
             if (passenger.IsOnTheBench())
             {
                 currentAttackProbability *=
@@ -348,6 +369,14 @@ public class PassengerSM : MovableCharacterSM
         }
         if (Randomizer.GetPercentageBasedBoolean((int)currentAttackProbability))
         {
+            if (_isConductorAttackDenied)
+            {
+                ConductorSM conductor = movable as ConductorSM;
+                if (conductor != null)
+                {
+                    return;
+                }
+            }
             AttackTarget = movable;
             AttackIfPossible();
         }
@@ -389,6 +418,13 @@ public class PassengerSM : MovableCharacterSM
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
         if (target != default(Vector2))
             SetTarget(target);
+    }
+
+    public void SetMaximumAttackProbabilityForTraining()
+    {
+        AttackProbability = 100;
+        ChangeStatePeriod = 1f;
+        _isAttackListenerActivated = true;
     }
 
     public void CalculateAttackReaction()
@@ -471,8 +507,11 @@ public class PassengerSM : MovableCharacterSM
                 GameController.GetInstance().UpdatePassenger(this);
                 if (!_hasTicket)
                 {
-                    AttackTarget = hero;
-                    CalculateAttackReaction();
+                    if (!_isConductorAttackDenied)
+                    {
+                        AttackTarget = hero;
+                        CalculateAttackReaction();
+                    }
                 }
                 else
                 {
@@ -489,13 +528,18 @@ public class PassengerSM : MovableCharacterSM
         hero.StartDrag(this);
     }
 
+    public bool IsDragDenied()
+    {
+        return _isDragDenied;
+    }
+
     public override void HandleDoubleClick()
     {
-        if (!MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler").IsFlyAwayEnabled())
-            return;
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero.CanKick(this))
         {
+            if (_isFlyAwayDenied)
+                return;
             hero.Kick(this);
             return;
         }
@@ -537,6 +581,11 @@ public class PassengerSM : MovableCharacterSM
         {
             if (attack)
             {
+                if (_isConductorAttackDenied)
+                {
+                    MakeIdle();
+                    return;
+                }
                 AttackTarget = conductor;
                 AttackIfPossible();
             }

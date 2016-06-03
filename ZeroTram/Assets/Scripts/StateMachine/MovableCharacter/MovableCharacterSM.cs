@@ -29,6 +29,7 @@ public class MovableCharacterSM : StateMachine
     private bool _isFreezeBonusActive;
     private SnowBonus.FreezeData _freezeData;
     private float _currentScale;
+    protected bool _isAttackListenerActivated;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -105,8 +106,20 @@ public class MovableCharacterSM : StateMachine
         GameController.GetInstance().Resurrect();
     }
 
+    public void SetAttackListenerActivated()
+    {
+        _isAttackListenerActivated = true;
+    }
+
     public virtual void AddDamage(MovableCharacterSM attacker)
     {
+        if (_isAttackListenerActivated)
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.ShowNext();
+            _isAttackListenerActivated = false;
+        }
         AttackedStartTime = Time.time;
         ActivateState((int)MovableCharacterStates.Attacked);
         if (attacker.AttackStrength < 0)

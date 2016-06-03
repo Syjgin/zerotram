@@ -36,12 +36,14 @@ public class TrainingHandler : MonoBehaviour
     private int _currentStep;
     private bool _isRefreshInProgress;
     private bool _isPassengerClickAllowed;
-    private bool _isFlyAwayEnabled;
     private Bird _birdPassenger;
     private Gnome _gnomePassenger;
+    private Cat _catPassenger;
+    private Granny _grannyPassenger;
     private int _lastSavedStep;
     private int _goAwayDoorIndex;
-
+    private ConductorSM _hero;
+    private GameObject _benches;
     private bool _isBonusDropEnabled;
     private bool _isGnomeSurvived;
 
@@ -64,12 +66,7 @@ public class TrainingHandler : MonoBehaviour
     {
         return _isPassengerClickAllowed;
     }
-
-    public bool IsFlyAwayEnabled()
-    {
-        return _isFlyAwayEnabled;
-    }
-
+    
     // Use this for initialization
     void Start () {
         ShowTrainingStep(0);
@@ -94,6 +91,8 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
+                _benches = GameObject.Find("benches");
+                _benches.SetActive(false);
                 _isBonusDropEnabled = false;
                 _doorsTimer.SetActive(false);
                 _ticketsCounter.SetActive(false);
@@ -102,7 +101,6 @@ public class TrainingHandler : MonoBehaviour
                 _lifes.SetActive(false);
                 _bonusSelectWindow.SetActive(false);
                 _isPassengerClickAllowed = false;
-                _isFlyAwayEnabled = false;
                 _centralWayout.SetActive(false);
                 _centralWayoutSprite.SetActive(false);
                 Time.timeScale = 0;
@@ -127,6 +125,8 @@ public class TrainingHandler : MonoBehaviour
                 GameObject gnomeObject = GameObject.Find("gnome(Clone)");
                 _gnomePassenger = gnomeObject.GetComponent<Gnome>();
                 _gnomePassenger.SetAttackEnabled(false);
+                _gnomePassenger.SetFlyAwayDenied(true);
+                _gnomePassenger.SetDragDenied(true);
                 DisplayArrowForPassenger(_gnomePassenger);
                 _isPassengerClickAllowed = true;
                 break;
@@ -149,6 +149,7 @@ public class TrainingHandler : MonoBehaviour
                 SpawnPassengerFromRandomDoor("bird", Spawner.TicketAdditionMode.WithoutTicket);
                 GameObject bird = GameObject.Find("bird(Clone)");
                 _birdPassenger = bird.GetComponent<Bird>();
+                _birdPassenger.SetFlyAwayDenied(true);
                 _birdPassenger.SetAttackEnabled(false);
                 _birdPassenger.SetRunawayDenied(true);
                 DisplayArrowForPassenger(_birdPassenger);
@@ -175,7 +176,7 @@ public class TrainingHandler : MonoBehaviour
             case 12:
                 Time.timeScale = 1;
                 _birdPassenger.SetRunawayDenied(false);
-                _isFlyAwayEnabled = true;
+                _birdPassenger.SetFlyAwayDenied(false);
                 _birdPassenger.ActivateFlyAwayListener();
                 break;
             case 13:
@@ -194,27 +195,80 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 15:
                 _doors[(_goAwayDoorIndex)].Open(false);
-                _lastSavedStep = 15;
                 break;
             case 16:
                 Time.timeScale = 0;
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training9"), true);
-                _lastSavedStep = 16;
                 break;
             case 17:
                 Time.timeScale = 1;
-                _lastSavedStep = 17;
                 break;
             case 18:
                 Time.timeScale = 0;
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(_isGnomeSurvived ? "Training10" : "Training11"), true);
-                _lastSavedStep = 18;
                 break;
             case 19:
                 Time.timeScale = 1;
                 _doors[(_goAwayDoorIndex)].Close();
                 _doorsTimerController.Unstick();
-                _lastSavedStep = 19;
+                StartCoroutine(WaitAndMoveNext(_doorsTimerController.GetCurrentRemainingTime() + 3));
+                break;
+            case 20:
+                _lastSavedStep = 20;
+                _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
+                _doorsTimerController.OpenDoors();
+
+                int index = Randomizer.GetInRange(0, _doors.Length);
+                _doors[index].OpenAndSpawnByName("granny", Spawner.TicketAdditionMode.WithTicket);
+                index = Randomizer.GetInRange(0, _doors.Length);
+                _doors[index].OpenAndSpawnByName("cat", Spawner.TicketAdditionMode.WithoutTicket);
+                StartCoroutine(WaitAndMoveNext(0.1f));
+                break;
+            case 21:
+                _doorsTimerController.SetMovementLocked(true);
+                GameObject grannyObject = GameObject.Find("granny(Clone)");
+                _grannyPassenger = grannyObject.GetComponent<Granny>();
+                GameObject catObject = GameObject.Find("cat(Clone)");
+
+                _catPassenger = catObject.GetComponent<Cat>();
+                _catPassenger.SetMaximumAttackProbabilityForTraining();
+                _grannyPassenger.SetMaximumAttackProbabilityForTraining();
+                _grannyPassenger.SetConductorAttackDenied(true);
+                _catPassenger.SetConductorAttackDenied(true);
+                _catPassenger.SetFlyAwayDenied(true);
+                _grannyPassenger.SetFlyAwayDenied(true);
+                break;
+            case 22:
+                StartCoroutine(WaitAndMoveNext(2));
+                break;
+            case 23:
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training12"), false);
+                break;
+            case 24:
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training13"), false);
+                break;
+            case 25:
+                _killedCounter.SetActive(true);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training14"), true);
+                break;
+            case 26:
+                Time.timeScale = 1;
+                _grannyPassenger.SetConductorAttackDenied(false);
+                _catPassenger.SetConductorAttackDenied(false);
+                _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
+                _hero.SetAttackListenerActivated();
+                break;
+            case 27:
+                StartCoroutine(WaitAndMoveNext(4));
+                break;
+            case 28:
+                Time.timeScale = 0;
+                _lifes.SetActive(true);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training15"), true);
+                break;
+            case 29:
+                Time.timeScale = 1;
                 break;
         }
         _isRefreshInProgress = false;

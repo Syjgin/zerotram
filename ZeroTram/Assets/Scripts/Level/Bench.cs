@@ -65,8 +65,11 @@ public class Bench : MonoBehaviour
 
     private void TryHaveSetPassenger(PassengerSM passenger)
     {
-        if(passenger.IsGoingAway)
+        if (passenger.IsGoingAway)
+        {
+            passenger.SetTarget(new Vector2());
             return;
+        }
         passenger.IsNearBench = true;
         if (passenger.IsOnTheBench())
         {

@@ -72,6 +72,8 @@ public class ConductorSM : MovableCharacterSM
         {
             obj.StopStick();
         }
+        if(obj.IsDragDenied())
+            return;
         _dragTarget = obj;
         _dragStartPoint = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition();
         CalculateOrientation(_dragStartPoint);
