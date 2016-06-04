@@ -100,7 +100,11 @@ public class PassengerFlyingAwayState : MovableCharacterState
             default:
                 return;
         }
-        if (drop != null)
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            drop = new AntiHareBonus();
+        }
+            if (drop != null)
         {
             MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer").DropBonus(drop, _passenger.transform.position);

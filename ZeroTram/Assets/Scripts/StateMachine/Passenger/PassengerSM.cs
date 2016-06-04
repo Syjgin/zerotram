@@ -37,6 +37,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isDragRunawayDeniedByTraining;
     private bool _isFlyAwayDenied;
     private bool _isDragDenied;
+    private bool _isDragListenerActivated;
 
     [SerializeField]
     private Sprite _question;
@@ -54,6 +55,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _attackDenyedByTraining;
     private bool _isStickModifiedForTraining;
     private bool _isConductorAttackDenied;
+    private bool _isPassengerAttackDenied;
 
     void Awake()
     {
@@ -92,9 +94,19 @@ public class PassengerSM : MovableCharacterSM
         _isConductorAttackDenied = value;
     }
 
+    public void SetPassengerAttackDenied(bool value)
+    {
+        _isPassengerAttackDenied = value;
+    }
+
     public void SetDragDenied(bool denied)
     {
         _isDragDenied = denied;
+    }
+
+    public void SetDragListenerEnabled(bool value)
+    {
+        _isDragListenerActivated = value;
     }
 
     public void SetAttackEnabled(bool isEnabled)
@@ -169,6 +181,11 @@ public class PassengerSM : MovableCharacterSM
             GameController.GetInstance().RegisterPassenger(this);
     }
 
+    public void IncreaseBonusProbability()
+    {
+        BonusProbability = 100;
+    }
+
     public float AttackTargetDistance()
     {
         if (AttackTarget == null)
@@ -215,9 +232,16 @@ public class PassengerSM : MovableCharacterSM
     {
         return _isVisibleToHero;
     }
-
+    
     public void StartDrag()
     {
+        if (_isDragListenerActivated)
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.ShowNext();
+            _isDragListenerActivated = false;
+        }
         if (IsFrozen())
         {
             TemporalyUnfreeze();
@@ -360,6 +384,8 @@ public class PassengerSM : MovableCharacterSM
         var sm = movable as PassengerSM;
         if (sm != null)
         {
+            if(_isPassengerAttackDenied)
+                return;
             PassengerSM passenger = sm;
             if (passenger.IsOnTheBench())
             {
@@ -424,7 +450,12 @@ public class PassengerSM : MovableCharacterSM
     {
         AttackProbability = 100;
         ChangeStatePeriod = 1f;
-        _isAttackListenerActivated = true;
+        IsAttackListenerActivated = true;
+    }
+
+    public void DisableAttackListener()
+    {
+        IsAttackListenerActivated = false;
     }
 
     public void CalculateAttackReaction()

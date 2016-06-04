@@ -28,6 +28,9 @@ public class TrainingHandler : MonoBehaviour
     [SerializeField] private GameObject _centralWayoutSprite;
     [SerializeField] private DoorsTimer _doorsTimerController;
     [SerializeField] private Floor _floor;
+    [SerializeField] private GameObject _bonusesUI;
+    [SerializeField]
+    private GameObject _megabonusUI;
 
     private GameObject _activeArrow;
 
@@ -40,12 +43,12 @@ public class TrainingHandler : MonoBehaviour
     private Gnome _gnomePassenger;
     private Cat _catPassenger;
     private Granny _grannyPassenger;
-    private int _lastSavedStep;
     private int _goAwayDoorIndex;
     private ConductorSM _hero;
     private GameObject _benches;
     private bool _isBonusDropEnabled;
     private bool _isGnomeSurvived;
+    private MovableCharacterSM _attackedPassenger;
 
     public void SetIsGnomeSurvived(bool val)
     {
@@ -103,6 +106,8 @@ public class TrainingHandler : MonoBehaviour
                 _isPassengerClickAllowed = false;
                 _centralWayout.SetActive(false);
                 _centralWayoutSprite.SetActive(false);
+                _bonusesUI.SetActive(false);
+                _megabonusUI.SetActive(false);
                 Time.timeScale = 0;
                 _doorsTimerController.SetMoveAndStopDuration(3, 1);
                 _doorsTimerController.SetMovementLocked(true);
@@ -178,6 +183,7 @@ public class TrainingHandler : MonoBehaviour
                 _birdPassenger.SetRunawayDenied(false);
                 _birdPassenger.SetFlyAwayDenied(false);
                 _birdPassenger.ActivateFlyAwayListener();
+                _haresCounter.SetActive(true);
                 break;
             case 13:
                 Time.timeScale = 0;
@@ -190,7 +196,6 @@ public class TrainingHandler : MonoBehaviour
                 _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
                 _gnomePassenger.SetAlwaysStickForTraining();
                 _gnomePassenger.StartGoAway();
-                _lastSavedStep = 14;
                 StartCoroutine(WaitAndMoveNext(2.9f));
                 break;
             case 15:
@@ -214,7 +219,6 @@ public class TrainingHandler : MonoBehaviour
                 StartCoroutine(WaitAndMoveNext(_doorsTimerController.GetCurrentRemainingTime() + 3));
                 break;
             case 20:
-                _lastSavedStep = 20;
                 _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
                 _doorsTimerController.OpenDoors();
 
@@ -237,38 +241,79 @@ public class TrainingHandler : MonoBehaviour
                 _catPassenger.SetConductorAttackDenied(true);
                 _catPassenger.SetFlyAwayDenied(true);
                 _grannyPassenger.SetFlyAwayDenied(true);
+                _catPassenger.SetHalfImmortal();
+                _grannyPassenger.SetHalfImmortal();
                 break;
             case 22:
-                StartCoroutine(WaitAndMoveNext(2));
+                _grannyPassenger.DisableAttackListener();
+                _catPassenger.DisableAttackListener();
+                if (_attackedPassenger != null)
+                {
+                    DisplayArrowForPassenger((PassengerSM)_attackedPassenger);
+                }
                 break;
             case 23:
                 Time.timeScale = 0;
+                Destroy(_activeArrow);
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training12"), false);
                 break;
             case 24:
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training13"), false);
                 break;
             case 25:
+                _grannyPassenger.SetDragListenerEnabled(true);
+                _catPassenger.SetDragListenerEnabled(true);
                 _killedCounter.SetActive(true);
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training14"), true);
                 break;
             case 26:
                 Time.timeScale = 1;
-                _grannyPassenger.SetConductorAttackDenied(false);
+                break;
+            case 27:
+                _grannyPassenger.SetDragListenerEnabled(false);
+                _catPassenger.SetDragListenerEnabled(false);
                 _catPassenger.SetConductorAttackDenied(false);
+                _catPassenger.SetPassengerAttackDenied(true);
+                _catPassenger.SetDragDenied(false);
                 _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
                 _hero.SetAttackListenerActivated();
                 break;
-            case 27:
-                StartCoroutine(WaitAndMoveNext(4));
-                break;
             case 28:
+                StartCoroutine(WaitAndMoveNext(1));
+                break;
+            case 29:
                 Time.timeScale = 0;
                 _lifes.SetActive(true);
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training15"), true);
+                _catPassenger.SetFlyAwayDenied(false);
+                _isBonusDropEnabled = true;
+                _catPassenger.IncreaseBonusProbability();
                 break;
-            case 29:
+            case 30:
+                DisplayArrowForPassenger(_catPassenger);
                 Time.timeScale = 1;
+                break;
+            case 31:
+                Destroy(_activeArrow);
+                break;
+            case 32:
+                StartCoroutine(WaitAndMoveNext(1));
+                break;
+            case 33:
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training16"), true);
+                break;
+            case 34:
+                Time.timeScale = 1;
+                break;
+            case 35:
+                StartCoroutine(WaitAndMoveNext(3));
+                break;
+            case 36:
+                Time.timeScale = 0;
+                _bonusesUI.SetActive(true);
+                _megabonusUI.SetActive(true);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training17"), true);
                 break;
         }
         _isRefreshInProgress = false;
@@ -277,7 +322,6 @@ public class TrainingHandler : MonoBehaviour
     private void TrainingFail(string textId)
     {
         Time.timeScale = 0;
-        _currentStep = _lastSavedStep - 1;
         _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true);
     }
 
@@ -300,6 +344,14 @@ public class TrainingHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(amount);
         ShowNext();
+    }
+
+    public void SetAttackedPassenger(MovableCharacterSM character)
+    {
+        if (_attackedPassenger == null)
+        {
+            _attackedPassenger = character;
+        }
     }
 
     private void DisplayArrowForPassenger(PassengerSM passenger)

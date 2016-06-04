@@ -20,7 +20,7 @@ public class UnknownDrop : MonoBehaviour
 	void FixedUpdate ()
 	{
 	    _currentPeriod += Time.fixedDeltaTime;
-	    if (_currentPeriod > _destroyPeriod)
+	    if (_currentPeriod > _destroyPeriod && TrainingHandler.IsTrainingFinished())
 	    {
 	        Destroy(gameObject);
 	    }

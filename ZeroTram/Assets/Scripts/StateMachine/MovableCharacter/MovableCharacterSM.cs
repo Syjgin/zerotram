@@ -29,7 +29,8 @@ public class MovableCharacterSM : StateMachine
     private bool _isFreezeBonusActive;
     private SnowBonus.FreezeData _freezeData;
     private float _currentScale;
-    protected bool _isAttackListenerActivated;
+    protected bool IsAttackListenerActivated;
+    private bool _isHalfImmortal;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -108,18 +109,16 @@ public class MovableCharacterSM : StateMachine
 
     public void SetAttackListenerActivated()
     {
-        _isAttackListenerActivated = true;
+        IsAttackListenerActivated = true;
+    }
+
+    public void SetHalfImmortal()
+    {
+        _isHalfImmortal = true;
     }
 
     public virtual void AddDamage(MovableCharacterSM attacker)
     {
-        if (_isAttackListenerActivated)
-        {
-            TrainingHandler handler =
-                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
-            handler.ShowNext();
-            _isAttackListenerActivated = false;
-        }
         AttackedStartTime = Time.time;
         ActivateState((int)MovableCharacterStates.Attacked);
         if (attacker.AttackStrength < 0)
@@ -134,6 +133,21 @@ public class MovableCharacterSM : StateMachine
         float currentStrength = attacker.AttackStrength*Randomizer.GetNormalizedRandom();
         AttackTarget = attacker;
         AddDamageValue(currentStrength);
+        if (_isHalfImmortal)
+        {
+            if (Hp < InitialLifes/2)
+            {
+                Hp = InitialLifes/2;
+            }
+        }
+        if (IsAttackListenerActivated)
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.SetAttackedPassenger(this);
+            handler.ShowNext();
+            IsAttackListenerActivated = false;
+        }
     }
 
     public bool IsAttackReationFinished()

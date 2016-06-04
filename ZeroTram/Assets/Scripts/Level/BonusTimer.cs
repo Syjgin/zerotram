@@ -75,6 +75,12 @@ public class BonusTimer : MonoBehaviour
         }
         coords.z = -5;
         GameObject instantiatedDrop = GameObject.Instantiate(_unknownDropPrefab, coords, Quaternion.identity) as GameObject;
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.ShowNext();
+        }
         if (instantiatedDrop != null)
         {
             UnknownDrop newDrop = instantiatedDrop.GetComponent<UnknownDrop>();
@@ -95,6 +101,12 @@ public class BonusTimer : MonoBehaviour
             Destroy(droppedBonus.gameObject);    
         }
         _droppedBonuses.Clear();
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.ShowNext();
+        }
     }
 
     public void ActivateBonus(IBonus bonus)
