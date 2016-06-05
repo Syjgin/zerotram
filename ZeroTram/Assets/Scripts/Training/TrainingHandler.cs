@@ -268,6 +268,7 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 26:
                 Time.timeScale = 1;
+                _catPassenger.AttackTarget = _grannyPassenger;
                 break;
             case 27:
                 _grannyPassenger.SetDragListenerEnabled(false);
@@ -275,6 +276,7 @@ public class TrainingHandler : MonoBehaviour
                 _catPassenger.SetConductorAttackDenied(false);
                 _catPassenger.SetPassengerAttackDenied(true);
                 _catPassenger.SetDragDenied(false);
+                _catPassenger.AttackTarget = null;
                 _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
                 _hero.SetAttackListenerActivated();
                 break;
@@ -307,13 +309,16 @@ public class TrainingHandler : MonoBehaviour
                 Time.timeScale = 1;
                 break;
             case 35:
-                StartCoroutine(WaitAndMoveNext(3));
-                break;
-            case 36:
                 Time.timeScale = 0;
                 _bonusesUI.SetActive(true);
                 _megabonusUI.SetActive(true);
-                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training17"), true);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training17"), false);
+                break;
+            case 36:
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training18"), true);
+                break;
+            case 37:
+                Time.timeScale = 1;
                 break;
         }
         _isRefreshInProgress = false;
@@ -322,7 +327,7 @@ public class TrainingHandler : MonoBehaviour
     private void TrainingFail(string textId)
     {
         Time.timeScale = 0;
-        _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true);
+        _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true, false);
     }
 
     public void TrainingFailPassengers()
@@ -364,7 +369,6 @@ public class TrainingHandler : MonoBehaviour
     {
         GameObject arrow = (GameObject)Instantiate(_arrowPrefab, go.gameObject.transform.position, Quaternion.identity);
         arrow.transform.parent = go.gameObject.transform;
-        arrow.transform.localPosition = new Vector3(1, -1.4f, -8);
         _activeArrow = arrow;
     }
 

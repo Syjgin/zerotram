@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour
@@ -29,6 +30,7 @@ public class DoorsTimer : MonoBehaviour
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
     [SerializeField] private TrainingHandler _trainingHandler;
+    [SerializeField] private Client _webClient;
 
     private PassengerSM _currentStickPassenger;
     private DoorsAnimationController _currentStickDoor;
@@ -258,6 +260,16 @@ public class DoorsTimer : MonoBehaviour
     public void StopNow()
     {
         int bonusCount = (int)(_currentStationTotalMoveDuration - _currentMoveDuration);
+        if (bonusCount > 0)
+        {
+            _webClient.SendDoorBonusTime(bonusCount, o =>
+            {
+                if(!o.HasField("error"))
+                {
+                      
+                }
+            });
+        }
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;

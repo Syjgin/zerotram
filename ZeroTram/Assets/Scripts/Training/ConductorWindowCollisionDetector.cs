@@ -10,7 +10,17 @@ public class ConductorWindowCollisionDetector : MonoBehaviour
 
     public void MouseClick()
     {
-        if(_window.Hide())
-            _handler.ShowNext();
+        if (_window.Hide())
+        {
+            if (_window.ShowNextAfterClick())
+            {
+                _handler.ShowNext();
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
+            
     }
 }

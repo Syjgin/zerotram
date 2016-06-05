@@ -262,7 +262,20 @@ public class Client : MonoBehaviour
 		return _currentRecord;
 	}
 
-	public void SendRecord(int newRecord, bool withFriends, System.Action<JSONObject> onComplete) {
+    public void SendDoorBonusTime(int bonusTime, System.Action<JSONObject> onComplete)
+    {
+        if (!HandleUnsetToken(onComplete))
+        {
+            return;
+        }
+        POST("event/unlock", new Dictionary<String, String>{
+                {"eventName", "doorsBonusTime"},
+                {"intParameter", bonusTime.ToString()},
+                {"token", _token}
+            }, onComplete);
+    }
+
+    public void SendRecord(int newRecord, bool withFriends, System.Action<JSONObject> onComplete) {
 		if(newRecord > _currentRecord) {
 			_currentRecord = newRecord;
 			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, _currentRecord);

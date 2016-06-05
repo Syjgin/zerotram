@@ -11,6 +11,8 @@ public class UnknownDrop : MonoBehaviour
     private float _destroyPeriod;
     private float _currentPeriod;
 
+    private const int WaitTimeForTraining = 1;
+
 	void Awake ()
 	{
 	    _currentPeriod = 0;
@@ -40,6 +42,15 @@ public class UnknownDrop : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            if(_currentPeriod < WaitTimeForTraining)
+                return;
+        }
         MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer").ActivateDrop(this);
     }

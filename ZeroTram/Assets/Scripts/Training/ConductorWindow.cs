@@ -18,6 +18,7 @@ public class ConductorWindow : MonoBehaviour
     private bool _hideAfterClick;
     private const float MinimalShowTime = 0.2f;
     private bool _canBeHidden;
+    private bool _showNextAfterClick;
 
     public bool Hide()
     {
@@ -34,8 +35,14 @@ public class ConductorWindow : MonoBehaviour
         _hideAfterClick = true;
     }
 
-    public void DisplayText(string text, bool hideAfterClick)
+    public bool ShowNextAfterClick()
     {
+        return _showNextAfterClick;
+    }
+
+    public void DisplayText(string text, bool hideAfterClick, bool showNextAfterClick=true)
+    {
+        _showNextAfterClick = showNextAfterClick;
         _canBeHidden = false;
         _window.SetActive(true);
         _background.gameObject.SetActive(false);

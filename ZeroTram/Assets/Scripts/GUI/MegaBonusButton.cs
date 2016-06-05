@@ -21,6 +21,10 @@ public class MegaBonusButton : MonoBehaviour
 
     public void OnMouseDown()
     {
+        if (_megaBonus == null)
+        {
+            return;
+        }
 		_client.UseBonus (_megaBonus.GetBonusType ().ToString (), (JSONObject result) => {
 			Debug.Log (result.ToString ());
 			//TODO: uncomment when shop will be implemented

@@ -66,7 +66,11 @@ public class ConductorSM : MovableCharacterSM
 
     public void StartDrag(PassengerSM obj)
     {
-        if(_dragTarget != null)
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+        if (_dragTarget != null)
             _dragTarget.StopDrag(false);
         if (obj.IsStick())
         {
