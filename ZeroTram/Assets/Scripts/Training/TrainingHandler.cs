@@ -43,6 +43,8 @@ public class TrainingHandler : MonoBehaviour
     private Gnome _gnomePassenger;
     private Cat _catPassenger;
     private Granny _grannyPassenger;
+    private Alien _alien1;
+    private Alien _alien2;
     private int _goAwayDoorIndex;
     private ConductorSM _hero;
     private GameObject _benches;
@@ -272,13 +274,14 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 27:
                 _grannyPassenger.SetDragListenerEnabled(false);
+                _grannyPassenger.SetCounterAttackProbability(0);
                 _catPassenger.SetDragListenerEnabled(false);
                 _catPassenger.SetConductorAttackDenied(false);
                 _catPassenger.SetPassengerAttackDenied(true);
                 _catPassenger.SetDragDenied(false);
-                _catPassenger.AttackTarget = null;
                 _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
                 _hero.SetAttackListenerActivated();
+                _catPassenger.AttackTarget = _hero;
                 break;
             case 28:
                 StartCoroutine(WaitAndMoveNext(1));
@@ -318,6 +321,33 @@ public class TrainingHandler : MonoBehaviour
                 _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training18"), true);
                 break;
             case 37:
+                Time.timeScale = 1;
+                _doorsTimerController.SetMoveAndStopDuration(3, 12);
+                _doorsTimerController.OpenDoors();
+                _doorsTimerController.SetMovementLocked(false);
+                _grannyPassenger.SetStickProbability(0);
+                _grannyPassenger.StartGoAway();
+                _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
+                _doors[(_goAwayDoorIndex)].Open(false);
+                _grannyPassenger.IncrementStationCount();
+                StartCoroutine(WaitAndMoveNext(_doorsTimerController.GetCurrentRemainingTime() + 3));
+                break;
+            case 38:
+                _doorsTimerController.OpenDoors();
+                SpawnPassengerFromRandomDoor("alien", Spawner.TicketAdditionMode.WithTicket);
+                SpawnPassengerFromRandomDoor("alien", Spawner.TicketAdditionMode.WithTicket);
+                _alien1 = GameObject.Find("alien(Clone)").GetComponent<Alien>();
+                StartCoroutine(WaitAndMoveNext(1));
+                break;
+            case 39:
+                _doorsTimerController.SetMovementLocked(true);
+                Time.timeScale = 0;
+                _benches.SetActive(true);
+                DisplayArrow(_benches);
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training19"), true);
+                break;
+            case 40:
+                Destroy(_activeArrow);
                 Time.timeScale = 1;
                 break;
         }

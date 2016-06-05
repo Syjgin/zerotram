@@ -260,6 +260,16 @@ public class PassengerSM : MovableCharacterSM
         _isStickModifiedForTraining = true;
     }
 
+    public void SetStickProbability(float probability)
+    {
+        StickProbability = probability;
+    }
+
+    public void SetCounterAttackProbability(float probability)
+    {
+        CounterAttackProbability = probability;
+    }
+
     public void IncrementStationCount()
     {
         _currentTramStopCount++;
@@ -691,7 +701,10 @@ public class PassengerSM : MovableCharacterSM
         {
             IsAttackingAllowed = true;
         }
-        
+        if (IsGoingAway && GetActiveState() != (int)MovableCharacterStates.Move && !IsStick())
+        {
+            int i = 0;
+        }
     }
 
     public void ApplyWrenchBonus(bool add)
