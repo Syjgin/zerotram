@@ -21,6 +21,7 @@ public class DoorsAnimationController : MonoBehaviour
 
     public void Open(bool spawn)
     {
+        _glitchIndicator.SetActive(false);
         _animator.enabled = true;
         _animator.Play("doors_open");
         if (spawn)

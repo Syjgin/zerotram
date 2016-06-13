@@ -4,9 +4,15 @@ using System.Collections;
 
 public class HpScript : MonoBehaviour
 {
-    public Image Num_Left;
-    public Image Num_Middle;
-    public Image Num_Right;
+    [SerializeField]
+    private Image _numLeft;
+    [SerializeField]
+    private Image _numMiddle;
+    [SerializeField]
+    private Image _numRight;
+   
+    [SerializeField] private Image _mask;
+    [SerializeField] private Sprite[] _maskSprites;
     private bool _bar_left;
     private bool _bar_middle;
     private bool _bar_right;
@@ -15,13 +21,13 @@ public class HpScript : MonoBehaviour
     private float _num_posY;
     private const float _baraban_speed = 15f;
     private const float _baraban_y = 52f;
-    // Use this for initialization
+    
+
     void Start()
     {
-        _num_posY = Num_Right.transform.localPosition.y;
+        _num_posY = _numRight.transform.localPosition.y;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         //if (Input.GetKeyDown(KeyCode.E))
@@ -39,6 +45,11 @@ public class HpScript : MonoBehaviour
         if (_hp != ConductorSM.HpPercent)
         {
             _hp = ConductorSM.HpPercent;
+            _mask.gameObject.SetActive(_hp < 100);
+            if (_mask.gameObject.activeInHierarchy)
+            {
+                _mask.sprite = _maskSprites[_hp];
+            }
             _bar_left = true;
             _bar_middle = true;
             _bar_right = true;
@@ -56,67 +67,67 @@ public class HpScript : MonoBehaviour
         {
             if (xxx < 9)
             {
-                if (Num_Left.transform.localPosition.y < (_num_posY - (_baraban_y*xxx)))
-                    Num_Left.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
+                if (_numLeft.transform.localPosition.y < (_num_posY - (_baraban_y*xxx)))
+                    _numLeft.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
-                    Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x,
-                        _num_posY - (_baraban_y*xxx), Num_Left.transform.localPosition.z);
+                    _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x,
+                        _num_posY - (_baraban_y*xxx), _numLeft.transform.localPosition.z);
                     _bar_left = false;
                 }
             }
             else
             {
-                if (Num_Left.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
-                    Num_Left.transform.Translate(0, -0.45f*_baraban_speed, 0);
+                if (_numLeft.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
+                    _numLeft.transform.Translate(0, -0.45f*_baraban_speed, 0);
                 else
                 {
-                    Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x,
-                        _num_posY - (_baraban_y*9), Num_Left.transform.localPosition.z);
+                    _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x,
+                        _num_posY - (_baraban_y*9), _numLeft.transform.localPosition.z);
                     _bar_left = false;
                 }
             }
             if (xx < 9)
             {
-                if (Num_Middle.transform.localPosition.y < (_num_posY - (_baraban_y*xx)))
-                    Num_Middle.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
+                if (_numMiddle.transform.localPosition.y < (_num_posY - (_baraban_y*xx)))
+                    _numMiddle.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
-                    Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x,
-                        _num_posY - (_baraban_y*xx), Num_Middle.transform.localPosition.z);
+                    _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x,
+                        _num_posY - (_baraban_y*xx), _numMiddle.transform.localPosition.z);
                     _bar_middle = false;
                 }
             }
             else
             {
-                if (Num_Middle.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
-                    Num_Middle.transform.Translate(0, -0.45f*_baraban_speed, 0);
+                if (_numMiddle.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
+                    _numMiddle.transform.Translate(0, -0.45f*_baraban_speed, 0);
                 else
                 {
-                    Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x,
-                        _num_posY - (_baraban_y*9), Num_Middle.transform.localPosition.z);
+                    _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x,
+                        _num_posY - (_baraban_y*9), _numMiddle.transform.localPosition.z);
                     _bar_middle = false;
                 }
             }
             if (x < 9)
             {
-                if (Num_Right.transform.localPosition.y < (_num_posY - (_baraban_y*x)))
-                    Num_Right.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
+                if (_numRight.transform.localPosition.y < (_num_posY - (_baraban_y*x)))
+                    _numRight.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
-                    Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x,
-                        _num_posY - (_baraban_y*x), Num_Right.transform.localPosition.z);
+                    _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x,
+                        _num_posY - (_baraban_y*x), _numRight.transform.localPosition.z);
                     _bar_right = false;
                 }
             }
             else
             {
-                if (Num_Right.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
-                    Num_Right.transform.Translate(0, -0.45f*_baraban_speed, 0);
+                if (_numRight.transform.localPosition.y > (_num_posY - (_baraban_y*9)))
+                    _numRight.transform.Translate(0, -0.45f*_baraban_speed, 0);
                 else
                 {
-                    Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x,
-                        _num_posY - (_baraban_y*9), Num_Right.transform.localPosition.z);
+                    _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x,
+                        _num_posY - (_baraban_y*9), _numRight.transform.localPosition.z);
                     _bar_right = false;
                 }
             }
@@ -126,50 +137,50 @@ public class HpScript : MonoBehaviour
             if(_hp == _hp_old)
                 return;
             {
-                if (Num_Left.transform.localPosition.y > (_num_posY - (_baraban_y * xxx)))
-                    Num_Left.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
+                if (_numLeft.transform.localPosition.y > (_num_posY - (_baraban_y * xxx)))
+                    _numLeft.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
                 else
                 {
-                    Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x, _num_posY - (_baraban_y * xxx), Num_Left.transform.localPosition.z);
+                    _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x, _num_posY - (_baraban_y * xxx), _numLeft.transform.localPosition.z);
                     _bar_left = false;
                 }
                 if (xx > 0)
                 {
-                    if (Num_Middle.transform.localPosition.y > (_num_posY - (_baraban_y * xx)))
-                        Num_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
+                    if (_numMiddle.transform.localPosition.y > (_num_posY - (_baraban_y * xx)))
+                        _numMiddle.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
                     else
                     {
-                        Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x, _num_posY - (_baraban_y * x), Num_Middle.transform.localPosition.z);
+                        _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x, _num_posY - (_baraban_y * x), _numMiddle.transform.localPosition.z);
                         _bar_middle = false;
                     }
                 }
                 else
                 {
-                    if (Num_Middle.transform.localPosition.y < _num_posY)
-                        Num_Middle.transform.Translate(0, 0.45f * _baraban_speed, 0);
+                    if (_numMiddle.transform.localPosition.y < _num_posY)
+                        _numMiddle.transform.Translate(0, 0.45f * _baraban_speed, 0);
                     else
                     {
-                        Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x, _num_posY, Num_Middle.transform.localPosition.z);
+                        _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x, _num_posY, _numMiddle.transform.localPosition.z);
                         _bar_middle = false;
                     }
                 }
                 if (x > 0)
                 {
-                    if (Num_Right.transform.localPosition.y > (_num_posY - (_baraban_y * x)))
-                        Num_Right.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
+                    if (_numRight.transform.localPosition.y > (_num_posY - (_baraban_y * x)))
+                        _numRight.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
                     else
                     {
-                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_posY - (_baraban_y * x), Num_Right.transform.localPosition.z);
+                        _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x, _num_posY - (_baraban_y * x), _numRight.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
                 else
                 {
-                    if (Num_Right.transform.localPosition.y < _num_posY)
-                        Num_Right.transform.Translate(0, 0.45f * _baraban_speed, 0);
+                    if (_numRight.transform.localPosition.y < _num_posY)
+                        _numRight.transform.Translate(0, 0.45f * _baraban_speed, 0);
                     else
                     {
-                        Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_posY, Num_Right.transform.localPosition.z);
+                        _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x, _num_posY, _numRight.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
