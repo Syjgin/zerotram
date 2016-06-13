@@ -10,15 +10,22 @@ public class ConductorWindow : MonoBehaviour
     [SerializeField]
     private Image _trainingPicture;
 
+    [SerializeField]
+    private Image _backgroundPicture;
+
     [SerializeField] private GameObject _window;
 
     [SerializeField] private Image _background;
-
-    private Sprite _baseSprite;
+    
     private bool _hideAfterClick;
     private const float MinimalShowTime = 0.2f;
     private bool _canBeHidden;
     private bool _showNextAfterClick;
+
+    public void ForceHide()
+    {
+        _window.SetActive(false);
+    }
 
     public bool Hide()
     {
@@ -31,7 +38,6 @@ public class ConductorWindow : MonoBehaviour
 
     private void Awake()
     {
-        _baseSprite = _trainingPicture.sprite;
         _hideAfterClick = true;
     }
 
@@ -46,21 +52,30 @@ public class ConductorWindow : MonoBehaviour
         _canBeHidden = false;
         _window.SetActive(true);
         _background.gameObject.SetActive(false);
-        if (_trainingPicture.sprite.name != _baseSprite.name)
-        {
-            _trainingPicture.sprite = _baseSprite;
-        }
+        if(_backgroundPicture != null)
+            _backgroundPicture.gameObject.SetActive(false);
         _replica.text = text;
         _hideAfterClick = hideAfterClick;
         StartCoroutine(WaitAndUnlock());
     }
 
-    public void DisplayTextWithImage(string text, Sprite sprite, bool hideAfterClick)
+    public void DisplayTextWithImage(string text, Sprite sprite, bool hideAfterClick, bool withCrossfade = false)
     {
         _canBeHidden = false;
         _window.SetActive(true);
-        _background.gameObject.SetActive(true);
-        _trainingPicture.sprite = sprite;
+        if (withCrossfade)
+        {
+            _background.canvasRenderer.SetAlpha(0.0f);
+            _background.gameObject.SetActive(true);
+            _background.CrossFadeAlpha(1, 3, true);
+        }
+        else
+        {
+            _background.gameObject.SetActive(true);
+        }
+        _backgroundPicture.gameObject.SetActive(true);
+        _backgroundPicture.sprite = sprite;
+        _backgroundPicture.SetNativeSize();
         _replica.text = text;
         _hideAfterClick = hideAfterClick;
         StartCoroutine(WaitAndUnlock());

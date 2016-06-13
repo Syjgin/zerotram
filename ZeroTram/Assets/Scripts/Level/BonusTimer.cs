@@ -12,12 +12,19 @@ public class BonusTimer : MonoBehaviour
     [SerializeField] private List<MegaBonusButton> _megaBonusButtons;
     [SerializeField] private Floor _floor;
 
+    private bool _isDropListenerActivated;
+
 	void Awake () {
         if(_activeBonuses == null)
             _activeBonuses = new List<IBonus>();
         if(_droppedBonuses == null)
             _droppedBonuses = new List<UnknownDrop>();	
 	}
+
+    public void ActivateDropListener()
+    {
+        _isDropListenerActivated = true;
+    }
 
     public void SetMegaBonus(GameController.BonusTypes bonusType)
     {
@@ -75,11 +82,12 @@ public class BonusTimer : MonoBehaviour
         }
         coords.z = -5;
         GameObject instantiatedDrop = GameObject.Instantiate(_unknownDropPrefab, coords, Quaternion.identity) as GameObject;
-        if (!TrainingHandler.IsTrainingFinished())
+        if (_isDropListenerActivated)
         {
             TrainingHandler handler =
                     MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
             handler.ShowNext();
+            _isDropListenerActivated = false;
         }
         if (instantiatedDrop != null)
         {
@@ -101,11 +109,12 @@ public class BonusTimer : MonoBehaviour
             Destroy(droppedBonus.gameObject);    
         }
         _droppedBonuses.Clear();
-        if (!TrainingHandler.IsTrainingFinished())
+        if (_isDropListenerActivated)
         {
             TrainingHandler handler =
                     MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
             handler.ShowNext();
+            _isDropListenerActivated = false;
         }
     }
 

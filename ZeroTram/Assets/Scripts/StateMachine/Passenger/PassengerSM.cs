@@ -38,6 +38,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isFlyAwayDenied;
     private bool _isDragDenied;
     private bool _isDragListenerActivated;
+    private bool _isSitListenerActivated;
 
     [SerializeField]
     private Sprite _question;
@@ -56,6 +57,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isStickModifiedForTraining;
     private bool _isConductorAttackDenied;
     private bool _isPassengerAttackDenied;
+    private bool _isGoAwayVelocityIncreased;
 
     void Awake()
     {
@@ -89,9 +91,19 @@ public class PassengerSM : MovableCharacterSM
         _isFlyAwayDenied = denied;
     }
 
+    public void SetSitListenerActivated(bool activated)
+    {
+        _isSitListenerActivated = activated;
+    }
+
     public void SetConductorAttackDenied(bool value)
     {
         _isConductorAttackDenied = value;
+    }
+
+    public void IncreaseGoAwayVelocity()
+    {
+        _isGoAwayVelocityIncreased = true;
     }
 
     public void SetPassengerAttackDenied(bool value)
@@ -237,9 +249,7 @@ public class PassengerSM : MovableCharacterSM
     {
         if (_isDragListenerActivated)
         {
-            TrainingHandler handler =
-                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
-            handler.ShowNext();
+            ShowNextTrainingMessage();
             _isDragListenerActivated = false;
         }
         if (IsFrozen())
@@ -309,6 +319,10 @@ public class PassengerSM : MovableCharacterSM
             BoxCollider2D collider = selected[i].GetComponent<BoxCollider2D>();
             Vector2 target = new Vector2(selected[i].gameObject.transform.position.x, selected[i].gameObject.transform.position.y) + collider.offset;
             Velocity *= 2;
+            if (_isGoAwayVelocityIncreased)
+            {
+                Velocity *= 2;
+            }
             IsGoingAway = true;
             base.SetTarget(target);
         }
@@ -323,13 +337,18 @@ public class PassengerSM : MovableCharacterSM
         {
             if (_isStickModifiedForTraining)
             {
-                TrainingHandler handler =
-                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
-                handler.ShowNext();
+                ShowNextTrainingMessage();
             }
             ActivateState((int)MovableCharacterStates.Stick);
             Indicator.sprite = _stick;
         }
+    }
+
+    private void ShowNextTrainingMessage()
+    {
+        TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+        handler.ShowNext();
     }
 
     public override bool CanNotInteract()
@@ -373,6 +392,20 @@ public class PassengerSM : MovableCharacterSM
         if (movable != null)
         {
             TryAttackMovable(movable);
+        }
+    }
+
+    public bool IsSitListenerActivated()
+    {
+        return _isSitListenerActivated;
+    }
+
+    public void ActivateSitListener()
+    {
+        if (_isSitListenerActivated)
+        {
+            ShowNextTrainingMessage();
+            _isSitListenerActivated = false;
         }
     }
 
@@ -502,10 +535,7 @@ public class PassengerSM : MovableCharacterSM
         {
             if (_isStickModifiedForTraining)
             {
-                TrainingHandler handler =
-                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
-                handler.SetIsGnomeSurvived(true);
-                handler.ShowNext();
+                ShowNextTrainingMessage();
             }
             Destroy(gameObject);       
         }
@@ -531,8 +561,7 @@ public class PassengerSM : MovableCharacterSM
     {
         if (_isTrainingEnabled)
         {
-            TrainingHandler handler = MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
-            handler.ShowNext();
+            ShowNextTrainingMessage();
             _isTrainingEnabled = false;
         }
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
@@ -700,10 +729,6 @@ public class PassengerSM : MovableCharacterSM
         if (_attackingDenyPeriod <= 0)
         {
             IsAttackingAllowed = true;
-        }
-        if (IsGoingAway && GetActiveState() != (int)MovableCharacterStates.Move && !IsStick())
-        {
-            int i = 0;
         }
     }
 

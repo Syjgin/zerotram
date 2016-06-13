@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class TrainingHandler : MonoBehaviour
 {
@@ -32,6 +34,8 @@ public class TrainingHandler : MonoBehaviour
     [SerializeField]
     private GameObject _megabonusUI;
 
+    [SerializeField] private BonusTimer _bonusTimer;
+
     private GameObject _activeArrow;
 
     private const string TrainingKey = "TrainingFinished";
@@ -43,14 +47,14 @@ public class TrainingHandler : MonoBehaviour
     private Gnome _gnomePassenger;
     private Cat _catPassenger;
     private Granny _grannyPassenger;
-    private Alien _alien1;
-    private Alien _alien2;
     private int _goAwayDoorIndex;
     private ConductorSM _hero;
     private GameObject _benches;
     private bool _isBonusDropEnabled;
-    private bool _isGnomeSurvived;
+    private bool _isGnomeSurvived = true;
     private MovableCharacterSM _attackedPassenger;
+    private Alien[] _aliens;
+    private Bench[] _benchArray;
 
     public void SetIsGnomeSurvived(bool val)
     {
@@ -96,6 +100,11 @@ public class TrainingHandler : MonoBehaviour
         switch (step)
         {
             case 0:
+                if (IsTrainingFinished())
+                {
+                    gameObject.SetActive(false);
+                    return;
+                }
                 _benches = GameObject.Find("benches");
                 _benches.SetActive(false);
                 _isBonusDropEnabled = false;
@@ -243,8 +252,10 @@ public class TrainingHandler : MonoBehaviour
                 _catPassenger.SetConductorAttackDenied(true);
                 _catPassenger.SetFlyAwayDenied(true);
                 _grannyPassenger.SetFlyAwayDenied(true);
-                _catPassenger.SetHalfImmortal();
-                _grannyPassenger.SetHalfImmortal();
+                _catPassenger.SetHalfImmortal(true);
+                _grannyPassenger.SetHalfImmortal(true);
+                _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
+                _hero.SetHalfImmortal(true);
                 break;
             case 22:
                 _grannyPassenger.DisableAttackListener();
@@ -278,8 +289,6 @@ public class TrainingHandler : MonoBehaviour
                 _catPassenger.SetDragListenerEnabled(false);
                 _catPassenger.SetConductorAttackDenied(false);
                 _catPassenger.SetPassengerAttackDenied(true);
-                _catPassenger.SetDragDenied(false);
-                _hero = GameObject.Find("hero").GetComponent<ConductorSM>();
                 _hero.SetAttackListenerActivated();
                 _catPassenger.AttackTarget = _hero;
                 break;
@@ -300,6 +309,7 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 31:
                 Destroy(_activeArrow);
+                _bonusTimer.ActivateDropListener();
                 break;
             case 32:
                 StartCoroutine(WaitAndMoveNext(1));
@@ -310,6 +320,7 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 34:
                 Time.timeScale = 1;
+                _bonusTimer.ActivateDropListener();
                 break;
             case 35:
                 Time.timeScale = 0;
@@ -322,11 +333,13 @@ public class TrainingHandler : MonoBehaviour
                 break;
             case 37:
                 Time.timeScale = 1;
-                _doorsTimerController.SetMoveAndStopDuration(3, 12);
+                _doorsTimerController.SetMoveAndStopDuration(3, 7);
                 _doorsTimerController.OpenDoors();
                 _doorsTimerController.SetMovementLocked(false);
                 _grannyPassenger.SetStickProbability(0);
                 _grannyPassenger.StartGoAway();
+                _grannyPassenger.IncreaseGoAwayVelocity();
+                _grannyPassenger.SetDragDenied(true);
                 _goAwayDoorIndex = Randomizer.GetInRange(0, _doors.Length);
                 _doors[(_goAwayDoorIndex)].Open(false);
                 _grannyPassenger.IncrementStationCount();
@@ -336,7 +349,6 @@ public class TrainingHandler : MonoBehaviour
                 _doorsTimerController.OpenDoors();
                 SpawnPassengerFromRandomDoor("alien", Spawner.TicketAdditionMode.WithTicket);
                 SpawnPassengerFromRandomDoor("alien", Spawner.TicketAdditionMode.WithTicket);
-                _alien1 = GameObject.Find("alien(Clone)").GetComponent<Alien>();
                 StartCoroutine(WaitAndMoveNext(1));
                 break;
             case 39:
@@ -349,6 +361,55 @@ public class TrainingHandler : MonoBehaviour
             case 40:
                 Destroy(_activeArrow);
                 Time.timeScale = 1;
+                _benchArray = FindObjectsOfType<Bench>();
+                foreach (var bench in _benchArray)
+                {
+                    bench.SetCheckState(false);
+                }
+                _aliens = FindObjectsOfType<Alien>();
+                foreach (var alien in _aliens)
+                {
+                    alien.SetFlyAwayDenied(true);
+                    alien.SetSitListenerActivated(true);
+                }
+                break;
+            case 41:
+                foreach (var alien in _aliens)
+                {
+                    alien.SetSitListenerActivated(false);
+                }
+                _hero.SetHalfImmortal(false);
+                Time.timeScale = 0;
+                _shortConductorWindow.DisplayText(StringResources.GetLocalizedString("Training20"), true);
+                foreach (var bench in _benchArray)
+                {
+                    bench.SetCheckState(true);
+                }
+                break;
+            case 42:
+                Time.timeScale = 1;
+                _doorsTimerController.SetStationCountListener(3);
+                _doorsTimerController.SetMovementLocked(false);
+                _doorsTimerController.DisableTrainingMode();
+                break;
+            case 43:
+                PassengerSM[] passengers = FindObjectsOfType<PassengerSM>();
+                foreach (var passengerSm in passengers)
+                {
+                    passengerSm.StartGoAway();
+                    passengerSm.IncreaseGoAwayVelocity();
+                }
+                _doorsTimerController.DisableSpawn();
+                _doorsTimerController.SetStationCountListener(2);
+                break;
+            case 44:
+                _shortConductorWindow.ForceHide();
+                Time.timeScale = 0;
+                _fullConductorWindow.DisplayTextWithImage(StringResources.GetLocalizedString("Training21"), Resources.Load<Sprite>("Sprites/training/training2"), false, true);
+                break;
+            case 45:
+                PlayerPrefs.SetString(TrainingKey, TrainingKey);
+                SceneManager.LoadSceneAsync("MainMenu");
                 break;
         }
         _isRefreshInProgress = false;
@@ -356,8 +417,16 @@ public class TrainingHandler : MonoBehaviour
 
     private void TrainingFail(string textId)
     {
-        Time.timeScale = 0;
-        _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true, false);
+        if (_currentStep < 44)
+        {
+            Time.timeScale = 0;
+            _shortConductorWindow.DisplayText(StringResources.GetLocalizedString(textId), true, false);
+        }
+    }
+
+    public bool IsDropTypeLocked()
+    {
+        return _currentStep < 35;
     }
 
     public void TrainingFailPassengers()

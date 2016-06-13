@@ -112,9 +112,9 @@ public class MovableCharacterSM : StateMachine
         IsAttackListenerActivated = true;
     }
 
-    public void SetHalfImmortal()
+    public void SetHalfImmortal(bool value)
     {
-        _isHalfImmortal = true;
+        _isHalfImmortal = value;
     }
 
     public virtual void AddDamage(MovableCharacterSM attacker)

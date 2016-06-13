@@ -102,7 +102,13 @@ public class PassengerFlyingAwayState : MovableCharacterState
         }
         if (!TrainingHandler.IsTrainingFinished())
         {
-            drop = new AntiHareBonus();
+            TrainingHandler handler = MonobehaviorHandler.GetMonobeharior()
+                .GetObject<TrainingHandler>("TrainingHandler");
+            if (handler.IsDropTypeLocked())
+            {
+                drop = new AntiHareBonus();
+            }
+            
         }
             if (drop != null)
         {

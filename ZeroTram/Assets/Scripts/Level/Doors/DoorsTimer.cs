@@ -45,13 +45,21 @@ public class DoorsTimer : MonoBehaviour
 
     private bool _isTrainingMode;
     private bool _isMovementTimeLocked;
+    private int _countToFinish = -1;
+    private bool _isSpawnEnabled;
 
     void Awake()
     {
+        _isSpawnEnabled = true;
         _moveDuration = ConfigReader.GetConfig().GetField("tram").GetField("MoveDuration").n;
         _stopDuration = ConfigReader.GetConfig().GetField("tram").GetField("StopDuration").n;
         _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
         _doorOpened = new bool[DoorsCount];
+    }
+
+    public void DisableSpawn()
+    {
+        _isSpawnEnabled = false;
     }
 
     private void UpdateMoveDuration()
@@ -72,6 +80,11 @@ public class DoorsTimer : MonoBehaviour
         _currentStationTotalMoveDuration = moveDuration;
         _stopDuration = stopDuration;
         _isTrainingMode = true;
+    }
+
+    public void DisableTrainingMode()
+    {
+        _isTrainingMode = false;
     }
 
     public int GetCurrentRemainingTime()
@@ -126,6 +139,11 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public void SetStationCountListener(int count)
+    {
+        _countToFinish = count;
+    }
+
     void UpdateDoors()
     {        
         if (_isDoorsOpen)
@@ -144,7 +162,7 @@ public class DoorsTimer : MonoBehaviour
                         {
                             if (_doorOpened[i])
                             {
-                                _doors[i].Open(true);
+                                _doors[i].Open(_isSpawnEnabled);
                             }
                         }
                         break;
@@ -154,14 +172,14 @@ public class DoorsTimer : MonoBehaviour
                         {
                             if (_doorOpened[i])
                             {
-                                _doors[i].Open(true);
+                                _doors[i].Open(_isSpawnEnabled);
                             }
                         }
                         break;
                     case DoorsOpenMode.all:
                         for (int i = 0; i < DoorsCount; i++)
                         {
-                            _doors[i].Open(true);
+                            _doors[i].Open(_isSpawnEnabled);
                         }
                         break;
                     default:
@@ -322,6 +340,15 @@ public class DoorsTimer : MonoBehaviour
                 GameController.GetInstance().CheckBeforeDoorsOpen();
                 UpdateDoors();
                 GameController.GetInstance().IncrementStationNumberForPassengers();
+                if (_countToFinish > 0)
+                {
+                    _countToFinish--;
+                    if (_countToFinish == 0)
+                    {
+                        MonobehaviorHandler.GetMonobeharior()
+                        .GetObject<TrainingHandler>("TrainingHandler").ShowNext();
+                    }
+                }
             }
         }
 
