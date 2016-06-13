@@ -8,12 +8,11 @@ using UnityEngine.UI;
 
 public class ConductorSM : MovableCharacterSM
 {
-    public static int _hp { get; set; }
+    public static int HpPercent { get; set; }
     public bool IsInWayoutZone;
 
     private PassengerSM _dragTarget;
     private Vector2 _dragStartPoint;
-    private Text _lifes;
     public float MovingToDragTargetVelocity;
     private PassengerSM _stickTarget;
     private bool _isTrainingKickHandlerActivated;
@@ -27,9 +26,7 @@ public class ConductorSM : MovableCharacterSM
         AttackReactionPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReactionPeriod").n;
         AttackReloadPeriod = ConfigReader.GetConfig().GetField("hero").GetField("AttackReloadPeriod").n;
         MovingToDragTargetVelocity = ConfigReader.GetConfig().GetField("hero").GetField("MovingToDragTargetVelocity").n;
-        _lifes = GameObject.Find("userLifes").GetComponent<Text>();
-        _lifes.text = "100%";
-        _hp = 100;
+        HpPercent = 100;
 
         IdleState idleState = new IdleState(this);
         ConductorMoveState moveState = new ConductorMoveState(this);
@@ -153,8 +150,7 @@ public class ConductorSM : MovableCharacterSM
     {
         base.AddDamageValue(damage);
         int lifesPercent = Mathf.RoundToInt(100 * (Hp / (float)InitialLifes));
-        _lifes.text = lifesPercent + "%";
-        _hp = lifesPercent;
+        HpPercent = lifesPercent;
     }
 
     public bool IsDragging()

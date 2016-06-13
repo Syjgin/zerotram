@@ -13,7 +13,6 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     [SerializeField] private Button _exitButton;
     [SerializeField] private Text _countText;
     [SerializeField] private Text _captionText;
-    [SerializeField] private GameObject _stickCaption;
 	[SerializeField] private Client _client;
     [SerializeField] private TrainingHandler _trainingHandler;
     [SerializeField] private ConductorSM _hero;
@@ -50,7 +49,6 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
     public void GameOver()
     {
         Time.timeScale = 0;
-        _stickCaption.SetActive(false);
         if (_stateInfo.IsLevelFinished)
         {
             _reasonText.text = StringResources.GetLocalizedString("GameOverVictory");

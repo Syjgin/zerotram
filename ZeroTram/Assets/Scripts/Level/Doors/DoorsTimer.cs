@@ -26,7 +26,6 @@ public class DoorsTimer : MonoBehaviour
     
     [SerializeField] private DoorsAnimationController[] _doors;
     [SerializeField] private Spawner _spawner;
-    [SerializeField] private GameObject _stickNote;
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
     [SerializeField] private TrainingHandler _trainingHandler;
@@ -239,7 +238,6 @@ public class DoorsTimer : MonoBehaviour
 
     public void Unstick()
     {
-        _stickNote.SetActive(false);
         if (_currentStickDoor != null)
         {
             if (_isDoorsOpen)
@@ -258,7 +256,6 @@ public class DoorsTimer : MonoBehaviour
         if (paused)
         {
             _isPaused = true;
-            _stickNote.SetActive(true);
             _currentStickSoundRemainingTime = StickSoundDelay;
         }
         else

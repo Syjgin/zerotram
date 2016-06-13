@@ -6,6 +6,8 @@ public class DoorsAnimationController : MonoBehaviour
     private Animator _animator;
     [SerializeField]
     private Spawner _unitSpawner;
+
+    [SerializeField] private GameObject _glitchIndicator;
     private bool _isOpened;
 
 	void Awake ()
@@ -38,12 +40,14 @@ public class DoorsAnimationController : MonoBehaviour
     {
         _animator.Play("doors_close");
         _isOpened = false;
+        _glitchIndicator.SetActive(false);
     }
 
     public void Glitch()
     {
         _animator.Play("doors_glitch");
         _isOpened = false;
+        _glitchIndicator.SetActive(true);
     }
 
     public bool IsOpened()
