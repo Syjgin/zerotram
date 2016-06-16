@@ -260,10 +260,7 @@ public class DoorsTimer : MonoBehaviour
         }
         else
         {
-            if (!GameController.GetInstance().IsAnybodyStick())
-            {
-                Unstick();
-            }
+            Unstick();
         }
     }
 

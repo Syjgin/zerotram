@@ -34,6 +34,8 @@ public class TrainingHandler : MonoBehaviour
     [SerializeField]
     private GameObject _megabonusUI;
 
+    [SerializeField] private MegaBonusButton _bonusButton;
+
     [SerializeField] private BonusTimer _bonusTimer;
 
     private GameObject _activeArrow;
@@ -119,6 +121,7 @@ public class TrainingHandler : MonoBehaviour
                 _centralWayoutSprite.SetActive(false);
                 _bonusesUI.SetActive(false);
                 _megabonusUI.SetActive(false);
+                _bonusButton.SetVisible(false);
                 Time.timeScale = 0;
                 _doorsTimerController.SetMoveAndStopDuration(3, 1);
                 _doorsTimerController.SetMovementLocked(true);

@@ -12,11 +12,16 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
     private bool _bar_left;
     private bool _bar_right;
     private int _killed_old;
-    private int _killed;
+    private int _killed = -1;
     private float _num_left_posY;
     private float _num_right_posY;
     private const float _baraban_speed = 15f;
     private const float _baraban_y = 47f;
+    [SerializeField] private Image _indicator;
+    [SerializeField]
+    private Sprite _blueSprite;
+    [SerializeField]
+    private Sprite _redSprite;
 
     void Start()
     {
@@ -114,6 +119,16 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
         }
     }
 
+    private IEnumerator Blink(GameController.StateInformation information)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            _indicator.sprite = i % 2 == 0 ? _blueSprite : _redSprite;
+            yield return new WaitForSeconds(0.2f);
+        }
+        _indicator.sprite = information.RemainKilled < 2 ? _redSprite : _blueSprite;
+    }
+
     void OnDestroy()
     {
         GameController.GetInstance().RemoveListener(this);
@@ -130,6 +145,14 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
             _killed = information.RemainKilled;
             _bar_left = true;
             _bar_right = true;
+            if (_killed == -1)
+            {
+                _indicator.sprite = information.RemainKilled < 2 ? _redSprite : _blueSprite;
+            }
+            else
+            {
+                StartCoroutine(Blink(information));
+            }
         }
     }
 

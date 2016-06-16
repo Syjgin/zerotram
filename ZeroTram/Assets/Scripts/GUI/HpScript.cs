@@ -54,9 +54,9 @@ public class HpScript : MonoBehaviour
             _bar_middle = true;
             _bar_right = true;
         }
-        int xxx = Mathf.FloorToInt(_hp / 100);
-        int xx = Mathf.FloorToInt((_hp - (xxx * 100)) / 10);
-        int x = _hp - (xxx * 100) - (xx * 10);
+        int hundreds = _hp / 100;
+        int decimals = (_hp - (hundreds * 100)) / 10;
+        int units = (_hp - (hundreds * 100)) - decimals*10;
         
         if (!_bar_left && !_bar_middle && !_bar_right)
         {
@@ -65,14 +65,14 @@ public class HpScript : MonoBehaviour
 
         if (_hp < _hp_old)
         {
-            if (xxx < 9)
+            if (hundreds < 9)
             {
-                if (_numLeft.transform.localPosition.y < (_num_posY - (_baraban_y*xxx)))
+                if (_numLeft.transform.localPosition.y < (_num_posY - (_baraban_y*hundreds)))
                     _numLeft.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
                     _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x,
-                        _num_posY - (_baraban_y*xxx), _numLeft.transform.localPosition.z);
+                        _num_posY - (_baraban_y*hundreds), _numLeft.transform.localPosition.z);
                     _bar_left = false;
                 }
             }
@@ -87,14 +87,14 @@ public class HpScript : MonoBehaviour
                     _bar_left = false;
                 }
             }
-            if (xx < 9)
+            if (decimals < 9)
             {
-                if (_numMiddle.transform.localPosition.y < (_num_posY - (_baraban_y*xx)))
+                if (_numMiddle.transform.localPosition.y < (_num_posY - (_baraban_y*decimals)))
                     _numMiddle.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
                     _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x,
-                        _num_posY - (_baraban_y*xx), _numMiddle.transform.localPosition.z);
+                        _num_posY - (_baraban_y*decimals), _numMiddle.transform.localPosition.z);
                     _bar_middle = false;
                 }
             }
@@ -109,14 +109,14 @@ public class HpScript : MonoBehaviour
                     _bar_middle = false;
                 }
             }
-            if (x < 9)
+            if (units < 9)
             {
-                if (_numRight.transform.localPosition.y < (_num_posY - (_baraban_y*x)))
+                if (_numRight.transform.localPosition.y < (_num_posY - (_baraban_y*units)))
                     _numRight.transform.Translate(0, 0.1f*_baraban_speed*(_hp_old - _hp), 0);
                 else
                 {
                     _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x,
-                        _num_posY - (_baraban_y*x), _numRight.transform.localPosition.z);
+                        _num_posY - (_baraban_y*units), _numRight.transform.localPosition.z);
                     _bar_right = false;
                 }
             }
@@ -137,20 +137,20 @@ public class HpScript : MonoBehaviour
             if(_hp == _hp_old)
                 return;
             {
-                if (_numLeft.transform.localPosition.y > (_num_posY - (_baraban_y * xxx)))
+                if (_numLeft.transform.localPosition.y > (_num_posY - (_baraban_y * hundreds)))
                     _numLeft.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
                 else
                 {
-                    _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x, _num_posY - (_baraban_y * xxx), _numLeft.transform.localPosition.z);
+                    _numLeft.transform.localPosition = new Vector3(_numLeft.transform.localPosition.x, _num_posY - (_baraban_y * hundreds), _numLeft.transform.localPosition.z);
                     _bar_left = false;
                 }
-                if (xx > 0)
+                if (decimals > 0)
                 {
-                    if (_numMiddle.transform.localPosition.y > (_num_posY - (_baraban_y * xx)))
+                    if (_numMiddle.transform.localPosition.y > (_num_posY - (_baraban_y * decimals)))
                         _numMiddle.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
                     else
                     {
-                        _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x, _num_posY - (_baraban_y * x), _numMiddle.transform.localPosition.z);
+                        _numMiddle.transform.localPosition = new Vector3(_numMiddle.transform.localPosition.x, _num_posY - (_baraban_y * decimals), _numMiddle.transform.localPosition.z);
                         _bar_middle = false;
                     }
                 }
@@ -164,13 +164,13 @@ public class HpScript : MonoBehaviour
                         _bar_middle = false;
                     }
                 }
-                if (x > 0)
+                if (units > 0)
                 {
-                    if (_numRight.transform.localPosition.y > (_num_posY - (_baraban_y * x)))
+                    if (_numRight.transform.localPosition.y > (_num_posY - (_baraban_y * units)))
                         _numRight.transform.Translate(0, 0.1f * _baraban_speed * (_hp_old - _hp), 0);
                     else
                     {
-                        _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x, _num_posY - (_baraban_y * x), _numRight.transform.localPosition.z);
+                        _numRight.transform.localPosition = new Vector3(_numRight.transform.localPosition.x, _num_posY - (_baraban_y * units), _numRight.transform.localPosition.z);
                         _bar_right = false;
                     }
                 }
