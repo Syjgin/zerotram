@@ -151,7 +151,8 @@ public class KilledPassengers : MonoBehaviour, GameStateNotificationListener
             }
             else
             {
-                StartCoroutine(Blink(information));
+                if (_indicator.gameObject.activeInHierarchy)
+                    StartCoroutine(Blink(information));
             }
         }
     }

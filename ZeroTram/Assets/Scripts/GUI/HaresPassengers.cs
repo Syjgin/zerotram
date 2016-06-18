@@ -33,6 +33,8 @@ public class HaresPassengers : MonoBehaviour, GameStateNotificationListener
     {
         if(_isAnimationFinished)
             return;
+        if(!_arrow.gameObject.activeInHierarchy)
+            return;
         float currentRotation = _arrow.transform.localRotation.eulerAngles.z;
         if (currentRotation > 180)
         {
@@ -72,7 +74,8 @@ public class HaresPassengers : MonoBehaviour, GameStateNotificationListener
 	            if (newHaresPercent != _savedHaresPercent)
 	            {
 	                _savedHaresPercent = newHaresPercent;
-	                StartCoroutine(Blink());
+                    if(_indicator.gameObject.activeInHierarchy)
+	                    StartCoroutine(Blink());
                     _targetRotation = PercentToDegree(_savedHaresPercent);
                     _isAnimationFinished = false;
                 }
