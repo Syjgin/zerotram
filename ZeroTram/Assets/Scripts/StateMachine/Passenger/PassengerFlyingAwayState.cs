@@ -21,6 +21,10 @@ public class PassengerFlyingAwayState : MovableCharacterState
         float sqrRemainingDistance = ((Vector2)newPosition - (Vector2)_flyTarget).sqrMagnitude;
         if (sqrRemainingDistance <= 1)
         {
+            if (_passenger.IsFlyAwayListenerActivated())
+            {
+                MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler").ShowNext();
+            }
             MonoBehaviour.Destroy(MovableCharacter.gameObject);
         }
     }
@@ -38,6 +42,16 @@ public class PassengerFlyingAwayState : MovableCharacterState
 
     public void DropBonus()
     {
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            if (
+                !MonobehaviorHandler.GetMonobeharior()
+                    .GetObject<TrainingHandler>("TrainingHandler")
+                    .IsBonusDropEnabled())
+            {
+                return;
+            }
+        }
         if (MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer")
                 .IsAnyBonusActive())
@@ -86,7 +100,17 @@ public class PassengerFlyingAwayState : MovableCharacterState
             default:
                 return;
         }
-        if (drop != null)
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            TrainingHandler handler = MonobehaviorHandler.GetMonobeharior()
+                .GetObject<TrainingHandler>("TrainingHandler");
+            if (handler.IsDropTypeLocked())
+            {
+                drop = new AntiHareBonus();
+            }
+            
+        }
+            if (drop != null)
         {
             MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer").DropBonus(drop, _passenger.transform.position);

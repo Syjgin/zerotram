@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MapItem : MonoBehaviour
 {
@@ -19,6 +20,6 @@ public class MapItem : MonoBehaviour
     void OnMouseDown()
     {
         MapManager.GetInstance().SetCurrentStation(_levelId);
-        Application.LoadLevelAsync("Main");
+        SceneManager.LoadSceneAsync("Main");
     }
 }

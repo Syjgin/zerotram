@@ -48,7 +48,7 @@ public class NewCharacterWindow : MonoBehaviour
         {
             _image.sprite = _images[imageIndex];
             _image.SetNativeSize();
-            _description.text = ConfigReader.GetConfig().GetField("descriptions").GetField(_currentCharacter).str;
+            _description.text = StringResources.GetLocalizedString(_currentCharacter);
             _window.SetActive(true);
         }
     }

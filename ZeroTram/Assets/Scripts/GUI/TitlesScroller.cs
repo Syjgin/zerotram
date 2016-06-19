@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TitlesScroller : MonoBehaviour
@@ -16,7 +17,7 @@ public class TitlesScroller : MonoBehaviour
 
     void Exit()
     {
-        Application.LoadLevelAsync("MainMenu");
+        SceneManager.LoadSceneAsync("MainMenu");
         _finished = true;
     }
 

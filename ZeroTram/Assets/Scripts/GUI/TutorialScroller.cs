@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TutorialScroller : MonoBehaviour
@@ -16,7 +17,7 @@ public class TutorialScroller : MonoBehaviour
             PlayerPrefs.SetInt("WasTutorialFinished", 1);
             _loadingText.SetActive(true);
             _exitButton.enabled = false;
-            Application.LoadLevelAsync("main");
+            SceneManager.LoadSceneAsync("main");
         });
 	}
 	

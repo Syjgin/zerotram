@@ -7,12 +7,19 @@ public class Bench : MonoBehaviour
     private float _timeAfterPassengerCheck;
     private float _maxWaitingTime;
     private bool _isCheckPossible;
+    private bool _checkStateEnabled;
 
     void Start()
     {
         _timeAfterPassengerCheck = 0;
         _maxWaitingTime = ConfigReader.GetConfig().GetField("tram").GetField("SitRecheckPeriod").n;
         _isCheckPossible = true;
+        _checkStateEnabled = true;
+    }
+
+    public void SetCheckState(bool state)
+    {
+        _checkStateEnabled = state;
     }
 
     void FixedUpdate()
@@ -40,7 +47,7 @@ public class Bench : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        if (!_isCheckPossible)
+        if (!_isCheckPossible && _checkStateEnabled)
             return;
         _isCheckPossible = false;
         _timeAfterPassengerCheck = 0;
@@ -54,7 +61,7 @@ public class Bench : MonoBehaviour
         ConductorCollisionDetector conductorCD = other.GetComponentInParent<ConductorCollisionDetector>();
         if (conductorCD != null)
         {
-            ConductorSM conductor = (ConductorSM) conductorCD.Character;
+            ConductorSM conductor = (ConductorSM)conductorCD.Character;
             if (conductor.IsDragging())
             {
                 PassengerSM draggedPassenger = conductor.GetDragTarget();
@@ -65,17 +72,28 @@ public class Bench : MonoBehaviour
 
     private void TryHaveSetPassenger(PassengerSM passenger)
     {
+        if (passenger.IsGoingAway)
+        {
+            passenger.SetTarget(new Vector2());
+            return;
+        }
+        if (passenger.GetActiveState() != (int) MovableCharacterSM.MovableCharacterStates.Dragged && passenger.IsSitListenerActivated())
+        {
+            passenger.CalculateRandomTarget();
+            return;
+        }
         passenger.IsNearBench = true;
         if (passenger.IsOnTheBench())
         {
             return;
         }
-        if (Randomizer.GetPercentageBasedBoolean(GetSitPossibility()))
+        if (Randomizer.GetPercentageBasedBoolean(GetSitPossibility()) || passenger.IsSitListenerActivated())
         {
             if (passenger.GetActiveState() == (int) MovableCharacterSM.MovableCharacterStates.Dragged &&
                 passenger.HasTicket())
             {
                 passenger.StopDrag(false);
+                passenger.ActivateSitListener();
             }
             passenger.HandleSitdown(this);
         }

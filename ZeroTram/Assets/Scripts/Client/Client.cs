@@ -194,14 +194,12 @@ public class Client : MonoBehaviour
 	private WWW POST(string url, Dictionary<string, string> post, System.Action<JSONObject> onComplete)
 	{
 		WWWForm form = new WWWForm();
-
 		foreach (KeyValuePair<string, string> post_arg in post)
 		{
 			form.AddField(post_arg.Key, post_arg.Value);
 		}
 
 		WWW www = new WWW(ServerName + url, form);
-
 		StartCoroutine(WaitForRequest(www, onComplete));
 		return www;
 	}
@@ -223,6 +221,7 @@ public class Client : MonoBehaviour
 			result.Bake();
 			onComplete(result);
 		}
+		www.Dispose ();
 	}
 
 	private bool HandleUnsetUserid(System.Action<JSONObject> onComplete)
@@ -263,7 +262,20 @@ public class Client : MonoBehaviour
 		return _currentRecord;
 	}
 
-	public void SendRecord(int newRecord, bool withFriends, System.Action<JSONObject> onComplete) {
+    public void SendDoorBonusTime(int bonusTime, System.Action<JSONObject> onComplete)
+    {
+        if (!HandleUnsetToken(onComplete))
+        {
+            return;
+        }
+        POST("event/unlock", new Dictionary<String, String>{
+                {"eventName", "doorsBonusTime"},
+                {"intParameter", bonusTime.ToString()},
+                {"token", _token}
+            }, onComplete);
+    }
+
+    public void SendRecord(int newRecord, bool withFriends, System.Action<JSONObject> onComplete) {
 		if(newRecord > _currentRecord) {
 			_currentRecord = newRecord;
 			EncryptedPlayerPrefs.SetInt (TicketsRecordKey, _currentRecord);
@@ -300,6 +312,32 @@ public class Client : MonoBehaviour
 			{"eventName", isBoss ? "dangerBoss" : "danger"}, 
 			{"intParameter", beatenCount.ToString ()}, 
 			{"stringParameter", passengerName}, 
+			{"token", _token}
+		}, onComplete);
+	}
+
+    public void SendAntiStickRecord(int savedCount, System.Action<JSONObject> onComplete)
+    {
+        if (!HandleUnsetToken(onComplete))
+        {
+            return;
+        }
+        POST("event/unlock", new Dictionary<String, String>{
+            {"eventName", "antistick"},
+            {"intParameter", savedCount.ToString ()},          
+            {"token", _token}
+        }, onComplete);
+    }
+
+	public void SendLivesaverRecord(int stationNumber, System.Action<JSONObject> onComplete)
+	{
+		if (!HandleUnsetToken(onComplete))
+		{
+			return;
+		}
+		POST("event/unlock", new Dictionary<String, String>{
+			{"eventName", "livesaver"},
+			{"intParameter", stationNumber.ToString ()},          
 			{"token", _token}
 		}, onComplete);
 	}

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour
@@ -25,9 +26,10 @@ public class DoorsTimer : MonoBehaviour
     
     [SerializeField] private DoorsAnimationController[] _doors;
     [SerializeField] private Spawner _spawner;
-    [SerializeField] private GameObject _stickNote;
     [SerializeField] private List<GameObject> _tramMovableObjects;
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
+    [SerializeField] private TrainingHandler _trainingHandler;
+    [SerializeField] private Client _webClient;
 
     private PassengerSM _currentStickPassenger;
     private DoorsAnimationController _currentStickDoor;
@@ -40,17 +42,48 @@ public class DoorsTimer : MonoBehaviour
 
     private bool[] _doorOpened;
 
+    private bool _isTrainingMode;
+    private bool _isMovementTimeLocked;
+    private int _countToFinish = -1;
+    private bool _isSpawnEnabled;
+
     void Awake()
     {
+        _isSpawnEnabled = true;
         _moveDuration = ConfigReader.GetConfig().GetField("tram").GetField("MoveDuration").n;
         _stopDuration = ConfigReader.GetConfig().GetField("tram").GetField("StopDuration").n;
         _player = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
         _doorOpened = new bool[DoorsCount];
     }
 
+    public void DisableSpawn()
+    {
+        _isSpawnEnabled = false;
+    }
+
     private void UpdateMoveDuration()
     {
-        _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+        if(!_isTrainingMode)
+            _currentStationTotalMoveDuration = _moveDuration*GameController.GetInstance().GetPassengersCount();
+    }
+
+    public void OpenDoors()
+    {
+        _isDoorsOpen = true;
+        UpdateDoors();
+    }
+
+    public void SetMoveAndStopDuration(float moveDuration, float stopDuration)
+    {
+        _currentMoveDuration = 0;
+        _currentStationTotalMoveDuration = moveDuration;
+        _stopDuration = stopDuration;
+        _isTrainingMode = true;
+    }
+
+    public void DisableTrainingMode()
+    {
+        _isTrainingMode = false;
     }
 
     public int GetCurrentRemainingTime()
@@ -65,7 +98,13 @@ public class DoorsTimer : MonoBehaviour
         _currentMoveDuration = 0;
         _currentStopDuration = 0;
         _isDoorsOpen = true;
-        UpdateDoors();
+        if(TrainingHandler.IsTrainingFinished())
+            UpdateDoors();
+    }
+
+    public void SetMovementLocked(bool locked)
+    {
+        _isMovementTimeLocked = locked;
     }
 
     void MoveObjects(bool isMoving)
@@ -99,44 +138,52 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public void SetStationCountListener(int count)
+    {
+        _countToFinish = count;
+    }
+
     void UpdateDoors()
     {        
         if (_isDoorsOpen)
         {
-			_benchCombinationManager.CalculateCurrent ();
             _player.SetDoorsOpen(true);
             MoveObjects(false);
             _spawner.PrepareToSpawn();
-            switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+            if (!_isTrainingMode)
             {
-                case DoorsOpenMode.single:
-                    CalculateOpenProbabilities(false);
-                    for (int i = 0; i < DoorsCount; i++)
-                    {
-                        if (_doorOpened[i])
+                _benchCombinationManager.CalculateCurrent();
+                switch (MapManager.GetInstance().GetCurrentStationInfo().DoorsOpenMode)
+                {
+                    case DoorsOpenMode.single:
+                        CalculateOpenProbabilities(false);
+                        for (int i = 0; i < DoorsCount; i++)
                         {
-                            _doors[i].Open(true);
+                            if (_doorOpened[i])
+                            {
+                                _doors[i].Open(_isSpawnEnabled);
+                            }
                         }
-                    }
-                    break;
-                case DoorsOpenMode.tween:
-                    CalculateOpenProbabilities(true);
-                    for (int i = 0; i < DoorsCount; i++)
-                    {
-                        if (_doorOpened[i])
+                        break;
+                    case DoorsOpenMode.tween:
+                        CalculateOpenProbabilities(true);
+                        for (int i = 0; i < DoorsCount; i++)
                         {
-                            _doors[i].Open(true);
+                            if (_doorOpened[i])
+                            {
+                                _doors[i].Open(_isSpawnEnabled);
+                            }
                         }
-                    }
-                    break;
-                case DoorsOpenMode.all:
-                    for (int i = 0; i < DoorsCount; i++)
-                    {
-                        _doors[i].Open(true);
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                        break;
+                    case DoorsOpenMode.all:
+                        for (int i = 0; i < DoorsCount; i++)
+                        {
+                            _doors[i].Open(_isSpawnEnabled);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             GameController.GetInstance().SetDoorsOpen(true);
         }
@@ -189,6 +236,19 @@ public class DoorsTimer : MonoBehaviour
         }
     }
 
+    public void Unstick()
+    {
+        if (_currentStickDoor != null)
+        {
+            if (_isDoorsOpen)
+                _currentStickDoor.Open(false);
+            else
+                _currentStickDoor.Close();
+            _currentStickPassenger = null;
+        }
+        _isPaused = false;
+    }
+
     public void SetPaused(bool paused)
     {
         if(paused == _isPaused)
@@ -196,24 +256,11 @@ public class DoorsTimer : MonoBehaviour
         if (paused)
         {
             _isPaused = true;
-            _stickNote.SetActive(true);
             _currentStickSoundRemainingTime = StickSoundDelay;
         }
         else
         {
-            if (!GameController.GetInstance().IsAnybodyStick())
-            {
-                _stickNote.SetActive(false);
-                if (_currentStickDoor != null)
-                {
-                    if(_isDoorsOpen)
-                        _currentStickDoor.Open(false);
-                    else 
-                        _currentStickDoor.Close();
-                    _currentStickPassenger = null;
-                }
-                _isPaused = false;
-            }
+            Unstick();
         }
     }
 
@@ -225,6 +272,16 @@ public class DoorsTimer : MonoBehaviour
     public void StopNow()
     {
         int bonusCount = (int)(_currentStationTotalMoveDuration - _currentMoveDuration);
+        if (bonusCount > 0)
+        {
+            _webClient.SendDoorBonusTime(bonusCount, o =>
+            {
+                if(!o.HasField("error"))
+                {
+                      
+                }
+            });
+        }
         if (_isDoorsOpen)
         {
             _isDoorsOpen = false;
@@ -268,16 +325,26 @@ public class DoorsTimer : MonoBehaviour
 	    }
 	    else
 	    {
-            _currentMoveDuration += Time.fixedDeltaTime;
-	        if (_currentMoveDuration > _currentStationTotalMoveDuration)
-	        {
-	            _isDoorsOpen = true;
-	            _currentMoveDuration = 0;
+            if(!_isMovementTimeLocked)
+                _currentMoveDuration += Time.fixedDeltaTime;
+            if (_currentMoveDuration > _currentStationTotalMoveDuration)
+            {
+                _isDoorsOpen = true;
+                _currentMoveDuration = 0;
                 GameController.GetInstance().CheckBeforeDoorsOpen();
                 UpdateDoors();
-
-	        }
-	    }
+                GameController.GetInstance().IncrementStationNumberForPassengers();
+                if (_countToFinish > 0)
+                {
+                    _countToFinish--;
+                    if (_countToFinish == 0)
+                    {
+                        MonobehaviorHandler.GetMonobeharior()
+                        .GetObject<TrainingHandler>("TrainingHandler").ShowNext();
+                    }
+                }
+            }
+        }
 
 	}
 }

@@ -16,7 +16,7 @@ public class PassengerMoveState : MoveState
         {
             if (MovableCharacter.IsGoingAway)
             {
-                if (GameController.GetInstance().IsDoorsOpen())
+                if (GameController.GetInstance().IsDoorsOpen() && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(_passenger))
                 {
                     CalculateStickOnExit();
                     if (!_passenger.IsStick())
@@ -36,8 +36,7 @@ public class PassengerMoveState : MoveState
                     }
                     else
                     {
-                        if(_passenger.IsAttackingAllowed)
-                            _passenger.ActivateState((int)MovableCharacterSM.MovableCharacterStates.Attack);
+                        _passenger.AttackIfPossible();
                     }
                 }
             }
@@ -70,7 +69,6 @@ public class PassengerMoveState : MoveState
         _passenger.CalculateStick();
         if (_passenger.IsStick())
         {
-            _passenger.transform.position = new Vector3(_passenger.GetTarget().x, _passenger.GetTarget().y - Spawner.StickYOffset, -1);
             MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(true);
         }
     }

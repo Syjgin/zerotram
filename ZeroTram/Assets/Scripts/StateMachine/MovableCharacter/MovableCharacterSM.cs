@@ -29,6 +29,8 @@ public class MovableCharacterSM : StateMachine
     private bool _isFreezeBonusActive;
     private SnowBonus.FreezeData _freezeData;
     private float _currentScale;
+    protected bool IsAttackListenerActivated;
+    private bool _isHalfImmortal;
 
     public const float MaxClickDuration = 0.6f;
 
@@ -55,7 +57,7 @@ public class MovableCharacterSM : StateMachine
     {
         return _target;
     }
-    public void SetTarget(Vector2 target)
+    public virtual void SetTarget(Vector2 target)
     {
         _target = target;
         CalculateOrientation(target);
@@ -67,7 +69,7 @@ public class MovableCharacterSM : StateMachine
         Hp -= damage;
         if (Hp > InitialLifes)
             Hp = InitialLifes;
-        float lifesPercent = Hp / (float)InitialLifes;
+        float lifesPercent = Hp / InitialLifes;
         float originalValue = _lifebar.bounds.min.x;
         _lifebar.transform.localScale = new Vector3(lifesPercent, 1, 1);
         float newValue = _lifebar.bounds.min.x;
@@ -90,8 +92,29 @@ public class MovableCharacterSM : StateMachine
             Hp = 0;
             IsDead = true;
             GameController.GetInstance().RegisterDeath(this);
+            if (!TrainingHandler.IsTrainingFinished())
+            {
+                if (this is ConductorSM)
+                    return;
+            }
             Destroy(this.gameObject);
         }
+    }
+
+    public void Resurrect()
+    {
+        Hp = InitialLifes;
+        GameController.GetInstance().Resurrect();
+    }
+
+    public void SetAttackListenerActivated()
+    {
+        IsAttackListenerActivated = true;
+    }
+
+    public void SetHalfImmortal(bool value)
+    {
+        _isHalfImmortal = value;
     }
 
     public virtual void AddDamage(MovableCharacterSM attacker)
@@ -110,6 +133,21 @@ public class MovableCharacterSM : StateMachine
         float currentStrength = attacker.AttackStrength*Randomizer.GetNormalizedRandom();
         AttackTarget = attacker;
         AddDamageValue(currentStrength);
+        if (_isHalfImmortal)
+        {
+            if (Hp < InitialLifes/2)
+            {
+                Hp = InitialLifes/2;
+            }
+        }
+        if (IsAttackListenerActivated)
+        {
+            TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+            handler.SetAttackedPassenger(this);
+            handler.ShowNext();
+            IsAttackListenerActivated = false;
+        }
     }
 
     public bool IsAttackReationFinished()

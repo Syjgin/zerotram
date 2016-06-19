@@ -13,10 +13,16 @@ public class Spawner : MonoBehaviour
 
     public static float StickYOffset = 0.8f;
 
+    public enum TicketAdditionMode
+    {
+        WithTicket,
+        WithoutTicket,
+        Default
+    }
+
     void Awake()
     {
         //PlayerPrefs.DeleteAll();
-
         _maxPassengers = ConfigReader.GetConfig().GetField("tram").GetField("MaxPassengers").n;
         _currentSessionSpawnCount = 0;
         GameController.GetInstance().StartNewGame();
@@ -25,12 +31,10 @@ public class Spawner : MonoBehaviour
     public PassengerSM SpawnAlternativePassenger(Vector3 position, string previousClass)
     {
         string newPassengerClass = MapManager.GetInstance().GetRandomCharacterWithExcludedIndex(previousClass);
-        if (VideoScript._isTraining)
-            newPassengerClass = "gnome";
-        return InstantiateNPC(newPassengerClass, position, false);
+        return InstantiateNPC(newPassengerClass, position, false, true);
     }
-
-    private PassengerSM InstantiateNPC(string className, Vector3 position, bool register)
+    
+    private PassengerSM InstantiateNPC(string className, Vector3 position, bool register, bool unstickable = false)
     {
         int randomIndex = PassengerIndex(className);
         if (randomIndex < 0)
@@ -39,7 +43,7 @@ public class Spawner : MonoBehaviour
         GameObject instantiated =
                     (GameObject)Instantiate(randomNPC, position, Quaternion.identity);
         PassengerSM ps = instantiated.GetComponent<PassengerSM>();
-        ps.Init(register);
+        ps.Init(register, unstickable);
         return ps;
     }
 
@@ -48,21 +52,35 @@ public class Spawner : MonoBehaviour
         _currentSessionSpawnCount = 0;
     }
 
-    public void Spawn(GameObject spawnPoint)
+    public void Spawn(GameObject spawnPoint, string passengerName = "", TicketAdditionMode ticketMode = TicketAdditionMode.Default)
     {
         if(GameController.GetInstance().IsGameFinished)
             return;
+        if (passengerName == "")
+        {
+            DoRegularSpawn(spawnPoint);
+        }
+        else
+        {
+            PassengerSM ps = InstantiateNPC(passengerName, spawnPoint.transform.position, true, true);
+            ps.CalculateRandomTarget(true);
+            if (ticketMode != TicketAdditionMode.Default)
+            {
+                ps.SetTicketAndVisibility(ticketMode == TicketAdditionMode.WithTicket, false);
+            }
+        }
+    }
+
+    private void DoRegularSpawn(GameObject spawnPoint)
+    {
         int maxCount = GameController.GetInstance().GetCurrentSpawnCount();
         int doorsCount = _doorsTimer.GetOpenedDoorsCount();
-        int realCount = Randomizer.GetInRange(1, maxCount/doorsCount);
-
+        int realCount = Randomizer.GetInRange(1, maxCount / doorsCount);
         for (int i = 0; i < realCount; i++)
         {
             if (GameController.GetInstance().GetPassengersCount() > _maxPassengers || _currentSessionSpawnCount >= maxCount)
                 return;
             string passengerString = MapManager.GetInstance().GetRandomCharacter();
-            if (VideoScript._isTraining)
-                passengerString = "gnome";
             PassengerSM ps = InstantiateNPC(passengerString, spawnPoint.transform.position, true);
             _currentSessionSpawnCount++;
             if (ps == null)
@@ -76,6 +94,7 @@ public class Spawner : MonoBehaviour
             ps.CalculateRandomTarget(true);
         }
     }
+
 
     private int PassengerIndex(string stringRepresentation)
     {

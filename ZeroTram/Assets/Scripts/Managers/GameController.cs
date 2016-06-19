@@ -22,36 +22,13 @@ public class GameController
 		Clew = 12
 	}
 
+	private int _bigStationsCount;
 	private Dictionary<string, int> _flyingAwayByKinds;
 	private bool _isPassengersListChanged;
 	private List<PassengerSM> _passengersToAdd;
-	private List<PassengerSM> _passengersToDelete; 
+	private List<PassengerSM> _passengersToDelete;
 
-	public void BonusEffectToPassengers(IBonus bonus, bool additition)
-	{
-		foreach (var passengerSm in _passengers)
-		{
-			if(additition)
-				bonus.AddEffect(passengerSm);
-			else
-				bonus.RemoveEffect(passengerSm);
-		}
-		if (_isPassengersListChanged)
-		{
-			_isPassengersListChanged = false;
-			foreach (var passengerSm in _passengersToDelete)
-			{
-				_passengers.Remove(passengerSm);
-				MonoBehaviour.Destroy(passengerSm.gameObject);
-			}
-			foreach (var passengerSm in _passengersToAdd)
-			{
-				_passengers.Add(passengerSm);
-			}
-			_passengersToAdd.Clear();
-			_passengersToDelete.Clear();
-		}
-	}
+    private int _antiStickCounter;
 
 	private float _minDistance;
 	private bool _isGameFinished;
@@ -61,6 +38,11 @@ public class GameController
 	{
 		return _isDoorsOpen;
 	}
+
+    public void Resurrect()
+    {
+        _isGameFinished = false;
+    }
 
 	public void SetDoorsOpen(bool open)
 	{
@@ -87,8 +69,7 @@ public class GameController
 		public bool IsLevelFinished;
 	}
 	private static GameController _instance;
-
-	private int _incomingPassengers;
+    
 	private int _totalPassengers;
 	private int _killedPassengers;
 	private int _totalHares;
@@ -133,11 +114,51 @@ public class GameController
 		_flyingAwayByKinds = new Dictionary<string, int> ();
 	}
 
-	public void StartNewGame()
+    public void BonusEffectToPassengers(IBonus bonus, bool additition)
+    {
+        foreach (var passengerSm in _passengers)
+        {
+            if (additition)
+                bonus.AddEffect(passengerSm);
+            else
+                bonus.RemoveEffect(passengerSm);
+        }
+        if (_isPassengersListChanged)
+        {
+            _isPassengersListChanged = false;
+            foreach (var passengerSm in _passengersToDelete)
+            {
+                _passengers.Remove(passengerSm);
+                MonoBehaviour.Destroy(passengerSm.gameObject);
+            }
+            foreach (var passengerSm in _passengersToAdd)
+            {
+                _passengers.Add(passengerSm);
+            }
+            _passengersToAdd.Clear();
+            _passengersToDelete.Clear();
+        }
+    }
+
+    public void ResetHarePercent()
+    {
+        _haresPercent = 0;
+        _isGameFinished = false;
+        UpdateListeners(false);
+    }
+
+    public void ResetDiedPassengersPercent()
+    {
+        _killedPassengers = 0;
+        _maxKilledPassengers = 0;
+        _isGameFinished = false;
+        UpdateListeners(false);
+    }
+
+    public void StartNewGame()
 	{
 		_passengers.Clear();
 		_totalHares = 0;
-		_incomingPassengers = 0;
 		_totalPassengers = 0;
 		_currentSpawnCount = (int)_initialSpawnCount;
 		_currentStationNumber = 0;
@@ -147,6 +168,20 @@ public class GameController
 		_haresPercent = 0;
 		_flyingAwayByKinds.Clear ();
 		_isGameFinished = false;
+        _antiStickCounter = 0;
+		_bigStationsCount = 0;
+	}
+
+	public int GetKilledPassengersCount() {
+		return _killedPassengers;
+	}
+
+	public int GetBigStationsCount() {
+		return _bigStationsCount;
+	}
+
+	public void IncreaseBigStationCount() {
+		_bigStationsCount++;
 	}
 
 	public int GetCurrentStationNumber()
@@ -178,13 +213,22 @@ public class GameController
 	{
 		if (ps.HasTicket())
 		{
-			_incomingPassengers++;
 			_totalPassengers++;
 		}
 		_totalHares++;
 		_passengers.Add(ps);
 		UpdateStats();
 	}
+
+    public void IncreaseAntiStick()
+    {
+        _antiStickCounter++;
+    }
+
+    public int GetAntiStick()
+    {
+        return _antiStickCounter;
+    }
 
 	public List<String> GetSitPassengers() {
 		List<String> result = new List<String> ();
@@ -337,7 +381,6 @@ public class GameController
 
 	private bool CheckStats()
 	{
-		_incomingPassengers = _passengers.Count;
 		UpdateStats();
 		if (_haresPercent > MaxHaresPercent)
 		{
@@ -355,6 +398,15 @@ public class GameController
 		}
 	}
 
+    public void IncrementStationNumberForPassengers()
+    {
+        _currentSpawnCount += (int)_spawnIncrementCount;
+        foreach (var passenger in _passengers)
+        {
+            passenger.IncrementStationCount();
+        }
+    }
+
 	private void NextStationReached()
 	{
 		_currentStationNumber++;
@@ -362,11 +414,6 @@ public class GameController
 		{
 			MapManager.GetInstance().OpenNextLevel();
 			Victory();
-		}
-		_currentSpawnCount += (int)_spawnIncrementCount;
-		foreach (var passenger in _passengers)
-		{
-			passenger.IncrementStationCount();
 		}
 	}
 
@@ -432,13 +479,27 @@ public class GameController
 		{
 			if (passengerSm.IsStick())
 			{
-				RegisterDeath(passengerSm);
-				MonoBehaviour.Destroy(passengerSm.gameObject);
+			    if (!TrainingHandler.IsTrainingFinished())
+			    {
+			        if (passengerSm.IsStickModifiedForTraining())
+			        {
+			            TrainingHandler handler =
+			                MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+			            handler.SetIsGnomeSurvived(false);
+			            handler.ShowNext();
+			        }
+			    }
+			    else
+			    {
+                    RegisterDeath(passengerSm);
+                }
+                if(passengerSm != null)
+				    MonoBehaviour.Destroy(passengerSm.gameObject);
 				return;
 			}
 		}
 	}
-
+    
 	public PassengerSM GetStickPassenger()
 	{
 		foreach (var passengerSm in _passengers)

@@ -27,6 +27,11 @@ public class PassengerCollisionDetector : CollisionDetector
     {
         if (Time.timeScale == 0)
             return;
+        if (!TrainingHandler.IsTrainingFinished())
+        {
+            if(!MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler").IsPassengerClickAllowed())
+                return;
+        }
         if (
             MonobehaviorHandler.GetMonobeharior()
                 .GetObject<BonusTimer>("bonusTimer")

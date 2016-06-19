@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Networking.NetworkSystem;
 
 public class PassengerSM : MovableCharacterSM
 {
@@ -25,13 +26,19 @@ public class PassengerSM : MovableCharacterSM
     public bool IsAttackingAllowed;
     private Bench _currentBench;
 
+    private bool _isFlyingAwayListenerActivated;
+
     public Dictionary<GameController.BonusTypes, float> BonusProbabilities; 
 
     private float _savedStickProbability;
 
-    public List<GameController.BonusTypes> ActiveBonuses; 
+    public List<GameController.BonusTypes> ActiveBonuses;
 
-    protected NewCharacterWindow Window;
+    private bool _isDragRunawayDeniedByTraining;
+    private bool _isFlyAwayDenied;
+    private bool _isDragDenied;
+    private bool _isDragListenerActivated;
+    private bool _isSitListenerActivated;
 
     [SerializeField]
     private Sprite _question;
@@ -43,6 +50,14 @@ public class PassengerSM : MovableCharacterSM
     private Sprite _stick;
     [SerializeField]
     protected SpriteRenderer Indicator;
+    
+    private bool _isTrainingEnabled;
+
+    private bool _attackDenyedByTraining;
+    private bool _isStickModifiedForTraining;
+    private bool _isConductorAttackDenied;
+    private bool _isPassengerAttackDenied;
+    private bool _isGoAwayVelocityIncreased;
 
     void Awake()
     {
@@ -71,6 +86,72 @@ public class PassengerSM : MovableCharacterSM
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
 
+    public void SetFlyAwayDenied(bool denied)
+    {
+        _isFlyAwayDenied = denied;
+    }
+
+    public void SetSitListenerActivated(bool activated)
+    {
+        _isSitListenerActivated = activated;
+    }
+
+    public void SetConductorAttackDenied(bool value)
+    {
+        _isConductorAttackDenied = value;
+    }
+
+    public void IncreaseGoAwayVelocity()
+    {
+        _isGoAwayVelocityIncreased = true;
+    }
+
+    public void SetPassengerAttackDenied(bool value)
+    {
+        _isPassengerAttackDenied = value;
+    }
+
+    public void SetDragDenied(bool denied)
+    {
+        _isDragDenied = denied;
+    }
+
+    public void SetDragListenerEnabled(bool value)
+    {
+        _isDragListenerActivated = value;
+    }
+
+    public void SetAttackEnabled(bool isEnabled)
+    {
+        _attackDenyedByTraining = !isEnabled;
+    }
+    
+    public void AttackIfPossible()
+    {
+        if (IsAttackingAllowed && !_attackDenyedByTraining)
+            ActivateState((int)MovableCharacterSM.MovableCharacterStates.Attack);
+    }
+
+    public void SetRunawayDenied(bool denied)
+    {
+        _isDragRunawayDeniedByTraining = denied;
+    }
+
+    public bool IsRunawayDenied()
+    {
+        return _isDragRunawayDeniedByTraining;
+    }
+
+    public void ActivateFlyAwayListener()
+    {
+        _isFlyingAwayListenerActivated = true;
+    }
+
+    public bool IsFlyAwayListenerActivated()
+    {
+        return _isFlyingAwayListenerActivated;
+    }
+
     public void RecalculateTicketProbability(float coef, bool onlyForInvisible)
     {
         TicketProbability *= coef;
@@ -79,7 +160,12 @@ public class PassengerSM : MovableCharacterSM
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
     }
 
-    public virtual void Init(bool register)
+    public void EnableTrainingClick()
+    {
+        _isTrainingEnabled = true;
+    }
+
+    public virtual void Init(bool register, bool unstickable = false)
     {
         AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
@@ -98,13 +184,18 @@ public class PassengerSM : MovableCharacterSM
         _attackingDenyPeriod = ConfigReader.GetConfig().GetField("tram").GetField("AttackDenyPeriod").n;
         ParseBonusMap();
         _hasTicket = Randomizer.GetPercentageBasedBoolean((int)TicketProbability);
-        CalculateStick();
+        if(!unstickable)
+            CalculateStick();
         _maxStopCount = ConfigReader.GetConfig().GetField("tram").GetField("MaxStopCount").n;
         int stopCount = Randomizer.GetInRange(1, (int)_maxStopCount);
         _tramStopCount = stopCount;
         if(register)
             GameController.GetInstance().RegisterPassenger(this);
-        Window = NewCharacterWindowHandler.GetWindow();
+    }
+
+    public void IncreaseBonusProbability()
+    {
+        BonusProbability = 100;
     }
 
     public float AttackTargetDistance()
@@ -115,7 +206,7 @@ public class PassengerSM : MovableCharacterSM
         Vector2 attackTargetPosition2D = AttackTarget.BoxCollider2D.bounds.ClosestPoint(transform.position);
         return (position2D - attackTargetPosition2D).sqrMagnitude;
     }
-    
+
     public bool HasTicket()
     {
         return _hasTicket;
@@ -153,9 +244,14 @@ public class PassengerSM : MovableCharacterSM
     {
         return _isVisibleToHero;
     }
-
+    
     public void StartDrag()
     {
+        if (_isDragListenerActivated)
+        {
+            ShowNextTrainingMessage();
+            _isDragListenerActivated = false;
+        }
         if (IsFrozen())
         {
             TemporalyUnfreeze();
@@ -163,21 +259,72 @@ public class PassengerSM : MovableCharacterSM
         ActivateState((int)MovableCharacterStates.Dragged);
     }
 
+    public void StartGoAway()
+    {
+        _currentTramStopCount = int.MaxValue - 1;
+    }
+
+    public void SetAlwaysStickForTraining()
+    {
+        StickProbability = 100;
+        _isStickModifiedForTraining = true;
+    }
+
+    public void SetStickProbability(float probability)
+    {
+        StickProbability = probability;
+    }
+
+    public void SetCounterAttackProbability(float probability)
+    {
+        CounterAttackProbability = probability;
+    }
+
     public void IncrementStationCount()
     {
         _currentTramStopCount++;
-        if (_currentTramStopCount > _tramStopCount)
+        if (_currentTramStopCount > _tramStopCount && !IsGoingAway)
         {
-            GameObject leftDoor = GameObject.Find("door1");
-            GameObject rightDoor = GameObject.Find("door2");
-            Vector2 target;
-            if (Randomizer.GetRandomPercent() > 50)
-                target = leftDoor.transform.position;
-            else
-                target = rightDoor.transform.position;
+            DoorsAnimationController door1 =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door1");
+            DoorsAnimationController door2 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door2");
+            DoorsAnimationController door3 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door3");
+            DoorsAnimationController door4 =
+                MonobehaviorHandler.GetMonobeharior().GetObject<DoorsAnimationController>("door4");
+            List<DoorsAnimationController> selected = new List<DoorsAnimationController>();
+            if (door1.IsOpened())
+                selected.Add(door1);
+            if (door2.IsOpened())
+                selected.Add(door2);
+            if (door3.IsOpened())
+                selected.Add(door3);
+            if (door4.IsOpened())
+                selected.Add(door4);
+            if (selected.Count == 0)
+                return;
+            int randomPercent = Randomizer.GetRandomPercent();
+            int step = 100 / selected.Count;
+            int currentStep = 0;
+            int i = 0;
+            for (i = 0; i < selected.Count - 1; i++)
+            {
+                if (currentStep > randomPercent)
+                {
+                    break;
+                }
+                currentStep += step;
+            }
+            BoxCollider2D collider = selected[i].GetComponent<BoxCollider2D>();
+            Vector2 target = new Vector2(selected[i].gameObject.transform.position.x, selected[i].gameObject.transform.position.y) + collider.offset;
             Velocity *= 2;
-            SetTarget(target);
+            if (_isGoAwayVelocityIncreased)
+            {
+                Velocity *= 2;
+            }
             IsGoingAway = true;
+            base.SetTarget(target);
         }
     }
     
@@ -188,9 +335,20 @@ public class PassengerSM : MovableCharacterSM
         bool stick = Randomizer.GetPercentageBasedBoolean((int)StickProbability);
         if (stick && MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
         {
+            if (_isStickModifiedForTraining)
+            {
+                ShowNextTrainingMessage();
+            }
             ActivateState((int)MovableCharacterStates.Stick);
             Indicator.sprite = _stick;
         }
+    }
+
+    private void ShowNextTrainingMessage()
+    {
+        TrainingHandler handler =
+                    MonobehaviorHandler.GetMonobeharior().GetObject<TrainingHandler>("TrainingHandler");
+        handler.ShowNext();
     }
 
     public override bool CanNotInteract()
@@ -237,8 +395,24 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
+    public bool IsSitListenerActivated()
+    {
+        return _isSitListenerActivated;
+    }
+
+    public void ActivateSitListener()
+    {
+        if (_isSitListenerActivated)
+        {
+            ShowNextTrainingMessage();
+            _isSitListenerActivated = false;
+        }
+    }
+
     public void HandleSitdown(Bench bench)
     {
+        if(IsGoingAway)
+            return;
         _currentBench = bench;
         AttackTarget = null;
         transform.position = new Vector3(bench.transform.position.x, bench.transform.position.y, transform.position.z);
@@ -247,10 +421,15 @@ public class PassengerSM : MovableCharacterSM
 
     public void TryAttackMovable(MovableCharacterSM movable)
     {
+        if(_attackDenyedByTraining)
+            return;
         float currentAttackProbability = AttackProbability;
-        if (movable is PassengerSM)
+        var sm = movable as PassengerSM;
+        if (sm != null)
         {
-            PassengerSM passenger = (PassengerSM) movable;
+            if(_isPassengerAttackDenied)
+                return;
+            PassengerSM passenger = sm;
             if (passenger.IsOnTheBench())
             {
                 currentAttackProbability *=
@@ -259,9 +438,16 @@ public class PassengerSM : MovableCharacterSM
         }
         if (Randomizer.GetPercentageBasedBoolean((int)currentAttackProbability))
         {
+            if (_isConductorAttackDenied)
+            {
+                ConductorSM conductor = movable as ConductorSM;
+                if (conductor != null)
+                {
+                    return;
+                }
+            }
             AttackTarget = movable;
-            if(IsAttackingAllowed)
-                ActivateState((int)MovableCharacterStates.Attack);
+            AttackIfPossible();
         }
         else
         {
@@ -276,8 +462,26 @@ public class PassengerSM : MovableCharacterSM
             base.MakeIdle();
     }
 
+    public override void SetTarget(Vector2 target)
+    {
+        if (IsGoingAway)
+        {
+            CalculateOrientation(GetTarget());
+            ActivateState((int) MovableCharacterStates.Move);
+        }
+        else
+        {
+            base.SetTarget(target);
+        }
+    }
+
     public void CalculateRandomTarget(bool force = false)
     {
+        if (IsGoingAway)
+        {
+            SetTarget(GetTarget());
+            return;
+        }
         if(AttackTarget != null && !force)
             return;
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
@@ -285,13 +489,27 @@ public class PassengerSM : MovableCharacterSM
             SetTarget(target);
     }
 
+    public void SetMaximumAttackProbabilityForTraining()
+    {
+        AttackProbability = 100;
+        ChangeStatePeriod = 1f;
+        IsAttackListenerActivated = true;
+    }
+
+    public void DisableAttackListener()
+    {
+        IsAttackListenerActivated = false;
+    }
+
     public void CalculateAttackReaction()
     {
+        if(_attackDenyedByTraining)
+            return;
         bool willCounterAttack = Randomizer.GetPercentageBasedBoolean((int)CounterAttackProbability);
         if (willCounterAttack)
         {
-            if (AttackTarget != null && IsAttackingAllowed)
-                ActivateState((int)MovableCharacterStates.Attack);
+            if (AttackTarget != null)
+                AttackIfPossible();
             else
                 MakeIdle();
         }
@@ -302,23 +520,29 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
+    public bool IsStickModifiedForTraining()
+    {
+        return _isStickModifiedForTraining;
+    }
+
     public void StopStick()
     {
-        MakeIdle();
         if (!IsGoingAway)
+        {
             CalculateRandomTarget();
+        }
+        else
+        {
+            if (_isStickModifiedForTraining)
+            {
+                ShowNextTrainingMessage();
+            }
+            Destroy(gameObject);       
+        }
         MonobehaviorHandler.GetMonobeharior().GetObject<DoorsTimer>("DoorsTimer").SetPaused(false);
+        GameController.GetInstance().IncreaseAntiStick();
     }
-
-    private void ShowCharacterInfo()
-    {
-        string key = NewCharacterWindow.Prefix + GetClassName();
-        if (PlayerPrefs.GetInt(key) == 1)
-            return;
-        PlayerPrefs.SetInt(key, 1);
-        Window.SetCharacterToShow(GetClassName());
-    }
-
+    
     public void FlyAway()
     {
         ActivateState((int)MovableCharacterStates.FlyingAway);
@@ -335,6 +559,11 @@ public class PassengerSM : MovableCharacterSM
 
     public override void HandleClick()
     {
+        if (_isTrainingEnabled)
+        {
+            ShowNextTrainingMessage();
+            _isTrainingEnabled = false;
+        }
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (!_isVisibleToHero)
         {
@@ -348,14 +577,16 @@ public class PassengerSM : MovableCharacterSM
                 GameController.GetInstance().UpdatePassenger(this);
                 if (!_hasTicket)
                 {
-                    AttackTarget = hero;
-                    CalculateAttackReaction();
+                    if (!_isConductorAttackDenied)
+                    {
+                        AttackTarget = hero;
+                        CalculateAttackReaction();
+                    }
                 }
                 else
                 {
                     MonobehaviorHandler.GetMonobeharior().GetObject<AudioPlayer>("AudioPlayer").PlayAudioById("coins");
                 }
-                ShowCharacterInfo();
             }
             return;
         }
@@ -367,11 +598,18 @@ public class PassengerSM : MovableCharacterSM
         hero.StartDrag(this);
     }
 
+    public bool IsDragDenied()
+    {
+        return _isDragDenied;
+    }
+
     public override void HandleDoubleClick()
     {
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero.CanKick(this))
         {
+            if (_isFlyAwayDenied)
+                return;
             hero.Kick(this);
             return;
         }
@@ -413,8 +651,13 @@ public class PassengerSM : MovableCharacterSM
         {
             if (attack)
             {
+                if (_isConductorAttackDenied)
+                {
+                    MakeIdle();
+                    return;
+                }
                 AttackTarget = conductor;
-                ActivateState((int) MovableCharacterStates.Attack);
+                AttackIfPossible();
             }
             else
             {
@@ -472,14 +715,6 @@ public class PassengerSM : MovableCharacterSM
         ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
         if (hero == null)
             return;
-        if (IsGoingAway && 
-            GameController.GetInstance().IsDoorsOpen() && 
-            !IsStick() &&
-            MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(this))
-        {
-            Destroy(gameObject);
-            return;
-        }
         CalculateIndicator();
         if(!hero.IsDragging())
             StopDrag(false);
@@ -495,7 +730,6 @@ public class PassengerSM : MovableCharacterSM
         {
             IsAttackingAllowed = true;
         }
-        
     }
 
     public void ApplyWrenchBonus(bool add)

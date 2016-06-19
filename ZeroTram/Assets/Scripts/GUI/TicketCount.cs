@@ -8,7 +8,6 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
     public Image Num_Left;
     public Image Num_Middle;
     public Image Num_Right;
-    public Text Txt;
     private bool _bar_left;
     private bool _bar_middle;
     private bool _bar_right;
@@ -20,7 +19,6 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
 
     void Start()
     {
-        Txt.text = "0";
         _num_posY = Num_Left.transform.localPosition.y;
         GameController.GetInstance().AddListener(this);
     }
@@ -104,10 +102,9 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
     {
         GameController.GetInstance().RemoveListener(this);
     }
-
+    
     public void UpdateInfo(GameController.StateInformation information)
     {
-        Txt.text = information.TicketCount.ToString();
         if (_ticket != information.TicketCount)
         {
             _ticket = information.TicketCount;

@@ -51,7 +51,7 @@ public class SelectBonusWindow : MonoBehaviour
 
     private string GetBonusDescription(GameController.BonusTypes bonusType)
     {
-        return ConfigReader.GetConfig().GetField("descriptions").GetField(bonusType.ToString()).str;
+        return StringResources.GetLocalizedString(bonusType.ToString());
     }
 
     private Sprite GetSpriteByBonus(GameController.BonusTypes bonusType)
