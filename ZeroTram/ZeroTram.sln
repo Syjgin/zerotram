@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroTram.CSharp", "ZeroTram.CSharp.csproj", "{6027CE26-CD26-113B-E010-CC8E931B59BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroTram.CSharp.Editor", "ZeroTram.CSharp.Editor.csproj", "{49FFF3B2-CF25-1F7C-1C01-B1A6D9BC2065}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6027CE26-CD26-113B-E010-CC8E931B59BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6027CE26-CD26-113B-E010-CC8E931B59BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6027CE26-CD26-113B-E010-CC8E931B59BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6027CE26-CD26-113B-E010-CC8E931B59BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49FFF3B2-CF25-1F7C-1C01-B1A6D9BC2065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49FFF3B2-CF25-1F7C-1C01-B1A6D9BC2065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49FFF3B2-CF25-1F7C-1C01-B1A6D9BC2065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49FFF3B2-CF25-1F7C-1C01-B1A6D9BC2065}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

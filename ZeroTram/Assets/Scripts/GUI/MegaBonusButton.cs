@@ -9,6 +9,7 @@ public class MegaBonusButton : MonoBehaviour
     [SerializeField] private Image _image;
     [SerializeField] private GameObject _megaIconPrefab;
     [SerializeField] private GameObject _background;
+	[SerializeField] private Client _client;
 
     private IBonus _megaBonus;
     
@@ -20,11 +21,20 @@ public class MegaBonusButton : MonoBehaviour
 
     public void OnMouseDown()
     {
-        GameObject icon = Instantiate(_megaIconPrefab);
-        MegaBonusIcon iconObject = icon.GetComponent<MegaBonusIcon>();
-        iconObject.SetBonus(_megaBonus, _image.sprite);
-       // _background.gameObject.SetActive(false);
-        _megaBonusButton.gameObject.SetActive(false);
+		_client.UseBonus (_megaBonus.GetBonusType ().ToString (), (JSONObject result) => {
+			Debug.Log (result.ToString ());
+			//TODO: uncomment when shop will be implemented
+			/*if(!result.HasField ("error")) {
+				GameObject icon = Instantiate(_megaIconPrefab);
+				MegaBonusIcon iconObject = icon.GetComponent<MegaBonusIcon>();
+				iconObject.SetBonus(_megaBonus, _image.sprite);
+				_megaBonusButton.gameObject.SetActive(false);		
+			}*/
+		});
+		GameObject icon = Instantiate(_megaIconPrefab);
+		MegaBonusIcon iconObject = icon.GetComponent<MegaBonusIcon>();
+		iconObject.SetBonus(_megaBonus, _image.sprite);
+		_megaBonusButton.gameObject.SetActive(false);
     }
 
     public void SetVisible(bool isVisible)

@@ -28,6 +28,7 @@ public class ConductorSM : MovableCharacterSM
         MovingToDragTargetVelocity = ConfigReader.GetConfig().GetField("hero").GetField("MovingToDragTargetVelocity").n;
         _lifes = GameObject.Find("userLifes").GetComponent<Text>();
         _lifes.text = "100%";
+        _hp = 100;
 
         IdleState idleState = new IdleState(this);
         ConductorMoveState moveState = new ConductorMoveState(this);

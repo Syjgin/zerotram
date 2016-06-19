@@ -216,7 +216,6 @@ public class PassengerSM : MovableCharacterSM
     {
         if (_currentBench != null)
         {
-            _currentBench.CurrentPassenger = null;
             _currentBench = null;
             CalculateRandomTarget();
         }

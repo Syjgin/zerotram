@@ -15,15 +15,15 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
     private int _ticket;
     private int _ticket_old;
     private float _num_posY;
-    private const float _baraban_speed = 35f;
-    private const float _baraban_y = 22.7f;
+    private const float _baraban_speed = 15f;
+    private const float _baraban_y = 47.5f;
 
-	void Start ()
-	{
+    void Start()
+    {
         Txt.text = "0";
-        _num_posY = Num_Left.transform.position.y;
+        _num_posY = Num_Left.transform.localPosition.y;
         GameController.GetInstance().AddListener(this);
-	}
+    }
 
     void Update()
     {
@@ -43,64 +43,64 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
         //}
         int xxx = Mathf.FloorToInt(_ticket / 100);
         int xx = Mathf.FloorToInt((_ticket - (xxx * 100)) / 10);
-        int x = _ticket - (xx * 10);
+        int x = _ticket - (xxx * 100) - (xx * 10);
         if (!_bar_left && !_bar_middle && !_bar_right)
         {
             _ticket_old = _ticket;
         }
         else
         {
-            if (Num_Left.transform.position.y > (_num_posY - (_baraban_y * xxx)))
+            if (Num_Left.transform.localPosition.y > (_num_posY - (_baraban_y * xxx)))
                 Num_Left.transform.Translate(0, Time.deltaTime * -_baraban_speed, 0);
             else
             {
-                Num_Left.transform.position = new Vector3(Num_Left.transform.position.x, _num_posY - (_baraban_y * xxx), Num_Left.transform.position.z);
+                Num_Left.transform.localPosition = new Vector3(Num_Left.transform.localPosition.x, _num_posY - (_baraban_y * xxx), Num_Left.transform.localPosition.z);
                 _bar_left = false;
             }
             if (xx > 0)
             {
-                if (Num_Middle.transform.position.y > (_num_posY - (_baraban_y * xx)))
+                if (Num_Middle.transform.localPosition.y > (_num_posY - (_baraban_y * xx)))
                     Num_Middle.transform.Translate(0, 0.1f * _baraban_speed * (_ticket_old - _ticket), 0);
                 else
                 {
-                    Num_Middle.transform.position = new Vector3(Num_Middle.transform.position.x, _num_posY - (_baraban_y * x), Num_Middle.transform.position.z);
+                    Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x, _num_posY - (_baraban_y * x), Num_Middle.transform.localPosition.z);
                     _bar_middle = false;
                 }
             }
             else
             {
-                if (Num_Middle.transform.position.y < _num_posY)
+                if (Num_Middle.transform.localPosition.y < _num_posY)
                     Num_Middle.transform.Translate(0, 0.45f * _baraban_speed, 0);
                 else
                 {
-                    Num_Middle.transform.position = new Vector3(Num_Middle.transform.position.x, _num_posY, Num_Middle.transform.position.z);
+                    Num_Middle.transform.localPosition = new Vector3(Num_Middle.transform.localPosition.x, _num_posY, Num_Middle.transform.localPosition.z);
                     _bar_middle = false;
                 }
             }
             if (x > 0)
             {
-                if (Num_Right.transform.position.y > (_num_posY - (_baraban_y * x)))
+                if (Num_Right.transform.localPosition.y > (_num_posY - (_baraban_y * x)))
                     Num_Right.transform.Translate(0, 0.1f * _baraban_speed * (_ticket_old - _ticket), 0);
                 else
                 {
-                    Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_posY - (_baraban_y * x), Num_Right.transform.position.z);
+                    Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_posY - (_baraban_y * x), Num_Right.transform.localPosition.z);
                     _bar_right = false;
                 }
             }
             else
             {
-                if (Num_Right.transform.position.y < _num_posY)
+                if (Num_Right.transform.localPosition.y < _num_posY)
                     Num_Right.transform.Translate(0, 0.45f * _baraban_speed, 0);
                 else
                 {
-                    Num_Right.transform.position = new Vector3(Num_Right.transform.position.x, _num_posY, Num_Right.transform.position.z);
+                    Num_Right.transform.localPosition = new Vector3(Num_Right.transform.localPosition.x, _num_posY, Num_Right.transform.localPosition.z);
                     _bar_right = false;
                 }
             }
         }
     }
 
-        void OnDestroy()
+    void OnDestroy()
     {
         GameController.GetInstance().RemoveListener(this);
     }
@@ -119,6 +119,6 @@ public class TicketCount : MonoBehaviour, GameStateNotificationListener
 
     public void GameOver()
     {
-        
+
     }
 }
