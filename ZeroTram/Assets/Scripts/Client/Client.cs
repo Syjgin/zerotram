@@ -7,36 +7,36 @@ using UnityEngine;
 
 public class Client : MonoBehaviour
 {
-	private const String ServerName = "http://golang-zerotramserver.rhcloud.com/";//"http://127.0.0.1:8080/"
-	private const String SavedUseridString = "UserId";
-	private const String SavedTokenString = "ServerToken";
-	private const String TicketsRecordKey = "TicketsRecordKey";
+	private const string ServerName = "http://golang-zerotramserver.rhcloud.com/";//"http://127.0.0.1:8080/"
+	private const string SavedUseridString = "UserId";
+	private const string SavedTokenString = "ServerToken";
+	private const string TicketsRecordKey = "TicketsRecordKey";
 
 	private int _currentRecord;
 	private bool _isRecordLoaded;
-	private String _userId;
-	private String _token;
+	private string _userId;
+	private string _token;
 
-	private String GetUserid() {
+	private string GetUserid() {
 		if(_userId == null) {
 			_userId = EncryptedPlayerPrefs.GetString (SavedUseridString, "");
 		}
 		return _userId;
 	}
 
-	private void SetUserid(String newid) {
+	private void SetUserid(string newid) {
 		_userId = newid;
 		EncryptedPlayerPrefs.SetString (SavedUseridString, newid);
 	}
 
-	private String GetToken() {
+	private string GetToken() {
 		if(_token == null) {
 			_token = EncryptedPlayerPrefs.GetString (SavedTokenString, "");
 		}
 		return _token;
 	}
 
-	public void UpdateToken(String newToken) {
+	public void UpdateToken(string newToken) {
 		_token = newToken;
 		EncryptedPlayerPrefs.SetString (SavedTokenString, newToken);
 	}
@@ -107,7 +107,7 @@ public class Client : MonoBehaviour
 		{
 			return;
 		}
-		POST("user/authorize", new Dictionary<string, string> { { "token", _token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
+		POST("event/unlock", new Dictionary<string, string> { { "token", _token }, {"eventname", eventName}, {"stringparameter", stringParameter}, {"intparameter", intParameter.ToString()} }, onComplete);
 	}
 
 	public void GetEvents(Action<JSONObject> onComplete)

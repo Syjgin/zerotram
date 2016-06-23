@@ -58,6 +58,20 @@
 	"four" : "Каре",
 	"fourAndTwo" : "Каре и пара",
 	"five" : "Пятерня",
-	"six" : "Шестерня"
+	"six" : "Шестерня",
+	"remainLivesCount" : "Трамваю осталось {0} поездок",
+	"newTicketsRecord" : "Продано билетов: {0}. Новый рекорд!",
+	"dangerReward" : "Новый рекорд по выпиныванию {0}!",
+	"moneyReward" : "{0} монет\n",
+	"gemsReward" : "{0} светильников\n",
+	"bonusReward" : "Бонус: {0}\n",
+	"tramLivesReward" : "Трамвай восстановлен на: {0}\n",
+	"tramSkinReward" : "Открыт новый трамвай!\n",
+	"conductorSkinReward" : "Открыта новая внешность кондуктора!\n",
+	"peacemaker", "Умиротворитель",
+	"snow", "Снежинка",
+	"antihare", "Анти-заяц",
+	"wrench", "Ключ",
+	"warp", "Вихрь"
 	}
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using Assets.Scripts.Client;
 
 public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 {
@@ -16,6 +17,7 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 	[SerializeField] private Client _client;
     [SerializeField] private TrainingHandler _trainingHandler;
     [SerializeField] private ConductorSM _hero;
+    [SerializeField] private MyMessageScript _messages;
 
     private const int ZeroCount = 6;
 
@@ -132,19 +134,33 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         _countText.text = countText;
         gameOverMenu.SetActive(true);
 		_client.DecreaseTramLives ((response) => {
-			Debug.Log (response);
+            
+            if (!response.HasField("error"))
+            {
+                if (response.HasField("TramlivesCount"))
+                {
+                    float count = response.GetField("TramlivesCount").n;
+                    string message = String.Format(StringResources.GetLocalizedString("remainLivesCount"), count);
+                    _messages.AddMessage(message);
+                }
+            }
 		});
 		if(_stateInfo.TicketCount > 0) {
 			RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
 			_client.SendRecord (_stateInfo.TicketCount, false, (result) => {
-				Debug.Log (result);
+                if (!result.HasField("error"))
+                {
+                    string message = string.Format(StringResources.GetLocalizedString("newTicketsRecord"),
+                            _stateInfo.TicketCount) + "\n"  + StringResources.GetLocalizedString("reward");
+                    MessageSender.SendRewardMessage(result, _messages, message);
+                }
 			});
 		}
 		int flyingAwayCount = 0;
 		foreach (KeyValuePair<string, int> pair in GameController.GetInstance().GetFlyingAwayDuringGame ()) {
 			flyingAwayCount += pair.Value;
             _client.SendDangerRecord(pair.Value, pair.Key, false, (result) => {
-                Debug.Log(result);
+                
             });
         }
 		int stationNumber = GameController.GetInstance ().GetCurrentStationNumber ();
