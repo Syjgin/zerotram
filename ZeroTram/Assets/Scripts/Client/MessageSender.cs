@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.Client
 {
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Client
     {
         public static void SendRewardMessage(JSONObject result, MyMessageScript messageScript, string initialString)
         {
+            Debug.Log("reward calculating started");
             string rewardString = "";
             if (result.HasField("money"))
             {

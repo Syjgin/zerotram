@@ -6,8 +6,8 @@ public class MyMessageScript : MonoBehaviour
 {
     [SerializeField] private Button _btn;
     private List<string> _message = new List<string>();
-    private const float MessagePeriod = 2;
-    private float _currentMessagePeriod;
+    private const float MessagePeriod = 5;
+    private float _messageOpenedTime;
     // Use this for initialization
     void Start()
     {
@@ -21,15 +21,11 @@ public class MyMessageScript : MonoBehaviour
         {
             _btn.GetComponentInChildren<Text>().text = _message[0];
             _btn.gameObject.SetActive(true);
-            _currentMessagePeriod = MessagePeriod;
+            _messageOpenedTime = Time.timeSinceLevelLoad;
         }
-        if (_currentMessagePeriod >= 0)
+        if (Time.timeSinceLevelLoad - _messageOpenedTime > MessagePeriod)
         {
-            _currentMessagePeriod -= Time.deltaTime;
-        }
-        else
-        {
-            if(_btn.gameObject.activeInHierarchy)
+            if (_btn.gameObject.activeInHierarchy)
             {
                 RemoveMessage();
             }
@@ -43,7 +39,6 @@ public class MyMessageScript : MonoBehaviour
 
     public void RemoveMessage()
     {
-        _currentMessagePeriod = 0;
         if(_message.Count > 0)
             _message.RemoveAt(0);
         _btn.gameObject.SetActive(false);

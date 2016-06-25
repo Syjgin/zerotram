@@ -148,10 +148,11 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 		if(_stateInfo.TicketCount > 0) {
 			RecordsManager.GetInstance().AddRecord(_stateInfo.TicketCount);
 			_client.SendRecord (_stateInfo.TicketCount, false, (result) => {
+               
                 if (!result.HasField("error"))
                 {
                     string message = string.Format(StringResources.GetLocalizedString("newTicketsRecord"),
-                            _stateInfo.TicketCount) + "\n"  + StringResources.GetLocalizedString("reward");
+                            _stateInfo.TicketCount) + Environment.NewLine  + StringResources.GetLocalizedString("reward");
                     MessageSender.SendRewardMessage(result, _messages, message);
                 }
 			});
@@ -159,8 +160,11 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
 		int flyingAwayCount = 0;
 		foreach (KeyValuePair<string, int> pair in GameController.GetInstance().GetFlyingAwayDuringGame ()) {
 			flyingAwayCount += pair.Value;
-            _client.SendDangerRecord(pair.Value, pair.Key, false, (result) => {
-                
+		    var pair1 = pair;
+		    _client.SendDangerRecord(pair.Value, pair.Key, false, (result) => {
+                string message = string.Format(StringResources.GetLocalizedString("newDangerRecord"),
+                            StringResources.GetLocalizedString(pair1.Key + "Name"), pair1.Value) + Environment.NewLine + StringResources.GetLocalizedString("reward");
+                MessageSender.SendRewardMessage(result, _messages, message);
             });
         }
 		int stationNumber = GameController.GetInstance ().GetCurrentStationNumber ();

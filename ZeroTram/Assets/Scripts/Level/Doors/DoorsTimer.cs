@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using Assets.Scripts.Client;
 using UnityEngine.UI;
 
 public class DoorsTimer : MonoBehaviour
@@ -30,6 +31,7 @@ public class DoorsTimer : MonoBehaviour
     [SerializeField] private BenchCombinationManager _benchCombinationManager;
     [SerializeField] private TrainingHandler _trainingHandler;
     [SerializeField] private Client _webClient;
+    [SerializeField] private MyMessageScript _messageScript;
 
     private PassengerSM _currentStickPassenger;
     private DoorsAnimationController _currentStickDoor;
@@ -278,7 +280,8 @@ public class DoorsTimer : MonoBehaviour
             {
                 if(!o.HasField("error"))
                 {
-                      
+                    string rewardCaption = String.Format(StringResources.GetLocalizedString("newDoorsTimeRecord"), bonusCount);
+                    MessageSender.SendRewardMessage(o, _messageScript, rewardCaption);
                 }
             });
         }
