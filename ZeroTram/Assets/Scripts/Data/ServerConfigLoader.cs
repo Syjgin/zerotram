@@ -75,11 +75,11 @@ public class ServerConfigLoader : MonoBehaviour
 			});
 		} else {
 			String username = System.Guid.NewGuid().ToString();
-			registerWithUsername (username);
+			RegisterWithUsername (username);
 		}
     }
 
-	private void registerWithUsername(String username) {
+	private void RegisterWithUsername(String username) {
 		_serverClient.RegisterUser (username, (result) => {
 			if (result.HasField("error"))
 			{
@@ -91,7 +91,7 @@ public class ServerConfigLoader : MonoBehaviour
 			{
 				if(result.HasField ("freeuuid")) {
 					Debug.Log ("this user id already exists. Trying with different one");
-					registerWithUsername (result.GetField ("freeuuid").str);
+					RegisterWithUsername (result.GetField ("freeuuid").str);
 				} else {
 					if(result.HasField ("token"))	{
 						_serverClient.UpdateToken (result.GetField ("token").str);

@@ -65,8 +65,8 @@ public class TrainingHandler : MonoBehaviour
 
     public static bool IsTrainingFinished()
     {
-        return true;
-        //return PlayerPrefs.HasKey(TrainingKey);
+        //return true;
+        return PlayerPrefs.HasKey(TrainingKey);
     }
 
     public bool IsBonusDropEnabled()

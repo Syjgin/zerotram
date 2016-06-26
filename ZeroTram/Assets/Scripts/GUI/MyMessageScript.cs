@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class MyMessageScript : MonoBehaviour
 {
-    [SerializeField] private Button _btn;
+    [SerializeField] private GameObject _btn;
     private List<string> _message = new List<string>();
-    private const float MessagePeriod = 5;
+    private const float MessagePeriod = 3;
     private float _messageOpenedTime;
     // Use this for initialization
     void Start()
@@ -17,15 +17,15 @@ public class MyMessageScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_btn.gameObject.activeSelf && _message.Count > 0)
+        if (!_btn.activeInHierarchy && _message.Count > 0)
         {
             _btn.GetComponentInChildren<Text>().text = _message[0];
-            _btn.gameObject.SetActive(true);
-            _messageOpenedTime = Time.timeSinceLevelLoad;
+            _btn.SetActive(true);
+            _messageOpenedTime = Time.unscaledTime;
         }
-        if (Time.timeSinceLevelLoad - _messageOpenedTime > MessagePeriod)
+        if (Time.unscaledTime - _messageOpenedTime > MessagePeriod)
         {
-            if (_btn.gameObject.activeInHierarchy)
+            if (_btn.activeInHierarchy)
             {
                 RemoveMessage();
             }
@@ -41,6 +41,6 @@ public class MyMessageScript : MonoBehaviour
     {
         if(_message.Count > 0)
             _message.RemoveAt(0);
-        _btn.gameObject.SetActive(false);
+        _btn.SetActive(false);
     }
 }

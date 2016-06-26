@@ -137,9 +137,9 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
             
             if (!response.HasField("error"))
             {
-                if (response.HasField("TramlivesCount"))
+                if (response.HasField("tramLivesCount"))
                 {
-                    float count = response.GetField("TramlivesCount").n;
+                    float count = response.GetField("tramLivesCount").n;
                     string message = String.Format(StringResources.GetLocalizedString("remainLivesCount"), count);
                     _messages.AddMessage(message);
                 }
@@ -169,29 +169,49 @@ public class GameOverHandler : MonoBehaviour, GameStateNotificationListener
         }
 		int stationNumber = GameController.GetInstance ().GetCurrentStationNumber ();
 		if(stationNumber > 0 && flyingAwayCount == 0) {
-			_client.SendPacifistRecord (stationNumber, (response) => {
-				Debug.Log (response);
-			});
+			_client.SendPacifistRecord (stationNumber, (result) => {
+                if (!result.HasField("error"))
+                {
+                    string message = string.Format(StringResources.GetLocalizedString("newPacifistRecord"),
+                            stationNumber);
+                    MessageSender.SendRewardMessage(result, _messages, message);
+                }
+            });
 		}
         int antistick = GameController.GetInstance().GetAntiStick();
         if (antistick > 0)
         {
-            _client.SendAntiStickRecord(antistick, (response) =>
+            _client.SendAntiStickRecord(antistick, (result) =>
             {
-                Debug.Log(response);
+                if (!result.HasField("error"))
+                {
+                    string message = string.Format(StringResources.GetLocalizedString("newAntistickRecord"),
+                            antistick);
+                    MessageSender.SendRewardMessage(result, _messages, message);
+                }
             });
         }
 		int bigStationsCount = GameController.GetInstance ().GetBigStationsCount ();
 		if(bigStationsCount > 0) {
 			if(GameController.GetInstance ().GetKilledPassengersCount () == 0) {
-				_client.SendLivesaverRecord (bigStationsCount, (response) => {
-					Debug.Log(response);
-				});
+				_client.SendLivesaverRecord (bigStationsCount, (result) => {
+                    if (!result.HasField("error"))
+                    {
+                        string message = string.Format(StringResources.GetLocalizedString("newLivesaverRecord"),
+                                bigStationsCount);
+                        MessageSender.SendRewardMessage(result, _messages, message);
+                    }
+                });
 			}
 			if(bigStationsCount > 1) {
-				_client.SendTruckerRecord (bigStationsCount, (response) => {
-					Debug.Log(response);
-				});
+				_client.SendTruckerRecord (bigStationsCount, (result) => {
+                    if (!result.HasField("error"))
+                    {
+                        string message = string.Format(StringResources.GetLocalizedString("newTruckerRecord"),
+                                bigStationsCount);
+                        MessageSender.SendRewardMessage(result, _messages, message);
+                    }
+                });
 			}
 		}
     }
