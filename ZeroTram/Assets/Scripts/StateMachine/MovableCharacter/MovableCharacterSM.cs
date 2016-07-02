@@ -15,7 +15,7 @@ public class MovableCharacterSM : StateMachine
     protected float Hp;
     public float AttackMaxDistance = 3;
     protected float AttackedStartTime;
-    private Vector2 _target;
+    protected Vector2 Target;
     protected float AttackStrength = 10;
     public MovableCharacterSM AttackTarget;
     protected float AttackReactionPeriod = 0.5f;
@@ -45,7 +45,8 @@ public class MovableCharacterSM : StateMachine
         FlyingAway = 6,
         Dragged = 7,
         Frozen = 8,
-        Sit = 9
+        Sit = 9,
+        Hunt = 10
     }
 
     public float GetInitialLifes()
@@ -55,11 +56,11 @@ public class MovableCharacterSM : StateMachine
     
     public Vector2 GetTarget()
     {
-        return _target;
+        return Target;
     }
     public virtual void SetTarget(Vector2 target)
     {
-        _target = target;
+        Target = target;
         CalculateOrientation(target);
         ActivateState((int)MovableCharacterStates.Move);
     }

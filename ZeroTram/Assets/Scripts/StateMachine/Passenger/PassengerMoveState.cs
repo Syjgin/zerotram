@@ -30,14 +30,7 @@ public class PassengerMoveState : MoveState
             {
                 if (!_passenger.IsStick())
                 {
-                    if (_passenger.AttackTarget == null)
-                    {
-                        _passenger.MakeIdle();
-                    }
-                    else
-                    {
-                        _passenger.AttackIfPossible();
-                    }
+                    _passenger.MakeIdle();
                 }
             }
             return;

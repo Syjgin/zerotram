@@ -58,6 +58,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isConductorAttackDenied;
     private bool _isPassengerAttackDenied;
     private bool _isGoAwayVelocityIncreased;
+    private float _calculatedAttackTargetDistance = -1;
 
     void Awake()
     {
@@ -71,6 +72,7 @@ public class PassengerSM : MovableCharacterSM
         PassengerDraggedState draggedState = new PassengerDraggedState(this);
         FrozenState frozenState = new FrozenState(this);
         PassengerSitState sitState = new PassengerSitState(this);
+        PassengerHuntState huntState = new PassengerHuntState(this);
         Dictionary<int, State> stateMap = new Dictionary<int, State>
         {
             {(int) MovableCharacterStates.Idle, idleState},
@@ -82,6 +84,7 @@ public class PassengerSM : MovableCharacterSM
             {(int) MovableCharacterStates.Dragged, draggedState},
             {(int) MovableCharacterStates.Frozen, frozenState},
             {(int) MovableCharacterStates.Sit, sitState},
+            {(int) MovableCharacterStates.Hunt, huntState},
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
     }
@@ -198,13 +201,23 @@ public class PassengerSM : MovableCharacterSM
         BonusProbability = 100;
     }
 
-    public float AttackTargetDistance()
+    private float AttackTargetDistance()
     {
         if (AttackTarget == null)
             return float.MaxValue;
         Vector2 position2D = transform.position;
         Vector2 attackTargetPosition2D = AttackTarget.BoxCollider2D.bounds.ClosestPoint(transform.position);
-        return (position2D - attackTargetPosition2D).sqrMagnitude;
+        _calculatedAttackTargetDistance = (position2D - attackTargetPosition2D).sqrMagnitude;
+        return _calculatedAttackTargetDistance;
+    }
+
+    public float CalculatedAttackTargetDistance()
+    {
+        if (_calculatedAttackTargetDistance == -1)
+        {
+            _calculatedAttackTargetDistance = AttackTargetDistance();
+        }
+        return _calculatedAttackTargetDistance;
     }
 
     public bool HasTicket()
@@ -460,6 +473,16 @@ public class PassengerSM : MovableCharacterSM
     {
         if(IsAttackingAllowed)
             base.MakeIdle();
+    }
+
+    public void BeginHunt()
+    {
+        if (AttackTarget == null)
+            return;
+        Vector2 result = AttackTarget.BoxCollider2D.bounds.ClosestPoint(transform.position);
+        Target = result;
+        CalculateOrientation(result);
+        ActivateState((int)MovableCharacterStates.Hunt);
     }
 
     public override void SetTarget(Vector2 target)
@@ -729,6 +752,14 @@ public class PassengerSM : MovableCharacterSM
         if (_attackingDenyPeriod <= 0)
         {
             IsAttackingAllowed = true;
+        }
+        if (AttackTarget != null)
+        {
+            float dist = AttackTargetDistance();
+            if (dist > AttackMaxDistance)
+            {
+                AttackTarget = null;
+            }
         }
     }
 

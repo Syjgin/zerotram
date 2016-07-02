@@ -44,11 +44,13 @@ public class PassengerAttackState : AttackState
     
     private bool CanAttack()
     {
+        if (_passenger.AttackTarget == null)
+            return false;
         if (_passenger.CanNotInteract())
             return false;
         if (_passenger.AttackTarget.CanNotInteract())
             return false;
-        if (_passenger.AttackTargetDistance() <= MovableCharacter.AttackDistance)
+        if (_passenger.CalculatedAttackTargetDistance() <= MovableCharacter.AttackDistance)
             return true;
         return false;
     }

@@ -41,23 +41,14 @@ public class PassengerIdleState : IdleState
         }
         if (MovableCharacter.AttackTarget != null)
         {
-            float dist = _passenger.AttackTargetDistance();
-            if (dist > _passenger.AttackMaxDistance)
+            float dist = _passenger.CalculatedAttackTargetDistance();
+            if (dist > _passenger.AttackDistance)
             {
-                _passenger.AttackTarget = null;
+                _passenger.BeginHunt();
             }
             else
             {
-                if (dist > _passenger.AttackDistance)
-                {
-                    Vector2 result =
-                        _passenger.AttackTarget.BoxCollider2D.bounds.ClosestPoint(_passenger.transform.position);
-                    _passenger.SetTarget(result);
-                }
-                else
-                {
-                    _passenger.AttackIfPossible();
-                }
+                _passenger.AttackIfPossible();
             }
         }
         else
