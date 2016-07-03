@@ -46,7 +46,8 @@ public class MovableCharacterSM : StateMachine
         Dragged = 7,
         Frozen = 8,
         Sit = 9,
-        Hunt = 10
+        Hunt = 10,
+        Escape = 11
     }
 
     public float GetInitialLifes()

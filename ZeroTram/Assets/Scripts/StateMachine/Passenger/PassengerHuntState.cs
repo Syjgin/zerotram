@@ -31,16 +31,4 @@ public class PassengerHuntState : MoveState
     {
         _passenger = (PassengerSM) parent;
     }
-
-    protected void CalculateOrientation(Vector2 target)
-    {
-        if (target.x > MovableCharacter.transform.position.x)
-        {
-            MovableCharacter.CharacterBody.transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            MovableCharacter.CharacterBody.transform.localScale = new Vector3(1, 1, 1);
-        }
-    }
 }

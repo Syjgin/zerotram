@@ -163,6 +163,7 @@
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerCollisionDetector.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerDraggedState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerFlyingAwayState.cs" />
+    <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerEscapeState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerIdleState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerHuntState.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Passenger\PassengerMoveState.cs" />

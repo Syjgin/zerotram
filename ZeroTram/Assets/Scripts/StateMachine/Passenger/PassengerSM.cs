@@ -39,6 +39,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isDragDenied;
     private bool _isDragListenerActivated;
     private bool _isSitListenerActivated;
+    private MovableCharacterSM _pursuer;
 
     [SerializeField]
     private Sprite _question;
@@ -73,6 +74,7 @@ public class PassengerSM : MovableCharacterSM
         FrozenState frozenState = new FrozenState(this);
         PassengerSitState sitState = new PassengerSitState(this);
         PassengerHuntState huntState = new PassengerHuntState(this);
+        PassengerEscapeState escapeState = new PassengerEscapeState(this);
         Dictionary<int, State> stateMap = new Dictionary<int, State>
         {
             {(int) MovableCharacterStates.Idle, idleState},
@@ -85,8 +87,25 @@ public class PassengerSM : MovableCharacterSM
             {(int) MovableCharacterStates.Frozen, frozenState},
             {(int) MovableCharacterStates.Sit, sitState},
             {(int) MovableCharacterStates.Hunt, huntState},
+            {(int) MovableCharacterStates.Escape, escapeState},
         };
         InitWithStates(stateMap, (int)MovableCharacterStates.Idle);
+    }
+
+    public MovableCharacterSM GetPursuer()
+    {
+        return _pursuer;
+    }
+
+    public void BeginEscape(MovableCharacterSM pursuer)
+    {
+        _pursuer = pursuer;
+        ActivateState((int)MovableCharacterStates.Escape);
+    }
+
+    public void StopEscape()
+    {
+        _pursuer = null;
     }
 
     public void SetFlyAwayDenied(bool denied)
@@ -485,6 +504,12 @@ public class PassengerSM : MovableCharacterSM
         ActivateState((int)MovableCharacterStates.Hunt);
     }
 
+    public void SetEscapeTarget(Vector2 target)
+    {
+        Target = target;
+        CalculateOrientation(target);
+    }
+    
     public override void SetTarget(Vector2 target)
     {
         if (IsGoingAway)
@@ -538,8 +563,9 @@ public class PassengerSM : MovableCharacterSM
         }
         else
         {
+            MovableCharacterSM pursuer = AttackTarget;
             AttackTarget = null;
-            CalculateRandomTarget();
+            BeginEscape(pursuer);
         }
     }
 
@@ -661,13 +687,17 @@ public class PassengerSM : MovableCharacterSM
     {
         if(GetActiveState() != (int)MovableCharacterStates.Dragged)
             return;
-        MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").OnMouseUp();
-        ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        Floor floor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor");
+        floor.OnMouseUp();
+        ConductorSM conductor = floor.GetHero();
         if (conductor.CanKick(this))
         {
-            if (!HasTicket())
+            if (!floor.IsPassengerNearDoors(this))
             {
-                CalculateRandomTarget();
+                if (!HasTicket())
+                {
+                    BeginEscape(conductor);
+                }
             }
         }
         else
