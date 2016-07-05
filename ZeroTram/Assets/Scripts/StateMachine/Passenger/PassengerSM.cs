@@ -415,18 +415,7 @@ public class PassengerSM : MovableCharacterSM
     {
         return GetActiveState() == (int)MovableCharacterStates.Sit;
     }
-
-    public void HandleTriggerEnter(Collider2D other)
-    {
-        if (CanNotInteract())
-            return;
-        MovableCharacterSM movable = other.gameObject.GetComponentInParent<MovableCharacterSM>();
-        if (movable != null)
-        {
-            TryAttackMovable(movable);
-        }
-    }
-
+    
     public bool IsSitListenerActivated()
     {
         return _isSitListenerActivated;
@@ -451,16 +440,16 @@ public class PassengerSM : MovableCharacterSM
         ActivateState((int) MovableCharacterStates.Sit);
     }
 
-    public void TryAttackMovable(MovableCharacterSM movable)
+    public bool TryAttackMovable(MovableCharacterSM movable)
     {
         if(_attackDenyedByTraining)
-            return;
+            return false;
         float currentAttackProbability = AttackProbability;
         var sm = movable as PassengerSM;
         if (sm != null)
         {
             if(_isPassengerAttackDenied)
-                return;
+                return false;
             PassengerSM passenger = sm;
             if (passenger.IsOnTheBench())
             {
@@ -475,16 +464,15 @@ public class PassengerSM : MovableCharacterSM
                 ConductorSM conductor = movable as ConductorSM;
                 if (conductor != null)
                 {
-                    return;
+                    return false;
                 }
             }
             AttackTarget = movable;
             AttackIfPossible();
+            return true;
         }
-        else
-        {
-            MakeIdle();
-        }
+        MakeIdle();
+        return false;
     }
 
 
@@ -523,15 +511,21 @@ public class PassengerSM : MovableCharacterSM
         }
     }
 
-    public void CalculateRandomTarget(bool force = false)
+    public void CalculateRandomTarget()
     {
         if (IsGoingAway)
         {
             SetTarget(GetTarget());
             return;
         }
-        if(AttackTarget != null && !force)
+        if(AttackTarget != null)
             return;
+        if(!GameController.GetInstance().FindAttackTarget(this))
+            MoveToRandomPosition();
+    }
+
+    public void MoveToRandomPosition()
+    {
         Vector2 target = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetRandomPosition();
         if (target != default(Vector2))
             SetTarget(target);

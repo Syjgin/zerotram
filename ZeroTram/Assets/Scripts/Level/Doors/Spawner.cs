@@ -63,7 +63,7 @@ public class Spawner : MonoBehaviour
         else
         {
             PassengerSM ps = InstantiateNPC(passengerName, spawnPoint.transform.position, true, true);
-            ps.CalculateRandomTarget(true);
+            ps.MoveToRandomPosition();
             if (ticketMode != TicketAdditionMode.Default)
             {
                 ps.SetTicketAndVisibility(ticketMode == TicketAdditionMode.WithTicket, false);
@@ -91,7 +91,7 @@ public class Spawner : MonoBehaviour
                 _doorsTimer.SetPaused(true);
                 return;
             }
-            ps.CalculateRandomTarget(true);
+            ps.MoveToRandomPosition();
         }
     }
 

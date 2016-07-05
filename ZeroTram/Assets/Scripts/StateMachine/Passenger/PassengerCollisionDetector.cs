@@ -10,11 +10,6 @@ public class PassengerCollisionDetector : CollisionDetector
     {
         _passenger = (PassengerSM) Character;
     }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        _passenger.HandleTriggerEnter(other);
-    }
     
     void OnMouseUp()
     {
