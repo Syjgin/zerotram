@@ -9,7 +9,6 @@ public class PassengerSM : MovableCharacterSM
 
     private int _tramStopCount;
     private int _currentTramStopCount;
-    public float AttackProbability = 50;
     public float ChangeStatePeriod = 10;
     public float DragChangeStatePeriod = 10;
     protected float CounterAttackProbability = 50;
@@ -22,6 +21,7 @@ public class PassengerSM : MovableCharacterSM
     private float _magnetDistance;
     private float _attackingDenyPeriod;
     private bool _isMagnetActivated;
+    private float _attackProbabilityCoefficient = 1;
 
     public bool IsAttackingAllowed;
     private Bench _currentBench;
@@ -41,6 +41,7 @@ public class PassengerSM : MovableCharacterSM
     private bool _isSitListenerActivated;
     private MovableCharacterSM _pursuer;
 
+    private Dictionary<string, float> _attackProbabilities;
     [SerializeField]
     private Sprite _question;
     [SerializeField]
@@ -187,9 +188,28 @@ public class PassengerSM : MovableCharacterSM
         _isTrainingEnabled = true;
     }
 
+    public float GetAttackProbabilityForClass(string className)
+    {
+        if (IsAttackListenerActivated)
+            return 100;
+        foreach (var attackProbability in _attackProbabilities)
+        {
+            if (attackProbability.Key.Equals(className))
+            {
+                return attackProbability.Value * _attackProbabilityCoefficient;
+            }
+        }
+        return _attackProbabilities["default"] *_attackProbabilityCoefficient;
+    }
+
     public virtual void Init(bool register, bool unstickable = false)
     {
-        AttackProbability = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbability").n;
+        _attackProbabilities = new Dictionary<string, float>();
+        JSONObject attackProbabilitiesJson = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackProbabilities");
+        foreach (var key in attackProbabilitiesJson.keys)
+        {
+            _attackProbabilities.Add(key, attackProbabilitiesJson.GetField(key).n);
+        }
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
         ChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("ChangeStatePeriod").n;
         AttackDistance = ConfigReader.GetConfig().GetField(GetClassName()).GetField("AttackDistance").n;
@@ -444,7 +464,7 @@ public class PassengerSM : MovableCharacterSM
     {
         if(_attackDenyedByTraining)
             return false;
-        float currentAttackProbability = AttackProbability;
+        float currentAttackProbability = GetAttackProbabilityForClass(movable.GetClassName());
         var sm = movable as PassengerSM;
         if (sm != null)
         {
@@ -533,7 +553,6 @@ public class PassengerSM : MovableCharacterSM
 
     public void SetMaximumAttackProbabilityForTraining()
     {
-        AttackProbability = 100;
         ChangeStatePeriod = 1f;
         IsAttackListenerActivated = true;
     }
@@ -561,6 +580,11 @@ public class PassengerSM : MovableCharacterSM
             AttackTarget = null;
             BeginEscape(pursuer);
         }
+    }
+
+    public void ChangeAttackProbabilityCoefficient(float coef)
+    {
+        _attackProbabilityCoefficient *= coef;
     }
 
     public bool IsStickModifiedForTraining()
@@ -815,11 +839,6 @@ public class PassengerSM : MovableCharacterSM
                 BonusProbabilities.Add((GameController.BonusTypes)bonus, unparsedMap.GetField(representation).n);
             }
         }
-    }
-
-    public virtual string GetClassName()
-    {
-        return string.Empty;
     }
 
 }

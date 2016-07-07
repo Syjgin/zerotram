@@ -10,7 +10,17 @@
 			"MovingToDragTargetVelocity" : 20
 		},
 	"alien": {
-            "AttackProbability" : 10,
+            "AttackProbabilities" : {
+              "conductor" : 70,
+              "alien" : 90,
+              "default" : 10
+            },
+            "RunAwayProbabilities" : {
+              "conductor" : 20,
+              "gnome" : 30,
+              "alien" : 0,
+              "default" : 50
+            },
             "ChangeStatePeriod" : 5,
 			"DragChangeStatePeriod" : 5,
             "AttackDistance" : 3,
@@ -31,7 +41,17 @@
 			}
 		},
 	"bird": {
-            "AttackProbability" : 70,
+            "AttackProbabilities" : {
+              "conductor" : 80,
+              "bird" : 20,
+              "granny" : 95,
+              "default" : 70
+            },
+            "RunAwayProbabilities" : {
+              "conductor" : 10,
+              "bird" : 30,
+              "default" : 50
+            },
             "ChangeStatePeriod" : 1,
 			"DragChangeStatePeriod" : 0.5,
             "AttackDistance" : 1.5,
@@ -52,7 +72,16 @@
 			}
 		},
 	"cat": {
-            "AttackProbability" : 50,
+            "AttackProbabilities" : {
+              "bird" : 70,
+              "gnome" : 20,
+              "default" : 50
+            },
+            "RunAwayProbabilities" : {
+              "conductor" : 95,
+              "alien" : 0,
+              "default" : 50
+            },
             "ChangeStatePeriod" : 3,
 			"DragChangeStatePeriod" : 1,
             "AttackDistance" : 1,
@@ -73,7 +102,17 @@
 			}
 		},
 	"gnome": {
-            "AttackProbability" : 5,
+            "AttackProbabilities" : {
+              "bird" : 40,
+              "cat" : 50,
+              "gnome" : 0,
+              "default" : 5
+            },
+            "RunAwayProbabilities" : {
+              "conductor" : 10,
+              "granny" : 30,
+              "default" : 5
+            },
             "ChangeStatePeriod" : 10,
 			"DragChangeStatePeriod" : 2,
             "AttackDistance" : 1,
@@ -94,7 +133,17 @@
 			}
 		},
 	"granny": {
-            "AttackProbability" : 85,
+            "AttackProbabilities" : {
+              "conductor" : 15,
+              "bird" : 30,
+              "granny" : 50,
+              "default" : 85
+            },
+            "RunAwayProbabilities" : {
+              "conductor" : 10,
+              "alien" : 0,
+              "default" : 50
+            },
             "ChangeStatePeriod" : 7,
 			"DragChangeStatePeriod" : 2,
             "AttackDistance" : 1,
@@ -255,7 +304,7 @@
 			"SitPossibility": 25,
 			"StandPossibility": 75,
 			"StopStandCheckPeriod" : 8,
-			"SitRecheckPeriod" : 5,
+			"SitRecheckPeriod" : 1,
 			"SitAggressionIncrement" : 2
 		},
 	"combinations" : {

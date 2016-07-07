@@ -28,7 +28,7 @@ public class PassengerDraggedState : MovableCharacterState
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
-            if ((Randomizer.GetPercentageBasedBoolean((int) _passenger.AttackProbability) && !_passenger.IsNearBench) || !_passenger.HasTicket())
+            if ((Randomizer.GetPercentageBasedBoolean((int) _passenger.GetAttackProbabilityForClass("conductor")) && !_passenger.IsNearBench) || !_passenger.HasTicket())
             {
                 if (!_passenger.IsRunawayDenied())
                 {

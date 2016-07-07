@@ -169,4 +169,9 @@ public class ConductorSM : MovableCharacterSM
             return;
         MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").DoubleClick();
     }
+
+    public override string GetClassName()
+    {
+        return "conductor";
+    }
 }

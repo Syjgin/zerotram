@@ -269,4 +269,9 @@ public class MovableCharacterSM : StateMachine
     {
         return _isFreezeInProgress;
     }
+
+    public virtual string GetClassName()
+    {
+        return string.Empty;
+    }
 }

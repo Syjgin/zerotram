@@ -13,12 +13,12 @@ public class SmileBonus : PassengerEffectBonus
     
     protected override void AddEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.AttackProbability *= DecrementCoef;
+        passenger.ChangeAttackProbabilityCoefficient(DecrementCoef);
     }
 
     protected override void RemoveEffectAfterCheck(PassengerSM passenger)
     {
-        passenger.AttackProbability *= IncrementCoef;
+        passenger.ChangeAttackProbabilityCoefficient(IncrementCoef);
     }
     
     public SmileBonus(string bonusName = "smileBonus")
