@@ -470,6 +470,31 @@ public class GameController
         return false;
     }
 
+    public bool FindRunAwayTarget(PassengerSM ps)
+    {
+        _passengers.RemoveAll(item => item == null);
+        foreach (var passenger in _passengers)
+        {
+            if (passenger != ps)
+            {
+                float dist = ((Vector2)passenger.transform.position - (Vector2)ps.transform.position).sqrMagnitude;
+                if (dist < ps.AttackMaxDistance)
+                {
+                    if (ps.TryRunAwayFromMovable(passenger))
+                        return true;
+                }
+            }
+        }
+        ConductorSM hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        float conductorDist = ((Vector2)hero.transform.position - (Vector2)ps.transform.position).sqrMagnitude;
+        if (conductorDist < ps.AttackMaxDistance)
+        {
+            if (ps.TryRunAwayFromMovable(hero))
+                return true;
+        }
+        return false;
+    }
+
     public PassengerSM GetPassengerNearClick(Vector2 point)
 	{
 		_passengers.RemoveAll(item => item == null);

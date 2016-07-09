@@ -42,6 +42,8 @@ public class PassengerSM : MovableCharacterSM
     private MovableCharacterSM _pursuer;
 
     private Dictionary<string, float> _attackProbabilities;
+    private Dictionary<string, float> _runAwayProbabilities;
+
     [SerializeField]
     private Sprite _question;
     [SerializeField]
@@ -202,6 +204,18 @@ public class PassengerSM : MovableCharacterSM
         return _attackProbabilities["default"] *_attackProbabilityCoefficient;
     }
 
+    public float GetRunAwayProbabilityForClass(string className)
+    {
+        foreach (var runAwayProbability in _runAwayProbabilities)
+        {
+            if (runAwayProbability.Key.Equals(className))
+            {
+                return runAwayProbability.Value * _attackProbabilityCoefficient;
+            }
+        }
+        return _runAwayProbabilities["default"] * _attackProbabilityCoefficient;
+    }
+
     public virtual void Init(bool register, bool unstickable = false)
     {
         _attackProbabilities = new Dictionary<string, float>();
@@ -209,6 +223,12 @@ public class PassengerSM : MovableCharacterSM
         foreach (var key in attackProbabilitiesJson.keys)
         {
             _attackProbabilities.Add(key, attackProbabilitiesJson.GetField(key).n);
+        }
+        _runAwayProbabilities = new Dictionary<string, float>();
+        JSONObject runAwayProbabilitiesJson = ConfigReader.GetConfig().GetField(GetClassName()).GetField("RunAwayProbabilities");
+        foreach (var key in runAwayProbabilitiesJson.keys)
+        {
+            _runAwayProbabilities.Add(key, runAwayProbabilitiesJson.GetField(key).n);
         }
         DragChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("DragChangeStatePeriod").n;
         ChangeStatePeriod = ConfigReader.GetConfig().GetField(GetClassName()).GetField("ChangeStatePeriod").n;
@@ -495,6 +515,16 @@ public class PassengerSM : MovableCharacterSM
         return false;
     }
 
+    public bool TryRunAwayFromMovable(MovableCharacterSM movable)
+    {
+        float currentRunAwayProbability = GetRunAwayProbabilityForClass(movable.GetClassName());
+        if (Randomizer.GetPercentageBasedBoolean((int)currentRunAwayProbability))
+        {
+            BeginEscape(movable);
+            return true;
+        }
+        return false;
+    }
 
     public override void MakeIdle()
     {
@@ -540,8 +570,11 @@ public class PassengerSM : MovableCharacterSM
         }
         if(AttackTarget != null)
             return;
-        if(!GameController.GetInstance().FindAttackTarget(this))
-            MoveToRandomPosition();
+        if (GameController.GetInstance().FindRunAwayTarget(this))
+            return;
+        if (GameController.GetInstance().FindAttackTarget(this))
+            return;
+        MoveToRandomPosition();
     }
 
     public void MoveToRandomPosition()
