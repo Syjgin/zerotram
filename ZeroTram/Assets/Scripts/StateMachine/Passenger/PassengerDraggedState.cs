@@ -3,10 +3,20 @@ public class PassengerDraggedState : MovableCharacterState
 {
     private float _timeSinceStateChanged;
     private PassengerSM _passenger;
+    private ConductorSM _hero;
+    private Floor _floor;
 
     protected override void OnStart()
     {
         _timeSinceStateChanged = 0;
+        if (_hero == null)
+        {
+            _hero = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
+        }
+        if (_floor == null)
+        {
+            _floor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor");
+        }
     }
 
     protected override void OnEnd()
@@ -17,18 +27,10 @@ public class PassengerDraggedState : MovableCharacterState
 
     public override void OnUpdate()
     {
-        if (MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").IsPassengerNearDoors(_passenger) && !_passenger.HasTicket())
-        {
-            if (!_passenger.IsRunawayDenied())
-            {
-                StopDragByConductor(false);
-                return;
-            }
-        }
         if (_timeSinceStateChanged >= _passenger.DragChangeStatePeriod)
         {
             _timeSinceStateChanged = 0;
-            if ((Randomizer.GetPercentageBasedBoolean((int) _passenger.GetAttackProbabilityForClass("conductor")) && !_passenger.IsNearBench) || !_passenger.HasTicket())
+            if ((Randomizer.GetPercentageBasedBoolean((int)_passenger.GetAttackProbabilityForClass("conductor")) && !_passenger.IsNearBench) || !_passenger.HasTicket())
             {
                 if (!_passenger.IsRunawayDenied())
                 {
@@ -37,17 +39,25 @@ public class PassengerDraggedState : MovableCharacterState
                 }
             }
         }
+        if (_hero.CanKick(_passenger) && !_passenger.HasTicket())
+        {
+            if (!_passenger.IsRunawayDenied() && Randomizer.GetPercentageBasedBoolean((int)_passenger.GetRunAwayProbabilityForClass("conductor")))
+            {
+                _floor.OnMouseUp();
+                _passenger.BeginEscape(_hero);
+                return;
+            }
+        }
         MovableCharacter.Animator.Play("attacked");
         Vector3 targetPos = new Vector3();
-        if (!MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetCurrentMousePosition(ref targetPos))
+        if (!_floor.GetCurrentMousePosition(ref targetPos))
             return;
         MovableCharacter.transform.position = new Vector3(targetPos.x, targetPos.y, -1);
     }
 
     private void StopDragByConductor(bool attack)
     {
-        ConductorSM conductor = MonobehaviorHandler.GetMonobeharior().GetObject<Floor>("Floor").GetHero();
-        conductor.StopDrag(attack);
+        _hero.StopDrag(attack);
     }
 
     public PassengerDraggedState(StateMachine parent) : base(parent)

@@ -733,7 +733,7 @@ public class PassengerSM : MovableCharacterSM
         else
             Indicator.sprite = _hare;
     }
-
+    
     public void StopDrag(bool attack)
     {
         if(GetActiveState() != (int)MovableCharacterStates.Dragged)
@@ -743,12 +743,9 @@ public class PassengerSM : MovableCharacterSM
         ConductorSM conductor = floor.GetHero();
         if (conductor.CanKick(this))
         {
-            if (!floor.IsPassengerNearDoors(this))
+            if (!HasTicket())
             {
-                if (!HasTicket())
-                {
-                    BeginEscape(conductor);
-                }
+                BeginEscape(conductor);
             }
         }
         else

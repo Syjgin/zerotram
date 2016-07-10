@@ -191,7 +191,15 @@ public class Floor : MonoBehaviour
         }
         return false;
     }
-    
+
+    public bool IsPassengerNearCentralWayout(PassengerSM ps)
+    {
+        Vector2 position = ps.transform.position;
+        if (IsPointCloseToCollider(position, _centralWayout))
+            return true;
+        return false;
+    }
+
     public GameObject GetPassengerDoor(PassengerSM passenger)
     {
         Vector2 position = passenger.transform.position;
